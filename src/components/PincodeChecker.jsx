@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { WHATSAPP_NUMBER } from '../data/products';
+import { useSettings } from '../context/SettingsContext';
 
 const LOCAL_KEYWORDS = [
   'chaparam',
@@ -12,18 +12,21 @@ const LOCAL_KEYWORDS = [
 ];
 
 export default function PincodeChecker() {
+  const { settings } = useSettings();
   const [pincode, setPincode] = useState('');
-  const [result, setResult] = useState(null); // { type: 'success' | 'info', val: string }
+  const [result, setResult] = useState(null);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const val = pincode.trim();
     if (!val) return;
     const lower = val.toLowerCase();
-    const isSrikakulamPin = /^532\d{3}$/.test(val);
+    const pincodes = settings.serviceable_pincodes || [];
+    const isServiceablePin =
+      pincodes.includes(val) || /^532\d{3}$/.test(val);
     const isLocalArea = LOCAL_KEYWORDS.some((k) => lower.includes(k));
 
-    if (isSrikakulamPin || isLocalArea) {
+    if (isServiceablePin || isLocalArea) {
       setResult({ type: 'success', val });
     } else {
       setResult({ type: 'info', val });
@@ -41,7 +44,7 @@ export default function PincodeChecker() {
 
             <div className="contact-direct-btns">
               <a
-                href={`https://wa.me/${WHATSAPP_NUMBER}?text=Hello%20Kushi%20Dairy!%20I%20would%20like%20to%20check%20product%20availability.`}
+                href={`https://wa.me/${settings.whatsapp_number}?text=Hello%20Kushi%20Dairy!%20I%20would%20like%20to%20check%20product%20availability.`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-whatsapp"
@@ -60,7 +63,7 @@ export default function PincodeChecker() {
                 </svg>
                 Chat on WhatsApp
               </a>
-              <a href="tel:+918464952708" className="btn-call-light">
+              <a href={`tel:+91${settings.phone}`} className="btn-call-light">
                 <svg
                   width="16"
                   height="16"
@@ -73,7 +76,7 @@ export default function PincodeChecker() {
                 >
                   <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"></path>
                 </svg>
-                Call +91 8464952708
+                Call +91 {settings.phone}
               </a>
             </div>
           </div>
@@ -107,15 +110,15 @@ export default function PincodeChecker() {
               {result?.type === 'success' && (
                 <>
                   <strong>Great news! We deliver to {result.val}.</strong> Daily
-                  fresh stock from Chaparam Village is available between 06:30
-                  AM–10:00 PM.
+                  fresh stock from Chaparam Village is available between{' '}
+                  {settings.store_open}–{settings.store_close}.
                 </>
               )}
               {result?.type === 'info' && (
                 <>
                   We’d love to check delivery for <strong>{result.val}</strong>.{' '}
                   <a
-                    href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
+                    href={`https://wa.me/${settings.whatsapp_number}?text=${encodeURIComponent(
                       `Hello Kushi Dairy! Do you deliver to ${result.val}?`
                     )}`}
                     target="_blank"

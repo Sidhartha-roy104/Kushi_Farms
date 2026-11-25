@@ -1,4 +1,8 @@
+import { useSettings } from '../context/SettingsContext';
+
 export default function AnnouncementBar() {
+  const { settings } = useSettings();
+
   return (
     <div className="top-bar-wrap">
       <div className="top-bar-pill">
@@ -21,8 +25,9 @@ export default function AnnouncementBar() {
             </svg>
           </span>
           <span>
-            Free home delivery on orders above ₹199 • Freshness guaranteed! ·
-            Chaparam, Srikakulam (06:30 AM–10:00 PM)
+            Free home delivery on orders above ₹{settings.free_delivery_threshold}{' '}
+            • Freshness guaranteed! · Chaparam, Srikakulam (
+            {settings.store_open}–{settings.store_close})
           </span>
         </div>
         <a href="#contact" className="top-bar-link">

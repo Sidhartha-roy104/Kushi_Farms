@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import Logo from './Logo';
 import { useCart } from '../context/CartContext';
 import { WHATSAPP_NUMBER } from '../data/products';
@@ -71,12 +72,7 @@ export default function Footer() {
                 </a>
               </li>
               <li>
-                <button
-                  id="openAdminModalBtn"
-                  onClick={() => openOverlay('admin')}
-                >
-                  Store administration
-                </button>
+                <Link to="/admin">Store administration</Link>
               </li>
             </ul>
           </div>

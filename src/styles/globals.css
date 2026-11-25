@@ -1836,3 +1836,246 @@ h1, h2, h3, h4 {
   .floating-basket { left: 14px; right: 14px; justify-content: space-between; }
   .leaf-decor { display: none; }
 }
+
+/* ==========================================================================
+   13. LOADING SKELETON (MATCHING PRODUCT CARD LAYOUT)
+   ========================================================================== */
+@keyframes kushiShimmer {
+  0% { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+
+.skeleton-card {
+  pointer-events: none;
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(90deg, #eef4fa 25%, #f7faff 50%, #eef4fa 75%);
+  background-size: 800px 100%;
+  animation: kushiShimmer 1.35s infinite linear;
+}
+
+.skeleton-line {
+  border-radius: 999px;
+}
+
+.skeleton-line.sm {
+  width: 56%;
+  height: 10px;
+  margin-bottom: 10px;
+}
+
+.skeleton-line.lg {
+  width: 78%;
+  height: 18px;
+  margin-bottom: 14px;
+}
+
+.skeleton-pills {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 18px;
+}
+
+.skeleton-pill {
+  width: 54px;
+  height: 28px;
+  border-radius: 999px;
+}
+
+.skeleton-footer {
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.skeleton-line.price {
+  width: 68px;
+  height: 20px;
+}
+
+.skeleton-pill.btn {
+  width: 82px;
+  height: 36px;
+}
+
+/* ==========================================================================
+   14. CHECKOUT FORM & ORDER SUCCESS PAGE
+   ========================================================================== */
+.checkout-form {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.checkout-back-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.checkout-back-btn {
+  font-family: var(--font-heading);
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: var(--brand-blue);
+}
+
+.checkout-back-btn:hover {
+  text-decoration: underline;
+}
+
+.checkout-step-tag {
+  font-family: var(--font-heading);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--brand-green-dark);
+  background: var(--brand-green-soft);
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+}
+
+.checkout-error {
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  background: #FEF2F2;
+  border: 1px solid #FECACA;
+  color: #991B1B;
+  font-size: 0.84rem;
+  margin-bottom: 14px;
+}
+
+.checkout-error strong {
+  display: block;
+  margin-bottom: 2px;
+  font-family: var(--font-heading);
+}
+
+.payment-method-box {
+  margin-top: 6px;
+  margin-bottom: 12px;
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-ice);
+  border: 1px solid var(--border-subtle);
+}
+
+.payment-method-label {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.payment-method-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.payment-radio {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.86rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.checkout-totals {
+  margin: 12px 0 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.status-page-shell {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 20px;
+  background: linear-gradient(135deg, #FBFDF9 0%, #EEF6FD 52%, #DCEEFB 100%);
+}
+
+.status-card {
+  width: 100%;
+  max-width: 540px;
+  background: #FFFFFF;
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-lg);
+  padding: 36px 32px;
+  text-align: center;
+}
+
+.status-logo-row {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 22px;
+}
+
+.status-check-circle {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  background: var(--brand-green-soft);
+  color: var(--brand-green-dark);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 18px;
+}
+
+.status-title {
+  font-size: clamp(1.6rem, 3vw, 2.05rem);
+  margin-bottom: 10px;
+}
+
+.status-desc {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  margin-bottom: 22px;
+}
+
+.order-ref-pill {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 12px 24px;
+  border-radius: var(--radius-md);
+  background: var(--bg-ice);
+  border: 1.5px solid var(--border-strong);
+  margin-bottom: 24px;
+}
+
+.order-ref-pill span {
+  font-family: var(--font-heading);
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-tertiary);
+}
+
+.order-ref-pill strong {
+  font-family: var(--font-heading);
+  font-size: 1.35rem;
+  color: var(--navy-deep);
+  letter-spacing: 0.04em;
+}
+
+.status-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}

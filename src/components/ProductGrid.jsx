@@ -1,17 +1,12 @@
 import { useMemo, useRef } from 'react';
 import { useCart } from '../context/CartContext';
+import { useSettings } from '../context/SettingsContext';
 import ProductCard from './ProductCard';
-
-const CATEGORIES = [
-  { value: 'all', label: 'All (8)' },
-  { value: 'Dairy', label: 'Dairy' },
-  { value: 'Farm Fresh', label: 'Farm Fresh' },
-  { value: 'Pantry', label: 'Pantry' }
-];
 
 export default function ProductGrid() {
   const {
     products,
+    loadingProducts,
     category,
     setCategory,
     searchInput,
@@ -20,8 +15,16 @@ export default function ProductGrid() {
     resetFilters,
     showToast
   } = useCart();
+  const { settings } = useSettings();
 
   const searchRef = useRef(null);
+
+  const categories = [
+    { value: 'all', label: `All (${products.length || 8})` },
+    { value: 'Dairy', label: 'Dairy' },
+    { value: 'Farm Fresh', label: 'Farm Fresh' },
+    { value: 'Pantry', label: 'Pantry' }
+  ];
 
   const filtered = useMemo(() => {
     const q = debouncedSearch.trim().toLowerCase();
@@ -62,7 +65,9 @@ export default function ProductGrid() {
             style={{ height: '44px', padding: '0 20px' }}
             onClick={() => {
               resetFilters();
-              showToast('Showing all 8 Kushi Dairy products');
+              showToast(
+                `Showing all ${products.length || 8} Kushi Dairy products`
+              );
             }}
           >
             View all products
@@ -80,8 +85,8 @@ export default function ProductGrid() {
             <span className="promise-check">✓</span> Hygienically Sealed Packs
           </span>
           <span className="promise-pill">
-            <span className="promise-check">✓</span> Free Local Delivery over
-            ₹199
+            <span className="promise-check">✓</span> Free Local Delivery over ₹
+            {settings.free_delivery_threshold}
           </span>
         </div>
 
@@ -91,7 +96,7 @@ export default function ProductGrid() {
             role="tablist"
             aria-label="Filter products by category"
           >
-            {CATEGORIES.map((cat) => (
+            {categories.map((cat) => (
               <button
                 key={cat.value}
                 className={`filter-pill${category === cat.value ? ' active' : ''}`}
@@ -140,7 +145,41 @@ export default function ProductGrid() {
         </div>
 
         <div className="products-grid" id="productsGrid">
-          {filtered.length === 0 ? (
+          {loadingProducts ? (
+            Array.from({ length: 8 }).map((_, idx) => (
+              <div
+                className="product-card skeleton-card"
+                key={idx}
+                aria-hidden="true"
+              >
+                <div className="product-photo-box skeleton-shimmer">
+                  <svg
+                    className="product-photo-wave"
+                    viewBox="0 0 360 32"
+                    preserveAspectRatio="none"
+                  >
+                    <path
+                      d="M0,18 C95,36 220,-4 360,20 L360,32 L0,32 Z"
+                      fill="#FFFFFF"
+                    />
+                  </svg>
+                </div>
+                <div className="product-body">
+                  <div className="skeleton-line skeleton-shimmer sm"></div>
+                  <div className="skeleton-line skeleton-shimmer lg"></div>
+                  <div className="skeleton-pills">
+                    <span className="skeleton-pill skeleton-shimmer"></span>
+                    <span className="skeleton-pill skeleton-shimmer"></span>
+                    <span className="skeleton-pill skeleton-shimmer"></span>
+                  </div>
+                  <div className="skeleton-footer">
+                    <div className="skeleton-line skeleton-shimmer price"></div>
+                    <div className="skeleton-pill skeleton-shimmer btn"></div>
+                  </div>
+                </div>
+              </div>
+            ))
+          ) : filtered.length === 0 ? (
             <div className="empty-state">
               <h3 style={{ marginBottom: '8px' }}>
                 No products found for &quot;{debouncedSearch}&quot;
@@ -160,7 +199,7 @@ export default function ProductGrid() {
                 style={{ height: '42px' }}
                 onClick={resetFilters}
               >
-                Show all 8 products
+                Show all {products.length || 8} products
               </button>
             </div>
           ) : (
