@@ -1,0 +1,3435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kushi Dairy — Simple Goodness. Every Day. | Chaparam, Srikakulam</title>
+
+  <!-- Google Fonts: Plus Jakarta Sans (Headings), Fraunces (Editorial Italic), Caveat (Purely Yours Script), Inter (Clean UI) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Fraunces:ital,opsz,wght@1,9..144,600;1,9..144,700&family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ==========================================================================
+       1. DESIGN TOKENS — KUSHI DAIRY BRAND SYSTEM
+       ========================================================================== */
+    :root {
+      /* Core Brand Palette from Reference & Logo */
+      --navy-deep: #092554;
+      --navy-dark: #0D316B;
+      --brand-blue: #1256A8;
+      --brand-blue-hover: #0D4285;
+      --brand-blue-soft: #E5F0FF;
+      --brand-sky: #8AC4F4;
+
+      --brand-green: #64B232;
+      --brand-green-dark: #3E7F1C;
+      --brand-green-soft: #ECF7E4;
+
+      --brand-yellow: #F7D138;
+      --brand-yellow-soft: #FEF8DF;
+
+      /* Surfaces & Neutrals */
+      --bg-white: #FFFFFF;
+      --bg-milk: #FAFBF8;
+      --bg-ice: #F2F7FC;
+      --border-subtle: #E3ECF5;
+      --border-warm: #E8EDE4;
+      --border-strong: #CBD8E6;
+
+      /* Typography */
+      --text-primary: #0A254B;
+      --text-secondary: #485E7A;
+      --text-tertiary: #7B8FA8;
+
+      --font-heading: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-editorial: 'Fraunces', Georgia, serif;
+      --font-script: 'Caveat', cursive;
+      --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+
+      /* Elevation & Radii */
+      --radius-sm: 12px;
+      --radius-md: 18px;
+      --radius-lg: 26px;
+      --radius-xl: 32px;
+      --radius-pill: 999px;
+
+      --shadow-xs: 0 2px 10px rgba(9, 37, 84, 0.05);
+      --shadow-sm: 0 8px 24px rgba(9, 37, 84, 0.07);
+      --shadow-md: 0 16px 40px rgba(9, 37, 84, 0.11);
+      --shadow-lg: 0 24px 56px rgba(9, 37, 84, 0.16);
+
+      --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+      --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    /* ==========================================================================
+       2. RESET & BASE TYPOGRAPHY
+       ========================================================================== */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      font-family: var(--font-body);
+      color: var(--text-primary);
+      background: var(--bg-white);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font: inherit;
+      color: inherit;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: var(--font-heading);
+      color: var(--text-primary);
+      letter-spacing: -0.025em;
+      line-height: 1.15;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      font-family: var(--font-heading);
+      font-size: 0.74rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--brand-green-dark);
+      margin-bottom: 10px;
+    }
+
+    .editorial-italic {
+      font-family: var(--font-editorial);
+      font-style: italic;
+      font-weight: 600;
+      color: var(--brand-blue);
+    }
+
+    /* Shared Buttons */
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      height: 50px;
+      padding: 0 26px;
+      border-radius: var(--radius-pill);
+      background: linear-gradient(180deg, #1660BA 0%, #0D458A 100%);
+      color: #FFFFFF;
+      font-family: var(--font-heading);
+      font-size: 0.94rem;
+      font-weight: 700;
+      box-shadow: 0 10px 24px rgba(18, 86, 168, 0.28);
+      transition: transform 0.22s var(--ease-out), box-shadow 0.22s ease, filter 0.2s ease;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 30px rgba(18, 86, 168, 0.36);
+      filter: brightness(1.04);
+    }
+
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      height: 50px;
+      padding: 0 24px;
+      border-radius: var(--radius-pill);
+      background: rgba(255, 255, 255, 0.9);
+      border: 1.5px solid #B9CFE6;
+      color: var(--text-primary);
+      font-family: var(--font-heading);
+      font-size: 0.93rem;
+      font-weight: 700;
+      backdrop-filter: blur(8px);
+      transition: all 0.2s ease;
+    }
+
+    .btn-outline:hover {
+      background: #FFFFFF;
+      border-color: var(--brand-blue);
+      color: var(--brand-blue);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-xs);
+    }
+
+    .btn-whatsapp {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      height: 50px;
+      padding: 0 24px;
+      border-radius: var(--radius-pill);
+      background: var(--brand-green);
+      color: #FFFFFF;
+      font-family: var(--font-heading);
+      font-size: 0.94rem;
+      font-weight: 700;
+      box-shadow: 0 8px 22px rgba(100, 178, 50, 0.28);
+      transition: all 0.2s ease;
+    }
+
+    .btn-whatsapp:hover {
+      background: var(--brand-green-dark);
+      transform: translateY(-2px);
+    }
+
+    /* ==========================================================================
+       3. REFERENCE-INSPIRED TOP ANNOUNCEMENT BAR & FLOATING GLASS NAVBAR
+       ========================================================================== */
+    .hero-canvas {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, #FBFDF9 0%, #EEF6FD 46%, #BFE0FA 100%);
+      padding-bottom: 34px;
+    }
+
+    /* Sunlit Pasture Backdrop Layer (Right-Weighted, Softly Blended to Cream on Left) */
+    .hero-pasture-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .hero-pasture-bg img {
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 74%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 45%;
+      opacity: 0.92;
+    }
+
+    /* Seamless Radial & Linear Blend from Creamy Left into Sunlit Pasture Right */
+    .hero-pasture-overlay {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, #FBFDF9 0%, #FBFDF9 28%, rgba(251, 253, 249, 0.92) 44%, rgba(235, 246, 255, 0.34) 64%, rgba(190, 224, 252, 0.12) 100%),
+        linear-gradient(180deg, rgba(226, 241, 255, 0.55) 0%, rgba(255, 255, 255, 0) 26%, rgba(255, 255, 255, 0) 76%, #FFFFFF 100%);
+    }
+
+    /* Decorative Floating Organic Leaves (Matching Reference Corners) */
+    .leaf-decor {
+      position: absolute;
+      pointer-events: none;
+      z-index: 2;
+      opacity: 0.88;
+    }
+
+    .leaf-top-left {
+      top: 76px;
+      left: -12px;
+      width: 76px;
+    }
+
+    .leaf-bottom-left {
+      bottom: 84px;
+      left: -16px;
+      width: 82px;
+    }
+
+    /* Top Dark-Navy Rounded Announcement Pill */
+    .top-bar-wrap {
+      position: relative;
+      z-index: 30;
+      padding: 0 24px;
+    }
+
+    .top-bar-pill {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: linear-gradient(90deg, #07224E 0%, #0C2F66 55%, #07224E 100%);
+      color: rgba(255, 255, 255, 0.95);
+      border-radius: 0 0 22px 22px;
+      padding: 10px 26px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      box-shadow: 0 8px 24px rgba(7, 34, 78, 0.2);
+    }
+
+    .top-bar-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .top-bar-truck {
+      color: #84D448;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .top-bar-link {
+      color: #F9DC5C;
+      font-family: var(--font-heading);
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .top-bar-link:hover {
+      opacity: 0.9;
+      transform: translateX(2px);
+    }
+
+    /* Floating Glassmorphic Pill Navbar */
+    .navbar-wrap {
+      position: sticky;
+      top: 10px;
+      z-index: 120;
+      padding: 14px 24px 0;
+      transition: padding 0.25s ease;
+    }
+
+    .navbar-wrap.scrolled {
+      top: 8px;
+      padding-top: 4px;
+    }
+
+    .navbar-pill {
+      max-width: 1200px;
+      margin: 0 auto;
+      height: 70px;
+      padding: 0 14px 0 24px;
+      border-radius: var(--radius-pill);
+      background: rgba(255, 255, 255, 0.86);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.95);
+      box-shadow: 0 12px 34px rgba(9, 37, 84, 0.09);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      transition: background 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .navbar-wrap.scrolled .navbar-pill {
+      background: rgba(255, 255, 255, 0.96);
+      box-shadow: 0 14px 38px rgba(9, 37, 84, 0.14);
+    }
+
+    .brand-logo {
+      display: inline-flex;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      list-style: none;
+    }
+
+    .nav-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 9px 15px;
+      border-radius: var(--radius-pill);
+      font-family: var(--font-heading);
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      transition: all 0.2s ease;
+    }
+
+    .nav-link:hover {
+      background: rgba(18, 86, 168, 0.07);
+      color: var(--brand-blue);
+    }
+
+    .nav-link.active {
+      background: var(--brand-blue-soft);
+      color: var(--brand-blue);
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Integrated Pill Search Bar inside Navbar */
+    .nav-search {
+      position: relative;
+      width: 220px;
+    }
+
+    .nav-search input {
+      width: 100%;
+      height: 42px;
+      padding: 0 16px 0 40px;
+      border-radius: var(--radius-pill);
+      border: 1px solid #DDE7F2;
+      background: #F6F9FD;
+      font-size: 0.85rem;
+      color: var(--text-primary);
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .nav-search input:focus {
+      background: #FFFFFF;
+      border-color: var(--brand-blue);
+      box-shadow: 0 0 0 3px rgba(18, 86, 168, 0.12);
+    }
+
+    .nav-search-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--brand-blue);
+      pointer-events: none;
+    }
+
+    .nav-circle-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #FFFFFF;
+      border: 1px solid #DDE7F2;
+      color: var(--brand-blue);
+      box-shadow: var(--shadow-xs);
+      transition: all 0.2s ease;
+    }
+
+    .nav-circle-btn:hover {
+      border-color: var(--brand-blue);
+      background: var(--brand-blue-soft);
+      transform: translateY(-1px);
+    }
+
+    .nav-cart-btn {
+      position: relative;
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--navy-deep);
+      color: #FFFFFF;
+      box-shadow: 0 8px 20px rgba(9, 37, 84, 0.24);
+      transition: transform 0.2s var(--ease-spring), background 0.2s ease;
+    }
+
+    .nav-cart-btn:hover {
+      background: var(--brand-blue);
+      transform: scale(1.06);
+    }
+
+    .cart-badge {
+      position: absolute;
+      top: -3px;
+      right: -3px;
+      min-width: 21px;
+      height: 21px;
+      padding: 0 5px;
+      border-radius: 50%;
+      background: var(--brand-green);
+      border: 2px solid #FFFFFF;
+      color: #FFFFFF;
+      font-family: var(--font-heading);
+      font-size: 0.72rem;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.22s var(--ease-spring);
+    }
+
+    .cart-badge.pop {
+      transform: scale(1.35);
+    }
+
+    .mobile-menu-btn {
+      display: none;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-ice);
+      color: var(--navy-deep);
+    }
+
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      top: 96px;
+      left: 16px;
+      right: 16px;
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(18px);
+      border: 1px solid var(--border-subtle);
+      border-radius: 24px;
+      padding: 18px 22px;
+      box-shadow: var(--shadow-lg);
+      z-index: 115;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .mobile-nav.open {
+      display: flex;
+    }
+
+    .mobile-nav a {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 0.98rem;
+      padding: 10px 12px;
+      border-radius: 12px;
+      color: var(--text-primary);
+    }
+
+    .mobile-nav a:hover {
+      background: var(--bg-ice);
+      color: var(--brand-blue);
+    }
+
+    /* ==========================================================================
+       4. HERO SECTION — REFERENCE COMPOSITION (SUNLIT FARM + BRANDED BOTTLE)
+       ========================================================================== */
+    .hero-main {
+      position: relative;
+      z-index: 5;
+      padding: 40px 0 18px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.04fr 0.96fr;
+      align-items: center;
+      gap: 24px;
+      min-height: 470px;
+    }
+
+    .hero-copy {
+      max-width: 560px;
+      padding: 10px 0 24px;
+    }
+
+    .pure-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      border-radius: var(--radius-pill);
+      background: rgba(255, 255, 255, 0.88);
+      border: 1.5px solid #76BD43;
+      color: var(--brand-green-dark);
+      font-family: var(--font-heading);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      margin-bottom: 22px;
+      box-shadow: 0 4px 14px rgba(100, 178, 50, 0.12);
+    }
+
+    .hero-title {
+      font-size: clamp(2.8rem, 5.2vw, 4.45rem);
+      font-weight: 800;
+      line-height: 1.03;
+      letter-spacing: -0.03em;
+      color: var(--navy-deep);
+      margin-bottom: 18px;
+    }
+
+    .hero-title-italic-row {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .hero-title .editorial-italic {
+      font-size: 1.04em;
+      font-weight: 600;
+      color: var(--brand-blue);
+    }
+
+    .green-swoosh {
+      width: clamp(64px, 7vw, 96px);
+      height: auto;
+      display: inline-block;
+      transform: translateY(4px);
+    }
+
+    .hero-sub {
+      font-size: clamp(1rem, 1.35vw, 1.12rem);
+      color: var(--text-secondary);
+      max-width: 440px;
+      line-height: 1.65;
+      margin-bottom: 28px;
+    }
+
+    .hero-sub strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    /* Right Visual Stage: Purely Yours Script + Branded Milk Bottle & Glass Showcase */
+    .hero-stage {
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      min-height: 430px;
+      padding-top: 24px;
+    }
+
+    .purely-yours {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      z-index: 6;
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      color: var(--brand-blue);
+      transform: rotate(-8deg);
+      pointer-events: none;
+    }
+
+    .purely-yours-text {
+      font-family: var(--font-script);
+      font-size: clamp(2.1rem, 3.2vw, 2.85rem);
+      font-weight: 700;
+      line-height: 1;
+      text-shadow: 0 4px 16px rgba(255, 255, 255, 0.9);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .bottle-composition {
+      position: relative;
+      width: min(470px, 100%);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+    }
+
+    /* Realistic Branded Bottle + Splash + Glass SVG Composition */
+    .hero-bottle-svg {
+      width: 100%;
+      height: auto;
+      filter: drop-shadow(0 20px 30px rgba(9, 37, 84, 0.18));
+    }
+
+    /* ==========================================================================
+       5. FLOATING 4-PILLAR TRUST BAR & SCROLL TO EXPLORE
+       ========================================================================== */
+    .trust-bar-wrap {
+      position: relative;
+      z-index: 10;
+      margin-top: -12px;
+    }
+
+    .trust-bar {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(255, 255, 255, 0.98);
+      border-radius: 26px;
+      padding: 20px 28px;
+      box-shadow: 0 18px 44px rgba(9, 37, 84, 0.1);
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+    }
+
+    .trust-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      position: relative;
+    }
+
+    .trust-item:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      right: -9px;
+      top: 18%;
+      bottom: 18%;
+      width: 1px;
+      background: var(--border-subtle);
+    }
+
+    .trust-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .trust-icon.green {
+      background: var(--brand-green-soft);
+      color: var(--brand-green);
+    }
+
+    .trust-icon.blue {
+      background: var(--brand-blue-soft);
+      color: var(--brand-blue);
+    }
+
+    .trust-item strong {
+      display: block;
+      font-family: var(--font-heading);
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      line-height: 1.25;
+    }
+
+    .trust-item span {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    /* Scroll to Explore Divider */
+    .scroll-explore-wrap {
+      position: relative;
+      z-index: 10;
+      margin-top: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+    }
+
+    .scroll-line {
+      width: min(140px, 20vw);
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(18, 86, 168, 0.24), transparent);
+    }
+
+    .scroll-explore-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      font-family: var(--font-heading);
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      transition: color 0.2s ease, transform 0.2s ease;
+    }
+
+    .scroll-explore-link:hover {
+      color: var(--brand-blue);
+      transform: translateY(2px);
+    }
+
+    .scroll-arrow-circle {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      border: 1.5px solid #B5CBE4;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--brand-blue);
+      background: #FFFFFF;
+    }
+
+    /* ==========================================================================
+       6. SECTION BACKGROUNDS & LAYERED MILK-WAVE DIVIDERS
+       ========================================================================== */
+    .section {
+      padding: 64px 0;
+      position: relative;
+    }
+
+    .section-compact {
+      padding: 48px 0;
+    }
+
+    .section-white { background: var(--bg-white); }
+    .section-ice   { background: var(--bg-ice); }
+    .section-milk  { background: var(--bg-milk); }
+
+    .wave-divider {
+      position: relative;
+      width: 100%;
+      line-height: 0;
+      overflow: hidden;
+      margin-top: -1px;
+      margin-bottom: -1px;
+    }
+
+    .wave-divider svg {
+      display: block;
+      width: 100%;
+      height: clamp(44px, 5.5vw, 84px);
+    }
+
+    .wave-from-white { background: var(--bg-white); }
+    .wave-from-ice   { background: var(--bg-ice); }
+    .wave-from-milk  { background: var(--bg-milk); }
+
+    /* ==========================================================================
+       7. EVERYDAY ESSENTIALS — DIRECT 6-CATEGORY QUICK-SHOP
+       ========================================================================== */
+    .section-head {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+      margin-bottom: 28px;
+    }
+
+    .section-head h2 {
+      font-size: clamp(1.75rem, 3vw, 2.4rem);
+      font-weight: 800;
+    }
+
+    .section-head p {
+      color: var(--text-secondary);
+      font-size: 0.96rem;
+      margin-top: 6px;
+    }
+
+    .range-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 14px;
+    }
+
+    .range-chip {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 9px;
+      padding: 20px 12px;
+      border-radius: 22px;
+      background: var(--bg-milk);
+      border: 1.5px solid var(--border-subtle);
+      transition: all 0.22s var(--ease-out);
+    }
+
+    .range-chip:hover {
+      background: #FFFFFF;
+      border-color: var(--brand-blue);
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .range-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 16px;
+      background: #FFFFFF;
+      border: 1px solid var(--border-subtle);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--brand-blue);
+      box-shadow: var(--shadow-xs);
+    }
+
+    .range-chip strong {
+      font-family: var(--font-heading);
+      font-size: 0.96rem;
+      font-weight: 800;
+    }
+
+    .range-chip span {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--brand-green-dark);
+    }
+
+    /* ==========================================================================
+       8. THE KUSHI COLLECTION — 8 BRANDED RETAIL PRODUCT CARDS
+       ========================================================================== */
+    .brand-promise-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding: 13px 20px;
+      border-radius: 16px;
+      background: #FFFFFF;
+      border: 1px solid var(--border-subtle);
+      margin-bottom: 22px;
+      font-family: var(--font-heading);
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+    }
+
+    .promise-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .promise-check {
+      width: 19px;
+      height: 19px;
+      border-radius: 50%;
+      background: var(--brand-green-soft);
+      color: var(--brand-green-dark);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.72rem;
+      font-weight: 800;
+    }
+
+    .catalog-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 28px;
+    }
+
+    .filter-pills {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .filter-pill {
+      height: 40px;
+      padding: 0 18px;
+      border-radius: var(--radius-pill);
+      background: #FFFFFF;
+      border: 1.5px solid var(--border-subtle);
+      font-family: var(--font-heading);
+      font-size: 0.86rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      transition: all 0.2s ease;
+    }
+
+    .filter-pill:hover {
+      border-color: var(--brand-blue);
+      color: var(--brand-blue);
+    }
+
+    .filter-pill.active {
+      background: var(--navy-deep);
+      border-color: var(--navy-deep);
+      color: #FFFFFF;
+      box-shadow: 0 6px 16px rgba(9, 37, 84, 0.22);
+    }
+
+    .search-wrap {
+      position: relative;
+      width: min(310px, 100%);
+    }
+
+    .search-input {
+      width: 100%;
+      height: 42px;
+      padding: 0 38px 0 40px;
+      border-radius: var(--radius-pill);
+      background: #FFFFFF;
+      border: 1.5px solid var(--border-subtle);
+      font-size: 0.88rem;
+      color: var(--text-primary);
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .search-input:focus {
+      border-color: var(--brand-blue);
+      box-shadow: 0 0 0 3px rgba(18, 86, 168, 0.12);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-tertiary);
+      pointer-events: none;
+    }
+
+    .search-clear {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--bg-ice);
+      color: var(--text-secondary);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+    }
+
+    .search-clear.visible {
+      display: inline-flex;
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 22px;
+    }
+
+    .empty-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 48px 24px;
+      background: #FFFFFF;
+      border-radius: var(--radius-lg);
+      border: 1px dashed var(--border-strong);
+    }
+
+    .product-card {
+      background: #FFFFFF;
+      border-radius: 26px;
+      border: 1px solid var(--border-subtle);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow-xs);
+      transition: transform 0.26s var(--ease-out), box-shadow 0.26s var(--ease-out), border-color 0.22s ease;
+    }
+
+    .product-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-md);
+      border-color: rgba(18, 86, 168, 0.28);
+    }
+
+    .product-photo-box {
+      position: relative;
+      aspect-ratio: 4 / 3.1;
+      background: var(--bg-milk);
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .product-photo-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.45s var(--ease-out);
+    }
+
+    .product-card:hover .product-photo-box img {
+      transform: scale(1.06);
+    }
+
+    .product-photo-wave {
+      position: absolute;
+      left: -1px;
+      right: -1px;
+      bottom: -1px;
+      width: calc(100% + 2px);
+      height: 26px;
+      display: block;
+      pointer-events: none;
+    }
+
+    .product-badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 11px;
+      border-radius: var(--radius-pill);
+      font-family: var(--font-heading);
+      font-size: 0.72rem;
+      font-weight: 800;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 4px 12px rgba(9, 37, 84, 0.12);
+    }
+
+    .product-badge.green { background: rgba(236, 247, 228, 0.95); color: var(--brand-green-dark); }
+    .product-badge.blue  { background: rgba(229, 240, 255, 0.95); color: var(--brand-blue); }
+    .product-badge.gold  { background: rgba(254, 248, 223, 0.96); color: #8F6000; }
+
+    .qv-eye-btn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.92);
+      color: var(--brand-blue);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(9, 37, 84, 0.12);
+      transition: all 0.2s ease;
+    }
+
+    .qv-eye-btn:hover {
+      background: var(--brand-blue);
+      color: #FFFFFF;
+      transform: scale(1.08);
+    }
+
+    .kushi-stamp {
+      position: absolute;
+      right: 12px;
+      bottom: 24px;
+      padding: 3px 9px;
+      border-radius: var(--radius-pill);
+      background: rgba(9, 37, 84, 0.8);
+      color: #FFFFFF;
+      font-family: var(--font-heading);
+      font-size: 0.66rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      backdrop-filter: blur(4px);
+    }
+
+    .product-body {
+      padding: 6px 18px 18px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .product-brand-line {
+      font-family: var(--font-heading);
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 0.09em;
+      color: var(--text-tertiary);
+      margin-bottom: 4px;
+    }
+
+    .product-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .product-title {
+      font-size: 1.08rem;
+      font-weight: 800;
+    }
+
+    .purity-pill {
+      padding: 3px 8px;
+      border-radius: var(--radius-pill);
+      background: var(--brand-yellow-soft);
+      color: #8A5C00;
+      font-family: var(--font-heading);
+      font-size: 0.68rem;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .variant-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .variant-pill {
+      padding: 5px 10px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-ice);
+      font-family: var(--font-heading);
+      font-size: 0.74rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      transition: all 0.18s ease;
+    }
+
+    .variant-pill:hover {
+      border-color: var(--brand-blue);
+      color: var(--brand-blue);
+    }
+
+    .variant-pill.active {
+      background: var(--brand-blue);
+      border-color: var(--brand-blue);
+      color: #FFFFFF;
+    }
+
+    .details-link-btn {
+      align-self: flex-start;
+      font-family: var(--font-heading);
+      font-size: 0.77rem;
+      font-weight: 700;
+      color: var(--brand-blue);
+      margin-bottom: 14px;
+    }
+
+    .details-link-btn:hover {
+      text-decoration: underline;
+    }
+
+    .product-footer {
+      margin-top: auto;
+      padding-top: 12px;
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .price-block {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .price-value {
+      font-family: var(--font-heading);
+      font-size: 1.18rem;
+      font-weight: 800;
+      line-height: 1.1;
+    }
+
+    .price-size {
+      font-size: 0.74rem;
+      color: var(--text-tertiary);
+      font-weight: 500;
+    }
+
+    .add-btn {
+      height: 38px;
+      padding: 0 18px;
+      border-radius: var(--radius-pill);
+      background: var(--brand-blue-soft);
+      color: var(--brand-blue);
+      border: 1.5px solid rgba(18, 86, 168, 0.24);
+      font-family: var(--font-heading);
+      font-size: 0.84rem;
+      font-weight: 800;
+      transition: all 0.22s var(--ease-spring);
+    }
+
+    .add-btn:hover {
+      background: var(--brand-blue);
+      color: #FFFFFF;
+      border-color: var(--brand-blue);
+      transform: scale(1.04);
+    }
+
+    .qty-stepper {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      height: 38px;
+      padding: 0 5px;
+      border-radius: var(--radius-pill);
+      background: var(--navy-deep);
+      color: #FFFFFF;
+      box-shadow: 0 6px 16px rgba(9, 37, 84, 0.22);
+    }
+
+    .qty-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.18);
+      color: #FFFFFF;
+      font-size: 1rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .qty-btn:hover {
+      background: rgba(255, 255, 255, 0.32);
+    }
+
+    .qty-count {
+      min-width: 18px;
+      text-align: center;
+      font-family: var(--font-heading);
+      font-size: 0.86rem;
+      font-weight: 800;
+    }
+
+    /* ==========================================================================
+       9. LOCAL STORE & DIRECT CONTACT HUB (CHAPARAM · SRIKAKULAM)
+       ========================================================================== */
+    .store-hub {
+      background: #FFFFFF;
+      border: 1.5px solid var(--border-subtle);
+      border-radius: 28px;
+      padding: 36px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .store-hub-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+      padding-bottom: 26px;
+      margin-bottom: 26px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .store-hub-heading h2 {
+      font-size: clamp(1.65rem, 2.6vw, 2.2rem);
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .store-hub-heading p {
+      color: var(--text-secondary);
+      font-size: 0.96rem;
+      max-width: 520px;
+    }
+
+    .store-quick-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .store-info-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .store-info-tile {
+      padding: 20px;
+      border-radius: 20px;
+      background: var(--bg-milk);
+      border: 1px solid var(--border-warm);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .store-tile-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .store-tile-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--brand-blue-soft);
+      color: var(--brand-blue);
+      flex-shrink: 0;
+    }
+
+    .store-info-tile:nth-child(2) .store-tile-icon {
+      background: var(--brand-green-soft);
+      color: var(--brand-green-dark);
+    }
+
+    .store-info-tile:nth-child(3) .store-tile-icon {
+      background: var(--brand-yellow-soft);
+      color: #9A6700;
+    }
+
+    .store-tile-label {
+      font-family: var(--font-heading);
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-tertiary);
+    }
+
+    .store-tile-value {
+      font-family: var(--font-heading);
+      font-size: 0.98rem;
+      font-weight: 700;
+      line-height: 1.45;
+    }
+
+    .store-tile-meta {
+      font-size: 0.84rem;
+      color: var(--text-secondary);
+      line-height: 1.45;
+    }
+
+    .store-tile-link {
+      margin-top: auto;
+      padding-top: 4px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-family: var(--font-heading);
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: var(--brand-blue);
+    }
+
+    .store-tile-link:hover {
+      text-decoration: underline;
+    }
+
+    .store-hub-footer {
+      margin-top: 24px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+      font-size: 0.86rem;
+      color: var(--text-secondary);
+    }
+
+    .story-text-btn {
+      font-family: var(--font-heading);
+      font-size: 0.86rem;
+      font-weight: 700;
+      color: var(--brand-blue);
+    }
+
+    .story-text-btn:hover {
+      text-decoration: underline;
+    }
+
+    /* ==========================================================================
+       10. CONTACT & PINCODE HELP BAND + DEEP NAVY FOOTER
+       ========================================================================== */
+    .contact-band {
+      background: linear-gradient(145deg, #104E9B 0%, var(--navy-deep) 100%);
+      color: #FFFFFF;
+      border-radius: 34px;
+      padding: 50px 46px;
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 38px;
+      align-items: center;
+      box-shadow: 0 22px 48px rgba(9, 37, 84, 0.22);
+    }
+
+    .contact-band .eyebrow { color: var(--brand-yellow); }
+    .contact-band h2 { color: #FFFFFF; font-size: clamp(1.85rem, 3vw, 2.45rem); margin-bottom: 12px; }
+    .contact-band p { color: rgba(255, 255, 255, 0.86); font-size: 1rem; margin-bottom: 24px; }
+
+    .contact-direct-btns {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .btn-call-light {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      height: 50px;
+      padding: 0 22px;
+      border-radius: var(--radius-pill);
+      background: rgba(255, 255, 255, 0.14);
+      border: 1.5px solid rgba(255, 255, 255, 0.34);
+      color: #FFFFFF;
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 0.94rem;
+      transition: all 0.2s ease;
+    }
+
+    .btn-call-light:hover {
+      background: #FFFFFF;
+      color: var(--navy-deep);
+    }
+
+    .pincode-box {
+      background: rgba(255, 255, 255, 0.97);
+      color: var(--text-primary);
+      border-radius: var(--radius-lg);
+      padding: 26px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .pincode-box h3 { font-size: 1.12rem; margin-bottom: 6px; }
+    .pincode-box > p { color: var(--text-secondary); font-size: 0.86rem; margin-bottom: 16px; }
+
+    .pincode-form { display: flex; gap: 8px; }
+
+    .pincode-input {
+      flex: 1;
+      height: 46px;
+      padding: 0 16px;
+      border-radius: var(--radius-pill);
+      border: 1.5px solid var(--border-strong);
+      font-size: 0.92rem;
+      outline: none;
+    }
+
+    .pincode-input:focus { border-color: var(--brand-blue); }
+
+    .pincode-submit {
+      height: 46px;
+      padding: 0 20px;
+      border-radius: var(--radius-pill);
+      background: var(--navy-deep);
+      color: #FFFFFF;
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 0.88rem;
+      flex-shrink: 0;
+    }
+
+    .pincode-submit:hover { background: var(--brand-blue); }
+
+    .pincode-result {
+      margin-top: 14px;
+      padding: 12px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      line-height: 1.5;
+      display: none;
+    }
+
+    .pincode-result.success {
+      display: block;
+      background: var(--brand-green-soft);
+      color: var(--brand-green-dark);
+      border: 1px solid rgba(100, 178, 50, 0.28);
+    }
+
+    .pincode-result.info {
+      display: block;
+      background: var(--brand-blue-soft);
+      color: var(--brand-blue);
+      border: 1px solid rgba(18, 86, 168, 0.2);
+    }
+
+    .footer {
+      background: var(--navy-deep);
+      color: rgba(255, 255, 255, 0.86);
+      padding: 44px 0 34px;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.35fr 0.9fr 1.15fr 1fr;
+      gap: 36px;
+      margin-bottom: 42px;
+    }
+
+    .footer-tagline {
+      margin-top: 14px;
+      font-size: 0.94rem;
+      color: rgba(235, 244, 252, 0.8);
+      max-width: 280px;
+      line-height: 1.65;
+    }
+
+    .footer-col h4 {
+      font-size: 0.92rem;
+      font-weight: 800;
+      margin-bottom: 14px;
+      color: #FFFFFF;
+    }
+
+    .footer-col ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .footer-col a, .footer-col button, .footer-col li {
+      font-size: 0.89rem;
+      color: rgba(235, 244, 252, 0.78);
+      text-align: left;
+      transition: color 0.18s ease;
+    }
+
+    .footer-col a:hover, .footer-col button:hover { color: var(--brand-yellow); }
+
+    .footer-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 14px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255, 255, 255, 0.14);
+      font-size: 0.82rem;
+      color: rgba(235, 244, 252, 0.65);
+    }
+
+    .footer-bottom button {
+      font-size: 0.82rem;
+      color: rgba(235, 244, 252, 0.82);
+      text-decoration: underline;
+    }
+
+    /* ==========================================================================
+       11. MODALS, SLIDE-OVER GUEST CART, FLOATING PILL & TOASTS
+       ========================================================================== */
+    .overlay-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(9, 37, 84, 0.48);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      z-index: 200;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+
+    .overlay-backdrop.open { opacity: 1; pointer-events: auto; }
+
+    .modal-dialog {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -46%) scale(0.96);
+      width: min(760px, calc(100vw - 32px));
+      max-height: calc(100vh - 40px);
+      overflow-y: auto;
+      background: #FFFFFF;
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-lg);
+      z-index: 210;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.26s var(--ease-out);
+    }
+
+    .modal-dialog.compact { width: min(500px, calc(100vw - 32px)); padding: 32px; }
+    .modal-dialog.open { opacity: 1; pointer-events: auto; transform: translate(-50%, -50%) scale(1); }
+
+    .modal-close-btn {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.94);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-primary);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      z-index: 5;
+    }
+
+    .modal-close-btn:hover { background: var(--navy-deep); color: #FFFFFF; }
+
+    .qv-grid { display: grid; grid-template-columns: 0.92fr 1.08fr; }
+    .qv-photo { min-height: 340px; background: var(--bg-milk); position: relative; overflow: hidden; }
+    .qv-photo img { width: 100%; height: 100%; object-fit: cover; }
+    .qv-header-wave { position: absolute; left: -1px; right: -1px; bottom: -1px; width: calc(100% + 2px); height: 30px; display: block; pointer-events: none; }
+    .qv-content { padding: 30px; display: flex; flex-direction: column; gap: 14px; }
+    .qv-pills { display: flex; flex-wrap: wrap; gap: 7px; }
+    .qv-pill { padding: 5px 11px; border-radius: var(--radius-pill); background: var(--brand-green-soft); color: var(--brand-green-dark); font-family: var(--font-heading); font-size: 0.74rem; font-weight: 700; }
+    .qv-pill.blue { background: var(--brand-blue-soft); color: var(--brand-blue); }
+    .qv-tip-box { padding: 12px 14px; border-radius: var(--radius-sm); background: var(--bg-milk); border: 1px solid var(--border-warm); font-size: 0.85rem; color: var(--text-secondary); }
+    .qv-tip-box strong { display: block; color: var(--text-primary); font-family: var(--font-heading); font-size: 0.8rem; margin-bottom: 3px; }
+
+    .cart-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      height: 100vh;
+      width: min(440px, 100vw);
+      background: #FFFFFF;
+      z-index: 220;
+      display: flex;
+      flex-direction: column;
+      box-shadow: -16px 0 46px rgba(9, 37, 84, 0.18);
+      transform: translateX(100%);
+      transition: transform 0.3s var(--ease-out);
+    }
+
+    .cart-drawer.open { transform: translateX(0); }
+    .drawer-header { padding: 18px 22px; border-bottom: 1px solid var(--border-subtle); display: flex; align-items: center; justify-content: space-between; }
+    .drawer-header h3 { font-size: 1.14rem; display: flex; align-items: center; gap: 8px; }
+    .drawer-badge-inline { min-width: 24px; height: 24px; padding: 0 7px; border-radius: 999px; background: var(--brand-green); color: #FFFFFF; font-size: 0.76rem; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; }
+
+    .delivery-progress { padding: 12px 22px; background: var(--bg-ice); border-bottom: 1px solid var(--border-subtle); }
+    .delivery-progress-text { font-family: var(--font-heading); font-size: 0.8rem; font-weight: 700; color: var(--brand-blue); margin-bottom: 7px; display: flex; align-items: center; justify-content: space-between; }
+    .delivery-progress-text.unlocked { color: var(--brand-green-dark); }
+    .delivery-bar-track { width: 100%; height: 7px; border-radius: var(--radius-pill); background: rgba(18, 86, 168, 0.14); overflow: hidden; }
+    .delivery-bar-fill { height: 100%; width: 0%; border-radius: var(--radius-pill); background: linear-gradient(90deg, var(--brand-blue) 0%, var(--brand-green) 100%); transition: width 0.35s var(--ease-out); }
+
+    .drawer-items { flex: 1; overflow-y: auto; padding: 16px 22px; display: flex; flex-direction: column; gap: 12px; }
+    .cart-empty { margin: auto; text-align: center; padding: 28px 16px; color: var(--text-secondary); }
+    .cart-empty strong { display: block; font-family: var(--font-heading); color: var(--text-primary); font-size: 1.04rem; margin: 10px 0 6px; }
+    .cart-item { display: flex; align-items: center; gap: 12px; padding: 11px; border-radius: var(--radius-md); border: 1px solid var(--border-subtle); background: #FFFFFF; }
+    .cart-item-img { width: 58px; height: 58px; border-radius: 12px; object-fit: cover; flex-shrink: 0; background: var(--bg-milk); }
+    .cart-item-info { flex: 1; min-width: 0; }
+    .cart-item-info strong { display: block; font-family: var(--font-heading); font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .cart-item-info span { display: block; font-size: 0.78rem; color: var(--text-secondary); }
+    .cart-item-price { font-family: var(--font-heading); font-size: 0.9rem; font-weight: 800; color: var(--brand-blue); margin-top: 2px; }
+
+    .drawer-footer { padding: 18px 22px 22px; border-top: 1px solid var(--border-subtle); background: var(--bg-milk); }
+    .guest-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+    .guest-input { height: 40px; padding: 0 12px; border-radius: 10px; border: 1.5px solid var(--border-strong); background: #FFFFFF; font-size: 0.84rem; outline: none; }
+    .guest-input:focus { border-color: var(--brand-blue); }
+    .summary-row { display: flex; justify-content: space-between; font-size: 0.92rem; color: var(--text-secondary); margin-bottom: 6px; }
+    .summary-row.total { font-family: var(--font-heading); font-size: 1.15rem; font-weight: 800; color: var(--text-primary); padding-top: 8px; margin: 8px 0 14px; border-top: 1px solid var(--border-warm); }
+    .wa-confirm-btn { width: 100%; height: 50px; border-radius: var(--radius-pill); background: var(--brand-green); color: #FFFFFF; font-family: var(--font-heading); font-weight: 700; font-size: 0.94rem; display: inline-flex; align-items: center; justify-content: center; gap: 9px; box-shadow: 0 8px 20px rgba(100, 178, 50, 0.25); transition: all 0.2s ease; }
+    .wa-confirm-btn:hover:not(:disabled) { background: var(--brand-green-dark); transform: translateY(-1px); }
+    .wa-confirm-btn:disabled { background: #CBD5E1; color: #64748B; box-shadow: none; cursor: not-allowed; }
+
+    .floating-basket {
+      position: fixed;
+      bottom: 22px;
+      right: 24px;
+      transform: translateY(120px);
+      z-index: 150;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 10px 12px 10px 20px;
+      border-radius: var(--radius-pill);
+      background: var(--navy-deep);
+      color: #FFFFFF;
+      box-shadow: 0 16px 36px rgba(9, 37, 84, 0.34);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.28s var(--ease-out);
+    }
+
+    .floating-basket.visible { transform: translateY(0); opacity: 1; pointer-events: auto; }
+    .floating-basket-btn { padding: 8px 16px; border-radius: var(--radius-pill); background: var(--brand-green); color: #FFFFFF; font-family: var(--font-heading); font-size: 0.84rem; font-weight: 700; }
+
+    .toast-stack { position: fixed; top: 96px; right: 24px; z-index: 260; display: flex; flex-direction: column; gap: 8px; pointer-events: none; }
+    .toast { display: flex; align-items: center; gap: 9px; padding: 11px 16px; border-radius: var(--radius-md); background: var(--navy-deep); color: #FFFFFF; font-family: var(--font-heading); font-size: 0.85rem; font-weight: 600; box-shadow: var(--shadow-md); animation: toastIn 0.26s var(--ease-out); }
+    .toast-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--brand-yellow); }
+
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateY(-8px) scale(0.96); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .form-field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+    .form-field label { font-family: var(--font-heading); font-size: 0.82rem; font-weight: 700; }
+    .form-field input { height: 44px; padding: 0 14px; border-radius: 10px; border: 1.5px solid var(--border-strong); font-size: 0.9rem; }
+    .cookie-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border-subtle); gap: 12px; }
+
+    /* ==========================================================================
+       12. RESPONSIVE BREAKPOINTS
+       ========================================================================== */
+    @media (max-width: 1160px) {
+      .products-grid { grid-template-columns: repeat(2, 1fr); }
+      .range-grid { grid-template-columns: repeat(3, 1fr); }
+      .nav-search { width: 170px; }
+      .trust-bar { grid-template-columns: repeat(2, 1fr); }
+      .trust-item::after { display: none; }
+    }
+
+    @media (max-width: 960px) {
+      .hero-grid,
+      .store-info-grid,
+      .contact-band,
+      .qv-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-pasture-bg img {
+        width: 100%;
+        opacity: 0.35;
+      }
+
+      .hero-pasture-overlay {
+        background: linear-gradient(180deg, rgba(251, 253, 249, 0.86) 0%, rgba(238, 246, 253, 0.72) 55%, #FFFFFF 100%);
+      }
+
+      .hero-copy {
+        max-width: 100%;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .hero-actions { justify-content: center; }
+      .hero-stage { min-height: 320px; padding-top: 8px; }
+      .purely-yours { right: 8%; top: 0; }
+
+      .nav-links,
+      .nav-search { display: none; }
+      .mobile-menu-btn { display: inline-flex; }
+
+      .footer-grid { grid-template-columns: repeat(2, 1fr); }
+      .contact-band { padding: 36px 26px; }
+    }
+
+    @media (max-width: 600px) {
+      .container, .top-bar-wrap, .navbar-wrap { padding-left: 14px; padding-right: 14px; }
+      .top-bar-pill { padding: 8px 16px; font-size: 0.74rem; justify-content: center; text-align: center; }
+      .top-bar-link { display: none; }
+      .navbar-pill { height: 62px; padding: 0 10px 0 16px; }
+      .trust-bar { grid-template-columns: 1fr; padding: 18px; }
+      .products-grid, .footer-grid, .guest-inputs { grid-template-columns: 1fr; }
+      .range-grid { grid-template-columns: repeat(2, 1fr); }
+      .store-hub { padding: 22px; }
+      .floating-basket { left: 14px; right: 14px; justify-content: space-between; }
+      .leaf-decor { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <!-- ========================================================================
+       1. SUNLIT HERO CANVAS (TOP BAR + FLOATING GLASS NAVBAR + HERO + TRUST BAR)
+       ======================================================================== -->
+  <div class="hero-canvas" id="home">
+    <!-- Sunlit Pasture Background Image (Right Side) + Seamless Cream-to-Sky Blend -->
+    <div class="hero-pasture-bg" aria-hidden="true">
+      <img
+        src="https://images.unsplash.com/photo-1500595046743-cd271d694d30?auto=format&fit=crop&w=1800&q=85"
+        alt=""
+        onerror="this.style.display='none';"
+      />
+      <div class="hero-pasture-overlay"></div>
+    </div>
+
+    <!-- Decorative Organic Green Leaves on Left Edge -->
+    <svg class="leaf-decor leaf-top-left" viewBox="0 0 90 90" fill="none" aria-hidden="true">
+      <path d="M12 68C20 44 42 26 76 18C68 48 48 66 12 68Z" fill="#A6D46C" opacity="0.65"/>
+      <path d="M16 64C34 48 52 34 72 22" stroke="#64B232" stroke-width="1.8" stroke-linecap="round"/>
+      <path d="M6 48C14 34 26 24 44 20C38 36 26 46 6 48Z" fill="#8CC648" opacity="0.55"/>
+    </svg>
+
+    <svg class="leaf-decor leaf-bottom-left" viewBox="0 0 96 96" fill="none" aria-hidden="true">
+      <path d="M8 22C34 24 58 40 78 72C46 68 24 52 8 22Z" fill="#77BE3F" opacity="0.72"/>
+      <path d="M12 26C32 40 50 54 74 68" stroke="#4D9122" stroke-width="1.8" stroke-linecap="round"/>
+    </svg>
+
+    <!-- Floating Dark-Navy Announcement Pill Bar -->
+    <div class="top-bar-wrap">
+      <div class="top-bar-pill">
+        <div class="top-bar-left">
+          <span class="top-bar-truck" aria-hidden="true">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="1" y="3" width="15" height="13"></rect>
+              <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+              <circle cx="5.5" cy="18.5" r="2.5"></circle>
+              <circle cx="18.5" cy="18.5" r="2.5"></circle>
+            </svg>
+          </span>
+          <span>Free home delivery on orders above ₹199 • Freshness guaranteed! · Chaparam, Srikakulam (06:30 AM–10:00 PM)</span>
+        </div>
+        <a href="#contact" class="top-bar-link">
+          Check Delivery Area →
+        </a>
+      </div>
+    </div>
+
+    <!-- Floating Glassmorphic Pill Navbar -->
+    <div class="navbar-wrap" id="navbarWrap">
+      <header class="navbar-pill">
+        <!-- Brand Logo -->
+        <a href="#home" class="brand-logo" aria-label="Kushi Dairy Home">
+          <svg width="148" height="40" viewBox="0 0 185 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M23 3C23 3 38 18.5 38 28.5C38 36.8 31.3 43.5 23 43.5C14.7 43.5 8 36.8 8 28.5C8 18.5 23 3 23 3Z" fill="#E5F2FF" stroke="#1256A8" stroke-width="2.4" stroke-linejoin="round"/>
+            <circle cx="28" cy="19.5" r="3.3" fill="#F7D138"/>
+            <path d="M11 31.5C14.8 28.5 20.2 28.5 24 31C27.8 33.4 31.8 32.5 35 30C34 36.8 29 41 23 41C17.2 41 12.2 37.2 11 31.5Z" fill="#64B232"/>
+            <text x="48" y="29" fill="#0D458A" font-family="'Plus Jakarta Sans', sans-serif" font-weight="800" font-size="24.5" letter-spacing="-0.03em">Kushi</text>
+            <text x="49" y="42" fill="#1256A8" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="10.2" letter-spacing="0.24em">DAIRY</text>
+            <path d="M117 10C117 6 121 3 125.5 3.4C125.2 7.8 121.8 11.2 117 10Z" fill="#64B232"/>
+          </svg>
+        </a>
+
+        <!-- Center Navigation Links -->
+        <nav aria-label="Main Navigation">
+          <ul class="nav-links">
+            <li>
+              <a href="#home" class="nav-link active">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                  <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
+                Home
+              </a>
+            </li>
+            <li>
+              <a href="#products" class="nav-link">
+                Our Products
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </a>
+            </li>
+            <li><a href="#essentials" class="nav-link">Goodness</a></li>
+            <li><a href="#about" class="nav-link">About Us</a></li>
+            <li><a href="#contact" class="nav-link">Contact</a></li>
+          </ul>
+        </nav>
+
+        <!-- Right: Pill Search + WhatsApp/Account Circle + Navy Cart Button -->
+        <div class="nav-right">
+          <div class="nav-search">
+            <svg class="nav-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="search" id="navSearchInput" placeholder="Search for products..." aria-label="Search for products" />
+          </div>
+
+          <a href="https://wa.me/918464952708?text=Hello%20Kushi%20Dairy!%20I%20would%20like%20to%20enquire%20about%20your%20products." target="_blank" rel="noopener noreferrer" class="nav-circle-btn" aria-label="Chat on WhatsApp" title="Chat on WhatsApp">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+            </svg>
+          </a>
+
+          <button class="nav-cart-btn" id="openCartBtn" aria-label="Open your cart">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="9" cy="21" r="1"></circle>
+              <circle cx="20" cy="21" r="1"></circle>
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+            </svg>
+            <span class="cart-badge" id="navCartCount">0</span>
+          </button>
+
+          <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open menu" aria-expanded="false">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="3" y1="7" x2="21" y2="7"></line>
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="17" x2="21" y2="17"></line>
+            </svg>
+          </button>
+        </div>
+      </header>
+    </div>
+
+    <!-- Mobile Navigation Drawer -->
+    <div class="mobile-nav" id="mobileNav">
+      <a href="#home">Home</a>
+      <a href="#products">Our Products</a>
+      <a href="#essentials">Goodness</a>
+      <a href="#about">About Us &amp; Store Hours</a>
+      <a href="#contact">Contact &amp; Delivery Area</a>
+    </div>
+
+    <!-- Main Hero Grid -->
+    <section class="hero-main">
+      <div class="container">
+        <div class="hero-grid">
+          <!-- Left Column: Badge, Typography, Subtext & Dual CTAs -->
+          <div class="hero-copy">
+            <div class="pure-pill">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#64B232" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"></path>
+                <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"></path>
+              </svg>
+              <span>Pure &nbsp;•&nbsp; Fresh &nbsp;•&nbsp; Healthy</span>
+            </div>
+
+            <h1 class="hero-title">
+              Simple Goodness.<br />
+              <span class="hero-title-italic-row">
+                <span class="editorial-italic">Every Day.</span>
+                <!-- Organic Green Swoosh Accent -->
+                <svg class="green-swoosh" viewBox="0 0 110 28" fill="none" aria-hidden="true">
+                  <path d="M4 24C28 8 68 2 106 9C72 10 38 14 4 24Z" fill="#64B232"/>
+                </svg>
+              </span>
+            </h1>
+
+            <p class="hero-sub">
+              From our <strong>Chaparam</strong> farm to your family’s table, discover the pure taste of Kushi Dairy—fresh milk, curd, ghee, paneer, honey &amp; everyday essentials.
+            </p>
+
+            <div class="hero-actions">
+              <a href="#products" class="btn-primary">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="9" cy="21" r="1"></circle>
+                  <circle cx="20" cy="21" r="1"></circle>
+                  <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                </svg>
+                Browse Our Products →
+              </a>
+              <button class="btn-outline" id="heroStoryBtn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1256A8" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polygon points="10 8 16 12 10 16 10 8" fill="#1256A8"></polygon>
+                </svg>
+                Our Story
+              </button>
+            </div>
+          </div>
+
+          <!-- Right Column: Purely Yours Script + Kushi Dairy Milk Bottle, Splash & Glass -->
+          <div class="hero-stage">
+            <!-- Floating Handwritten "Purely Yours ♡" Script -->
+            <div class="purely-yours" aria-hidden="true">
+              <div class="purely-yours-text">
+                <span>Purely Yours</span>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                </svg>
+              </div>
+              <svg width="110" height="14" viewBox="0 0 110 14" fill="none">
+                <path d="M4 11C34 4 74 3 106 8" stroke="#1256A8" stroke-width="2.2" stroke-linecap="round"/>
+              </svg>
+            </div>
+
+            <!-- Custom High-Detail Kushi Branded Glass Milk Bottle, Splash, Wooden Board & Daisies -->
+            <div class="bottle-composition">
+              <svg class="hero-bottle-svg" viewBox="0 0 520 430" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Kushi Dairy glass milk bottle with fresh milk splash and glass of milk on a wooden board">
+                <defs>
+                  <linearGradient id="milkGrad" x1="200" y1="115" x2="310" y2="355" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stop-color="#FFFFFF"/>
+                    <stop offset="55%" stop-color="#F7F5EE"/>
+                    <stop offset="100%" stop-color="#ECE7DA"/>
+                  </linearGradient>
+                  <linearGradient id="glassShine" x1="205" y1="80" x2="245" y2="350" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.85"/>
+                    <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0.08"/>
+                  </linearGradient>
+                  <linearGradient id="capGrad" x1="218" y1="42" x2="292" y2="66" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stop-color="#2575D6"/>
+                    <stop offset="50%" stop-color="#1256A8"/>
+                    <stop offset="100%" stop-color="#09346B"/>
+                  </linearGradient>
+                  <linearGradient id="woodGrad" x1="90" y1="350" x2="465" y2="395" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stop-color="#C98E55"/>
+                    <stop offset="50%" stop-color="#9E6231"/>
+                    <stop offset="100%" stop-color="#76451E"/>
+                  </linearGradient>
+                  <linearGradient id="splashGrad" x1="78" y1="130" x2="225" y2="310" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stop-color="#FFFFFF"/>
+                    <stop offset="100%" stop-color="#EBF2F9"/>
+                  </linearGradient>
+                </defs>
+
+                <!-- Dynamic Milk Splash behind left side of bottle -->
+                <path d="M210 184C185 150 132 132 110 154C90 174 114 212 94 238C74 264 60 240 68 214C50 236 62 288 102 310C140 330 186 334 218 326V184H210Z" fill="url(#splashGrad)"/>
+                <circle cx="116" cy="126" r="7" fill="#FFFFFF"/>
+                <circle cx="84" cy="166" r="5" fill="#FFFFFF"/>
+                <circle cx="62" cy="196" r="4" fill="#FFFFFF"/>
+                <circle cx="144" cy="112" r="4.5" fill="#FFFFFF"/>
+
+                <!-- Rustic Wooden Serving Board -->
+                <ellipse cx="278" cy="378" rx="198" ry="28" fill="#092554" fill-opacity="0.16"/>
+                <path d="M96 356C96 346 112 340 134 340H428C450 340 464 346 464 356V368C464 380 448 388 424 388H136C112 388 96 380 96 368V356Z" fill="url(#woodGrad)"/>
+                <path d="M104 353C104 346 118 342 138 342H422C442 342 456 346 456 353C456 360 442 365 422 365H138C118 365 104 360 104 353Z" fill="#D59E66" fill-opacity="0.45"/>
+
+                <!-- Soft Shadow under Bottle & Glass -->
+                <ellipse cx="255" cy="356" rx="68" ry="12" fill="#4A270E" fill-opacity="0.28"/>
+                <ellipse cx="384" cy="356" rx="46" ry="10" fill="#4A270E" fill-opacity="0.26"/>
+
+                <!-- Kushi Dairy Glass Milk Bottle -->
+                <!-- Bottle Neck & Body Outer Glass -->
+                <path d="M225 66H285V98C285 118 318 142 318 184V336C318 352 304 360 286 360H224C206 360 192 352 192 336V184C192 142 225 118 225 98V66Z" fill="url(#milkGrad)" stroke="#D9E4F0" stroke-width="2.5"/>
+                <!-- Milk Fill Top Meniscus -->
+                <ellipse cx="255" cy="108" rx="31" ry="6" fill="#FFFFFF"/>
+                <!-- Subtle Blue Cap -->
+                <rect x="218" y="42" width="74" height="26" rx="8" fill="url(#capGrad)"/>
+                <rect x="224" y="47" width="62" height="5" rx="2.5" fill="#FFFFFF" fill-opacity="0.28"/>
+                <!-- Left Glossy Glass Highlight -->
+                <path d="M206 184C206 154 226 130 232 108H244C238 130 220 154 220 184V334C220 342 224 346 228 348H214C208 346 206 341 206 334V184Z" fill="url(#glassShine)"/>
+                <!-- Right Subtle Rim Reflection -->
+                <path d="M304 186V334" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-opacity="0.65"/>
+
+                <!-- Printed Kushi DAIRY Logo on Bottle -->
+                <g transform="translate(216, 198)">
+                  <!-- Droplet -->
+                  <path d="M39 0C39 0 54 15.5 54 25.5C54 33.8 47.3 40.5 39 40.5C30.7 40.5 24 33.8 24 25.5C24 15.5 39 0 39 0Z" fill="#DDF0FF" stroke="#1256A8" stroke-width="2.2" stroke-linejoin="round"/>
+                  <circle cx="44" cy="16" r="3.2" fill="#F7D138"/>
+                  <path d="M27 28.5C31 25.5 36.2 25.5 40 28C43.5 30.2 47.6 29.4 51 27C50 33.6 45 38 39 38C33.2 38 28.2 34.2 27 28.5Z" fill="#64B232"/>
+                  <!-- Wordmark -->
+                  <text x="39" y="65" text-anchor="middle" fill="#0D458A" font-family="'Plus Jakarta Sans', sans-serif" font-weight="800" font-size="25" letter-spacing="-0.03em">Kushi</text>
+                  <text x="39" y="79" text-anchor="middle" fill="#1256A8" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="10.5" letter-spacing="0.24em">DAIRY</text>
+                  <path d="M68 44C68 40 72 37 76.5 37.5C76 41.8 72.8 45 68 44Z" fill="#64B232"/>
+                </g>
+
+                <!-- Glass of Fresh Milk on Right -->
+                <path d="M340 198H428L418 346C417 355 410 360 400 360H368C358 360 351 355 350 346L340 198Z" fill="#FFFFFF" fill-opacity="0.45" stroke="#DDE8F4" stroke-width="2.2"/>
+                <path d="M344 218H424L416 342C415 350 409 354 400 354H368C359 354 353 350 352 342L344 218Z" fill="url(#milkGrad)"/>
+                <ellipse cx="384" cy="218" rx="40" ry="6.5" fill="#FFFFFF"/>
+                <ellipse cx="384" cy="198" rx="44" ry="7" fill="#FFFFFF" fill-opacity="0.35" stroke="#FFFFFF" stroke-width="1.5"/>
+                <path d="M352 214L359 342" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" stroke-opacity="0.7"/>
+
+                <!-- Small Fresh White Daisies on Wooden Board -->
+                <g transform="translate(152, 326)">
+                  <circle cx="0" cy="-7" r="4.5" fill="#FFFFFF"/>
+                  <circle cx="6.5" cy="-2" r="4.5" fill="#FFFFFF"/>
+                  <circle cx="4" cy="5.5" r="4.5" fill="#FFFFFF"/>
+                  <circle cx="-4" cy="5.5" r="4.5" fill="#FFFFFF"/>
+                  <circle cx="-6.5" cy="-2" r="4.5" fill="#FFFFFF"/>
+                  <circle cx="0" cy="0" r="3.6" fill="#F7C927"/>
+                </g>
+                <g transform="translate(174, 336) scale(0.82)">
+                  <circle cx="0" cy="-7" r="4.5" fill="#FFFFFF"/>
+                  <circle cx="6.5" cy="-2" r="4.5" fill="#FFFFFF"/>
+                  <circle cx="4" cy="5.5" r="4.5" fill="#FFFFFF"/>
+                  <circle cx="-4" cy="5.5" r="4.5" fill="#FFFFFF"/>
+                  <circle cx="-6.5" cy="-2" r="4.5" fill="#FFFFFF"/>
+                  <circle cx="0" cy="0" r="3.6" fill="#F7C927"/>
+                </g>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Floating White 4-Pillar Trust Bar (Matching Reference Bottom Card) -->
+        <div class="trust-bar-wrap">
+          <div class="trust-bar">
+            <div class="trust-item">
+              <span class="trust-icon green">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"></path>
+                  <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"></path>
+                </svg>
+              </span>
+              <div>
+                <strong>100% Pure</strong>
+                <span>No additives</span>
+              </div>
+            </div>
+
+            <div class="trust-item">
+              <span class="trust-icon blue">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                  <polyline points="9 12 11 14 15 10"></polyline>
+                </svg>
+              </span>
+              <div>
+                <strong>Hygienic &amp; Safe</strong>
+                <span>Trusted quality</span>
+              </div>
+            </div>
+
+            <div class="trust-item">
+              <span class="trust-icon blue">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="1" y="3" width="15" height="13"></rect>
+                  <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                  <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                  <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                </svg>
+              </span>
+              <div>
+                <strong>On-Time Delivery</strong>
+                <span>Fresh at your doorstep</span>
+              </div>
+            </div>
+
+            <div class="trust-item">
+              <span class="trust-icon green">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 10l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                  <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
+              </span>
+              <div>
+                <strong>Supporting Local Farmers</strong>
+                <span>Chaparam, Srikakulam</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Scroll to Explore Cue -->
+        <div class="scroll-explore-wrap">
+          <span class="scroll-line" aria-hidden="true"></span>
+          <a href="#essentials" class="scroll-explore-link">
+            <span>Scroll to explore</span>
+            <span class="scroll-arrow-circle" aria-hidden="true">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <polyline points="19 12 12 19 5 12"></polyline>
+              </svg>
+            </span>
+          </a>
+          <span class="scroll-line" aria-hidden="true"></span>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <main>
+    <!-- ======================================================================
+         2. EVERYDAY ESSENTIALS — DIRECT 6-CATEGORY QUICK-SHOP
+         ====================================================================== -->
+    <section class="section section-white section-compact" id="essentials">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">01 / EVERYDAY GOODNESS</span>
+            <h2>Shop by Daily Range</h2>
+            <p>Six trusted kitchen essentials, available fresh every day from Chaparam.</p>
+          </div>
+          <a href="#products" class="btn-outline" style="height: 42px; padding: 0 20px; font-size: 0.86rem;">Explore All 8 Products →</a>
+        </div>
+
+        <div class="range-grid">
+          <button class="range-chip" data-range="Milk">
+            <span class="range-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M8 2h8"></path>
+                <path d="M9 2v2.789a4 4 0 0 1-.672 2.219l-.656.984A4 4 0 0 0 7 10.212V20a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-9.789a4 4 0 0 0-.672-2.219l-.656-.984A4 4 0 0 1 15 4.788V2"></path>
+              </svg>
+            </span>
+            <strong>Cow’s Milk</strong>
+            <span>From ₹12</span>
+          </button>
+
+          <button class="range-chip" data-range="Curd">
+            <span class="range-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 11h16a1 1 0 0 1 1 1v.5c0 4.5-3.5 8.5-9 8.5s-9-4-9-8.5V12a1 1 0 0 1 1-1z"></path>
+                <path d="M7 11c0-2 2.2-3 5-3s5 1 5 3"></path>
+              </svg>
+            </span>
+            <strong>Fresh Curd</strong>
+            <span>From ₹25</span>
+          </button>
+
+          <button class="range-chip" data-range="Ghee">
+            <span class="range-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6 7h12v11a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V7z"></path>
+                <path d="M8 7V4h8v3"></path>
+              </svg>
+            </span>
+            <strong>Desi Ghee</strong>
+            <span>From ₹160</span>
+          </button>
+
+          <button class="range-chip" data-range="Paneer">
+            <span class="range-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="4" y="4" width="7" height="7" rx="1.5"></rect>
+                <rect x="13" y="4" width="7" height="7" rx="1.5"></rect>
+                <rect x="4" y="13" width="7" height="7" rx="1.5"></rect>
+                <rect x="13" y="13" width="7" height="7" rx="1.5"></rect>
+              </svg>
+            </span>
+            <strong>Paneer</strong>
+            <span>From ₹55</span>
+          </button>
+
+          <button class="range-chip" data-range="Honey">
+            <span class="range-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path>
+              </svg>
+            </span>
+            <strong>Pure Honey</strong>
+            <span>From ₹70</span>
+          </button>
+
+          <button class="range-chip" data-range="Mushroom">
+            <span class="range-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 3C7 3 3 7 3 11h18c0-4-4-8-9-8z"></path>
+                <path d="M9 11v7a3 3 0 0 0 6 0v-7"></path>
+              </svg>
+            </span>
+            <strong>Farm Fresh</strong>
+            <span>From ₹22</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- WAVE 1: White -> Soft Ice (#F2F7FC) -->
+    <div class="wave-divider wave-from-white" aria-hidden="true">
+      <svg viewBox="0 0 1440 96" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0,36 C360,88 760,10 1140,58 C1285,76 1380,58 1440,42 L1440,96 L0,96 Z" fill="rgba(242, 247, 252, 0.55)"/>
+        <path d="M0,62 C300,20 720,90 1120,40 C1270,22 1380,44 1440,56 L1440,96 L0,96 Z" fill="#F2F7FC"/>
+      </svg>
+    </div>
+
+    <!-- ======================================================================
+         3. THE KUSHI COLLECTION — 8 BRANDED RETAIL PRODUCT CARDS
+         ====================================================================== -->
+    <section class="section section-ice" id="products">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">THE KUSHI COLLECTION</span>
+            <h2>Goodness for <span class="editorial-italic">every table.</span></h2>
+            <p>Find your daily favourites, all in one place. Browse and order as a guest on WhatsApp.</p>
+          </div>
+          <button class="btn-outline" id="viewAllBtn" style="height: 44px; padding: 0 20px;">View all products</button>
+        </div>
+
+        <div class="brand-promise-bar">
+          <span class="promise-pill"><span class="promise-check">✓</span> Chaparam Village Sourced</span>
+          <span class="promise-pill"><span class="promise-check">✓</span> Daily Fresh Stock</span>
+          <span class="promise-pill"><span class="promise-check">✓</span> Hygienically Sealed Packs</span>
+          <span class="promise-pill"><span class="promise-check">✓</span> Free Local Delivery over ₹199</span>
+        </div>
+
+        <div class="catalog-controls">
+          <div class="filter-pills" role="tablist" aria-label="Filter products by category">
+            <button class="filter-pill active" data-category="all">All (8)</button>
+            <button class="filter-pill" data-category="Dairy">Dairy</button>
+            <button class="filter-pill" data-category="Farm Fresh">Farm Fresh</button>
+            <button class="filter-pill" data-category="Pantry">Pantry</button>
+          </div>
+
+          <div class="search-wrap">
+            <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="search" id="catalogSearch" class="search-input" placeholder="Search milk, paneer, honey..." aria-label="Search Kushi Dairy products" />
+            <button class="search-clear" id="searchClear" aria-label="Clear search">&times;</button>
+          </div>
+        </div>
+
+        <div class="products-grid" id="productsGrid"></div>
+      </div>
+    </section>
+
+    <!-- WAVE 2: Ice (#F2F7FC) -> Milk Cream (#FAFBF8) -->
+    <div class="wave-divider wave-from-ice" aria-hidden="true">
+      <svg viewBox="0 0 1440 96" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0,44 C340,92 740,14 1120,60 C1280,80 1380,60 1440,46 L1440,96 L0,96 Z" fill="rgba(250, 251, 248, 0.55)"/>
+        <path d="M0,66 C320,24 760,90 1140,38 C1285,20 1385,42 1440,54 L1440,96 L0,96 Z" fill="#FAFBF8"/>
+      </svg>
+    </div>
+
+    <!-- ======================================================================
+         4. DIRECT STORE & CONTACT HUB (CHAPARAM · SRIKAKULAM)
+         ====================================================================== -->
+    <section class="section section-milk section-compact" id="about">
+      <div class="container">
+        <div class="store-hub">
+          <div class="store-hub-top">
+            <div class="store-hub-heading">
+              <span class="eyebrow" style="margin-bottom: 6px;">CHAPARAM · SRIKAKULAM</span>
+              <h2>Visit or Contact Kushi Dairy</h2>
+              <p>Fresh milk, curd, ghee, paneer, and everyday essentials directly from our Chaparam counter.</p>
+            </div>
+
+            <div class="store-quick-actions">
+              <a href="https://wa.me/918464952708?text=Hello%20Kushi%20Dairy!%20I%20have%20a%20question%20about%20your%20products." target="_blank" rel="noopener noreferrer" class="btn-whatsapp">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+                </svg>
+                WhatsApp Us
+              </a>
+              <a href="tel:+918464952708" class="btn-primary">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                </svg>
+                Call 8464952708
+              </a>
+            </div>
+          </div>
+
+          <div class="store-info-grid">
+            <div class="store-info-tile">
+              <div class="store-tile-head">
+                <span class="store-tile-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                    <circle cx="12" cy="10" r="3"></circle>
+                  </svg>
+                </span>
+                <span class="store-tile-label">Store Address</span>
+              </div>
+              <p class="store-tile-value">Chaparam Village, Patrunivalasa Post</p>
+              <p class="store-tile-meta">Srikakulam, Andhra Pradesh, India</p>
+              <a href="https://maps.google.com/?q=Chaparam+Village,+Patrunivalasa+Post,+Srikakulam,+Andhra+Pradesh" target="_blank" rel="noopener noreferrer" class="store-tile-link">
+                Open in Google Maps ↗
+              </a>
+            </div>
+
+            <div class="store-info-tile">
+              <div class="store-tile-head">
+                <span class="store-tile-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                  </svg>
+                </span>
+                <span class="store-tile-label">Store Hours</span>
+              </div>
+              <p class="store-tile-value">06:30 AM – 10:00 PM</p>
+              <p class="store-tile-meta">Open all 7 days of the week for walk-in pickup and local orders.</p>
+            </div>
+
+            <div class="store-info-tile">
+              <div class="store-tile-head">
+                <span class="store-tile-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                  </svg>
+                </span>
+                <span class="store-tile-label">Direct Contact</span>
+              </div>
+              <p class="store-tile-value">+91 8464952708</p>
+              <p class="store-tile-meta">Call or message for stock updates, bulk orders, and delivery queries.</p>
+              <a href="tel:+918464952708" class="store-tile-link">Tap to call directly →</a>
+            </div>
+          </div>
+
+          <div class="store-hub-footer">
+            <span>Walk-in counter &amp; neighbourhood delivery across Srikakulam.</span>
+            <button class="story-text-btn" id="openStoryModalBtn">Read our story →</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- WAVE 3: Milk (#FAFBF8) -> White (#FFFFFF) -->
+    <div class="wave-divider wave-from-milk" aria-hidden="true">
+      <svg viewBox="0 0 1440 96" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0,38 C360,90 780,14 1140,58 C1280,76 1380,58 1440,42 L1440,96 L0,96 Z" fill="rgba(255, 255, 255, 0.55)"/>
+        <path d="M0,60 C280,22 680,90 1080,38 C1260,14 1375,38 1440,50 L1440,96 L0,96 Z" fill="#FFFFFF"/>
+      </svg>
+    </div>
+
+    <!-- ======================================================================
+         5. CONTACT & PINCODE CHECKER BAND
+         ====================================================================== -->
+    <section class="section section-white" id="contact">
+      <div class="container">
+        <div class="contact-band">
+          <div>
+            <span class="eyebrow">LET’S MAKE YOUR DAY A LITTLE BETTER</span>
+            <h2>A question? We’re just a message away.</h2>
+            <p>Ask about products, availability and delivery to your pincode.</p>
+
+            <div class="contact-direct-btns">
+              <a href="https://wa.me/918464952708?text=Hello%20Kushi%20Dairy!%20I%20would%20like%20to%20check%20product%20availability." target="_blank" rel="noopener noreferrer" class="btn-whatsapp">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+                </svg>
+                Chat on WhatsApp
+              </a>
+              <a href="tel:+918464952708" class="btn-call-light">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                </svg>
+                Call +91 8464952708
+              </a>
+            </div>
+          </div>
+
+          <div class="pincode-box">
+            <h3>Check Pincode or Area Availability</h3>
+            <p>Enter your Srikakulam pincode (e.g., 532401, 532001) or village/colony name.</p>
+            <form class="pincode-form" id="pincodeForm">
+              <input type="text" id="pincodeInput" class="pincode-input" placeholder="e.g., 532401 or Patrunivalasa" aria-label="Enter pincode or area name" required />
+              <button type="submit" class="pincode-submit">Check</button>
+            </form>
+            <div class="pincode-result" id="pincodeResult" aria-live="polite"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- WAVE 4: White (#FFFFFF) -> Deep Dairy Navy (#092554) -->
+    <div class="wave-divider wave-from-white" aria-hidden="true">
+      <svg viewBox="0 0 1440 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0,36 C320,92 720,8 1120,62 C1280,82 1380,58 1440,44 L1440,100 L0,100 Z" fill="rgba(18, 86, 168, 0.2)"/>
+        <path d="M0,60 C360,14 780,94 1160,42 C1300,24 1390,42 1440,54 L1440,100 L0,100 Z" fill="#092554"/>
+      </svg>
+    </div>
+  </main>
+
+  <!-- ========================================================================
+       6. DEEP DAIRY NAVY FOOTER
+       ======================================================================== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <a href="#home" class="brand-logo" aria-label="Kushi Dairy">
+            <svg width="160" height="42" viewBox="0 0 185 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M23 3C23 3 38 18.5 38 28.5C38 36.8 31.3 43.5 23 43.5C14.7 43.5 8 36.8 8 28.5C8 18.5 23 3 23 3Z" fill="#E5F2FF" stroke="#FFFFFF" stroke-width="2.4" stroke-linejoin="round"/>
+              <circle cx="28" cy="19.5" r="3.3" fill="#F7D138"/>
+              <path d="M11 31.5C14.8 28.5 20.2 28.5 24 31C27.8 33.4 31.8 32.5 35 30C34 36.8 29 41 23 41C17.2 41 12.2 37.2 11 31.5Z" fill="#64B232"/>
+              <text x="48" y="29" fill="#FFFFFF" font-family="'Plus Jakarta Sans', sans-serif" font-weight="800" font-size="24.5" letter-spacing="-0.03em">Kushi</text>
+              <text x="49" y="42" fill="#CFE4FB" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="10.2" letter-spacing="0.24em">DAIRY</text>
+              <path d="M117 10C117 6 121 3 125.5 3.4C125.2 7.8 121.8 11.2 117 10Z" fill="#64B232"/>
+            </svg>
+          </a>
+          <p class="footer-tagline">
+            Everyday essentials.<br />A little closer to home.
+          </p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Explore</h4>
+          <ul>
+            <li><a href="#about">About us</a></li>
+            <li><a href="#products">Our products</a></li>
+            <li><a href="#contact">Contact us</a></li>
+            <li><button id="footerCartLink">Your cart</button></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Visit us</h4>
+          <ul>
+            <li>Chaparam Village, Patrunivalasa Post, Srikakulam, Andhra Pradesh, India</li>
+            <li><strong>Open 06:30 AM–10:00 PM</strong></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>We’re here to help</h4>
+          <ul>
+            <li><a href="tel:+918464952708">+91 8464952708</a></li>
+            <li><a href="https://wa.me/918464952708" target="_blank" rel="noopener noreferrer">Chat on WhatsApp</a></li>
+            <li><button id="openAdminModalBtn">Store administration</button></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span>© 2026 KUSHI DAIRY PRODUCTS. All rights reserved.</span>
+        <button id="openCookieModalBtn">Cookie settings</button>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========================================================================
+       7. OVERLAYS: QUICK-VIEW, STORY, ADMIN, COOKIE MODALS & GUEST CART DRAWER
+       ======================================================================== -->
+  <div class="overlay-backdrop" id="overlayBackdrop"></div>
+
+  <div class="modal-dialog" id="quickViewModal" role="dialog" aria-modal="true" aria-labelledby="qvTitle">
+    <button class="modal-close-btn" data-close-overlay aria-label="Close product details">&times;</button>
+    <div class="qv-grid" id="quickViewBody"></div>
+  </div>
+
+  <div class="modal-dialog compact" id="storyModal" role="dialog" aria-modal="true" aria-labelledby="storyModalTitle">
+    <button class="modal-close-btn" data-close-overlay aria-label="Close story modal">&times;</button>
+    <span class="eyebrow">CHAPARAM · SRIKAKULAM</span>
+    <h3 id="storyModalTitle" style="font-size: 1.65rem; margin-bottom: 12px;">From Chaparam, with care.</h3>
+    <p style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 14px; line-height: 1.7;">
+      Kushi Dairy Products started with a simple neighbourhood promise in Chaparam Village, Patrunivalasa Post: bring clean, honest milk, curd, ghee, and everyday kitchen essentials directly to families across Srikakulam without unnecessary middlemen.
+    </p>
+    <p style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 20px; line-height: 1.7;">
+      We stay open from <strong>06:30 AM to 10:00 PM</strong> every day so whether you need morning cow's milk for filter coffee, midday curd, or evening paneer and sweet corn, a friendly voice is always just a WhatsApp message away.
+    </p>
+    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+      <a href="https://wa.me/918464952708" target="_blank" rel="noopener noreferrer" class="btn-whatsapp" style="height: 44px; padding: 0 20px; font-size: 0.88rem;">Chat on WhatsApp</a>
+      <button class="btn-outline" data-close-overlay style="height: 44px; padding: 0 20px; font-size: 0.88rem;">Back to Store</button>
+    </div>
+  </div>
+
+  <div class="modal-dialog compact" id="adminModal" role="dialog" aria-modal="true" aria-labelledby="adminModalTitle">
+    <button class="modal-close-btn" data-close-overlay aria-label="Close admin modal">&times;</button>
+    <span class="eyebrow">KUSHI DAIRY PRODUCTS</span>
+    <h3 id="adminModalTitle" style="font-size: 1.45rem; margin-bottom: 6px;">Store Administration</h3>
+    <p style="color: var(--text-secondary); font-size: 0.88rem; margin-bottom: 18px;">Authorized Chaparam store staff portal for inventory &amp; daily pricing.</p>
+    <form id="adminForm">
+      <div class="form-field">
+        <label for="adminUser">Staff ID / Mobile</label>
+        <input type="text" id="adminUser" placeholder="e.g., 8464952708" required />
+      </div>
+      <div class="form-field">
+        <label for="adminPass">Access PIN</label>
+        <input type="password" id="adminPass" placeholder="••••••" required />
+      </div>
+      <button type="submit" class="btn-primary" style="width: 100%; height: 46px;">Sign In to Store Console</button>
+      <p id="adminMsg" style="margin-top: 12px; font-size: 0.84rem; color: var(--brand-blue); display: none;"></p>
+    </form>
+  </div>
+
+  <div class="modal-dialog compact" id="cookieModal" role="dialog" aria-modal="true" aria-labelledby="cookieModalTitle">
+    <button class="modal-close-btn" data-close-overlay aria-label="Close cookie settings">&times;</button>
+    <span class="eyebrow">PRIVACY &amp; PREFERENCES</span>
+    <h3 id="cookieModalTitle" style="font-size: 1.45rem; margin-bottom: 8px;">Cookie Settings</h3>
+    <p style="color: var(--text-secondary); font-size: 0.88rem; margin-bottom: 14px;">We keep browsing simple and respectful—no invasive tracking.</p>
+
+    <div class="cookie-row">
+      <div>
+        <strong style="display:block; font-size: 0.9rem;">Essential Cart Storage</strong>
+        <span style="font-size: 0.8rem; color: var(--text-secondary);">Remembers your guest basket items while browsing.</span>
+      </div>
+      <span style="font-size: 0.78rem; font-weight: 700; color: var(--brand-green-dark);">Always On</span>
+    </div>
+
+    <div class="cookie-row" style="border-bottom: none; margin-bottom: 16px;">
+      <div>
+        <strong style="display:block; font-size: 0.9rem;">Store Preferences</strong>
+        <span style="font-size: 0.8rem; color: var(--text-secondary);">Saves your preferred delivery area in Srikakulam.</span>
+      </div>
+      <input type="checkbox" id="prefCookieToggle" checked style="width: 18px; height: 18px; accent-color: var(--brand-blue);" />
+    </div>
+
+    <button class="btn-primary" id="saveCookiesBtn" style="width: 100%; height: 44px;">Save Preferences</button>
+  </div>
+
+  <!-- Slide-Over Guest Cart Drawer -->
+  <aside class="cart-drawer" id="cartDrawer" role="dialog" aria-modal="true" aria-label="Your Kushi Dairy Cart">
+    <div class="drawer-header">
+      <h3>
+        Your Cart
+        <span class="drawer-badge-inline" id="drawerCartCount">0</span>
+      </h3>
+      <button class="nav-circle-btn" data-close-overlay aria-label="Close cart" style="width: 36px; height: 36px; font-size: 1.3rem;">&times;</button>
+    </div>
+
+    <div class="delivery-progress">
+      <div class="delivery-progress-text" id="deliveryProgressText">
+        <span>Add ₹199.00 for Free Local Delivery</span>
+        <span>0%</span>
+      </div>
+      <div class="delivery-bar-track">
+        <div class="delivery-bar-fill" id="deliveryBarFill"></div>
+      </div>
+    </div>
+
+    <div class="drawer-items" id="drawerItems"></div>
+
+    <div class="drawer-footer">
+      <div class="guest-inputs">
+        <input type="text" id="guestName" class="guest-input" placeholder="Your name (optional)" aria-label="Your name" />
+        <input type="text" id="guestArea" class="guest-input" placeholder="Area / Landmark" aria-label="Delivery area or landmark" />
+      </div>
+
+      <div class="summary-row">
+        <span>Guest Order Subtotal</span>
+        <span id="drawerSubtotal">₹0.00</span>
+      </div>
+      <div class="summary-row total">
+        <span>Total Payable</span>
+        <span id="drawerTotal">₹0.00</span>
+      </div>
+
+      <button class="wa-confirm-btn" id="confirmWaBtn" disabled>
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+        </svg>
+        Confirm Order on WhatsApp
+      </button>
+    </div>
+  </aside>
+
+  <!-- Floating Bottom Basket Bar -->
+  <div class="floating-basket" id="floatingBasket" role="region" aria-label="Basket summary">
+    <span id="floatingBasketText">0 items · ₹0.00</span>
+    <button class="floating-basket-btn" id="floatingBasketBtn">View Cart →</button>
+  </div>
+
+  <!-- Toast Stack -->
+  <div class="toast-stack" id="toastStack" aria-live="polite"></div>
+
+  <!-- ========================================================================
+       8. VANILLA JAVASCRIPT — INTERACTIVE STORE, MODALS & WHATSAPP ORDERING
+       ======================================================================== -->
+  <script>
+    (function () {
+      'use strict';
+
+      const FREE_DELIVERY_THRESHOLD = 199;
+
+      const PRODUCTS = [
+        {
+          id: 'cows-milk',
+          name: "Cow's Milk",
+          brandLine: 'KUSHI DAIRY · DAILY ESSENTIALS',
+          purity: '★ 4.9 · Pure',
+          badge: 'Fresh Daily',
+          badgeTone: 'green',
+          category: 'Dairy',
+          pills: ['Unadulterated', 'Morning Sourced', 'Rich Calcium'],
+          image: 'https://images.unsplash.com/photo-1563636619-e9143da7973b?auto=format&fit=crop&w=800&q=80',
+          fallback: 'https://placehold.co/600x440/E5F0FF/1256A8?text=Fresh+Cow%27s+Milk',
+          description: 'Clean, naturally sweet cow’s milk sourced daily from Chaparam for morning filter coffee, tea, and children’s nutrition.',
+          kitchenTip: 'Boil gently on a low flame to enjoy a rich natural malai layer and authentic farm aroma.',
+          freshness: 'Sourced fresh every morning · Best consumed within 24–48 hours when refrigerated.',
+          variants: [
+            { label: '250 ml', price: 12 },
+            { label: '500 ml', price: 24 },
+            { label: '1 L', price: 48 }
+          ]
+        },
+        {
+          id: 'frozen-paneer',
+          name: 'Frozen Paneer',
+          brandLine: 'KUSHI DAIRY · FRESH CHOICE',
+          purity: '★ 4.8 · High Protein',
+          badge: 'Fresh Choice',
+          badgeTone: 'blue',
+          category: 'Dairy',
+          pills: ['High Protein', 'Soft Cubes', 'Hygienic Seal'],
+          image: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?auto=format&fit=crop&w=800&q=80',
+          fallback: 'https://placehold.co/600x440/F2F7FC/1256A8?text=Frozen+Paneer',
+          description: 'Soft, protein-rich paneer cubes hygienically packed to stay tender in curries, pulao, and tawa fry.',
+          kitchenTip: 'Soak cubes in warm salted water for 8 minutes before cooking for melt-in-mouth softness.',
+          freshness: 'Hygienically chilled & sealed · Keep frozen until ready to cook.',
+          variants: [
+            { label: '200 g', price: 55 },
+            { label: '500 g', price: 130 },
+            { label: '1 kg', price: 250 }
+          ]
+        },
+        {
+          id: 'honey',
+          name: 'Honey',
+          brandLine: 'KUSHI PANTRY · NATURAL HARVEST',
+          purity: '★ 4.9 · Raw',
+          badge: '100% Pure',
+          badgeTone: 'gold',
+          category: 'Pantry',
+          pills: ['Zero Added Sugar', 'Natural Enzymes', 'Floral Aroma'],
+          image: 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&w=800&q=80',
+          fallback: 'https://placehold.co/600x440/FEF8DF/9A6700?text=100%25+Pure+Honey',
+          description: 'Unadulterated golden natural honey with rich floral notes—no added sugar syrup or artificial flavours.',
+          kitchenTip: 'Stir a spoonful into warm lemon water every morning or drizzle over fresh curd and fruits.',
+          freshness: '100% Pure · Store at room temperature away from direct sunlight.',
+          variants: [
+            { label: '100 g', price: 70 },
+            { label: '250 g', price: 165 },
+            { label: '500 g', price: 310 }
+          ]
+        },
+        {
+          id: 'mushroom',
+          name: 'Mushroom',
+          brandLine: 'KUSHI FARM · FRESH HARVEST',
+          purity: '★ 4.8 · Farm Pick',
+          badge: 'Farm Fresh',
+          badgeTone: 'green',
+          category: 'Farm Fresh',
+          pills: ['Handpicked', 'Rich Vitamin D', 'Cleaned Pack'],
+          image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=80',
+          fallback: 'https://placehold.co/600x440/ECF7E4/3E7F1C?text=Farm+Fresh+Mushroom',
+          description: 'Plump, earthy button mushrooms handpicked fresh for Andhra-style mushroom masala, biryani, and pepper fry.',
+          kitchenTip: 'Wipe gently or rinse quickly right before slicing so they sear golden instead of steaming.',
+          freshness: 'Farm Fresh · Refrigerate in a breathable pack and use within 3 days.',
+          variants: [
+            { label: '200 g', price: 50 },
+            { label: '400 g', price: 95 }
+          ]
+        },
+        {
+          id: 'sweet-corn',
+          name: 'Sweet Corn',
+          brandLine: 'KUSHI FARM · GOLDEN KERNELS',
+          purity: '★ 4.9 · Crisp',
+          badge: 'Farm Fresh',
+          badgeTone: 'gold',
+          category: 'Farm Fresh',
+          pills: ['Naturally Sweet', 'Ready to Steam', 'High Fibre'],
+          image: 'https://images.unsplash.com/photo-1551754655-cd27e38d2076?auto=format&fit=crop&w=800&q=80',
+          fallback: 'https://placehold.co/600x440/FEF8DF/9A6700?text=Farm+Fresh+Sweet+Corn',
+          description: 'Juicy, naturally sweet golden kernels ready for evening masala corn chaat, soups, and crispy corn.',
+          kitchenTip: 'Steam for 5 minutes and toss with Kushi ghee, chaat masala, chilli powder, and a squeeze of lime.',
+          freshness: 'Farm Fresh · Crisp golden kernels packed cleanly for quick prep.',
+          variants: [
+            { label: '200 g', price: 22 },
+            { label: '500 g', price: 52 },
+            { label: '1 kg', price: 98 }
+          ]
+        },
+        {
+          id: 'green-peas',
+          name: 'Green Peas',
+          brandLine: 'KUSHI FARM · FRESH HARVEST',
+          purity: '★ 4.8 · Tender',
+          badge: 'Farm Fresh',
+          badgeTone: 'green',
+          category: 'Farm Fresh',
+          pills: ['Tender Pods', 'Plant Protein', 'Quick Cook'],
+          image: 'https://images.unsplash.com/photo-1587735243615-c03f25aaff15?auto=format&fit=crop&w=800&q=80',
+          fallback: 'https://placehold.co/600x440/ECF7E4/3E7F1C?text=Farm+Fresh+Green+Peas',
+          description: 'Tender, bright green peas carefully selected for matar paneer, vegetable pulao, upma, and aloo matar.',
+          kitchenTip: 'Blanch for 2 minutes in boiling water to lock in the vibrant green colour and sweet crunch.',
+          freshness: 'Farm Fresh · Cleaned and ready for everyday family cooking.',
+          variants: [
+            { label: '250 g', price: 50 },
+            { label: '500 g', price: 95 },
+            { label: '1 kg', price: 185 }
+          ]
+        },
+        {
+          id: 'fresh-curd',
+          name: 'Fresh Curd',
+          brandLine: 'KUSHI DAIRY · HOMESTYLE SET',
+          purity: '★ 4.9 · Thick',
+          badge: 'Daily Set',
+          badgeTone: 'blue',
+          category: 'Dairy',
+          pills: ['Live Probiotics', 'Mild & Creamy', 'Set Daily'],
+          image: 'https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=800&q=80',
+          fallback: 'https://placehold.co/600x440/E5F0FF/1256A8?text=Fresh+Daily+Curd',
+          description: 'Thick, creamy, mildly sweet homestyle perugu (curd) set daily from fresh milk—essential for every Andhra lunch.',
+          kitchenTip: 'Perfect for cooling curd rice (daddojanam), onion raita, or whisked into spiced buttermilk.',
+          freshness: 'Set fresh daily · Keep chilled at 4°C for mild, non-sour taste.',
+          variants: [
+            { label: '250 g', price: 25 },
+            { label: '500 g', price: 48 },
+            { label: '1 kg', price: 92 }
+          ]
+        },
+        {
+          id: 'pure-desi-ghee',
+          name: 'Pure Desi Ghee',
+          brandLine: 'KUSHI DAIRY · TRADITIONAL',
+          purity: '★ 5.0 · Grainy',
+          badge: 'Traditional',
+          badgeTone: 'gold',
+          category: 'Dairy',
+          pills: ['Slow Clarified', 'Rich Aroma', '100% Pure'],
+          image: 'https://images.unsplash.com/photo-1628088062854-d1870b4553da?auto=format&fit=crop&w=800&q=80',
+          fallback: 'https://placehold.co/600x440/FEF8DF/9A6700?text=Pure+Desi+Ghee',
+          description: 'Rich, grainy, aromatic desi ghee slow-clarified for hot steamed rice, pappu, dosas, and festive sweets.',
+          kitchenTip: 'Spoon over hot mudda pappu and avakaya rice for an unmistakable coastal Andhra comfort meal.',
+          freshness: '100% Pure · Naturally shelf-stable in a cool, dry kitchen cupboard.',
+          variants: [
+            { label: '200 ml', price: 160 },
+            { label: '500 ml', price: 385 },
+            { label: '1 L', price: 750 }
+          ]
+        }
+      ];
+
+      const state = {
+        category: 'all',
+        search: '',
+        selectedVariants: Object.fromEntries(PRODUCTS.map(p => [p.id, 0])),
+        cart: {},
+        activeModalProductId: null
+      };
+
+      const navbarWrap = document.getElementById('navbarWrap');
+      const navSearchInput = document.getElementById('navSearchInput');
+      const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+      const mobileNav = document.getElementById('mobileNav');
+      const productsGrid = document.getElementById('productsGrid');
+      const filterPills = document.querySelectorAll('.filter-pill');
+      const rangeChips = document.querySelectorAll('.range-chip');
+      const catalogSearch = document.getElementById('catalogSearch');
+      const searchClear = document.getElementById('searchClear');
+      const viewAllBtn = document.getElementById('viewAllBtn');
+
+      const pincodeForm = document.getElementById('pincodeForm');
+      const pincodeInput = document.getElementById('pincodeInput');
+      const pincodeResult = document.getElementById('pincodeResult');
+
+      const overlayBackdrop = document.getElementById('overlayBackdrop');
+      const quickViewModal = document.getElementById('quickViewModal');
+      const quickViewBody = document.getElementById('quickViewBody');
+      const storyModal = document.getElementById('storyModal');
+      const adminModal = document.getElementById('adminModal');
+      const cookieModal = document.getElementById('cookieModal');
+      const cartDrawer = document.getElementById('cartDrawer');
+
+      const openCartBtn = document.getElementById('openCartBtn');
+      const footerCartLink = document.getElementById('footerCartLink');
+      const navCartCount = document.getElementById('navCartCount');
+      const drawerCartCount = document.getElementById('drawerCartCount');
+      const deliveryProgressText = document.getElementById('deliveryProgressText');
+      const deliveryBarFill = document.getElementById('deliveryBarFill');
+      const drawerItems = document.getElementById('drawerItems');
+      const drawerSubtotal = document.getElementById('drawerSubtotal');
+      const drawerTotal = document.getElementById('drawerTotal');
+      const guestName = document.getElementById('guestName');
+      const guestArea = document.getElementById('guestArea');
+      const confirmWaBtn = document.getElementById('confirmWaBtn');
+
+      const floatingBasket = document.getElementById('floatingBasket');
+      const floatingBasketText = document.getElementById('floatingBasketText');
+      const floatingBasketBtn = document.getElementById('floatingBasketBtn');
+      const toastStack = document.getElementById('toastStack');
+
+      function formatINR(amount) {
+        return `₹${Number(amount).toFixed(2)}`;
+      }
+
+      function getCartKey(id, vIdx) {
+        return `${id}__${vIdx}`;
+      }
+
+      function getProduct(id) {
+        return PRODUCTS.find(p => p.id === id);
+      }
+
+      function getCartSummary() {
+        let count = 0;
+        let total = 0;
+        Object.values(state.cart).forEach(item => {
+          count += item.qty;
+          total += item.price * item.qty;
+        });
+        return { count, total };
+      }
+
+      function showToast(text) {
+        const el = document.createElement('div');
+        el.className = 'toast';
+        el.innerHTML = `<span class="toast-dot"></span><span>${text}</span>`;
+        toastStack.appendChild(el);
+        setTimeout(() => {
+          el.style.opacity = '0';
+          el.style.transform = 'translateY(-6px)';
+          el.style.transition = 'all 0.24s ease';
+          setTimeout(() => el.remove(), 250);
+        }, 2100);
+      }
+
+      function renderProducts() {
+        const q = state.search.trim().toLowerCase();
+        const filtered = PRODUCTS.filter(p => {
+          const catMatch = state.category === 'all' || p.category === state.category;
+          const searchMatch = !q ||
+            p.name.toLowerCase().includes(q) ||
+            p.category.toLowerCase().includes(q) ||
+            p.badge.toLowerCase().includes(q) ||
+            p.description.toLowerCase().includes(q);
+          return catMatch && searchMatch;
+        });
+
+        if (filtered.length === 0) {
+          productsGrid.innerHTML = `
+            <div class="empty-state">
+              <h3 style="margin-bottom: 8px;">No products found for "${state.search}"</h3>
+              <p style="color: var(--text-secondary); margin-bottom: 16px;">Try searching for Cow's Milk, Paneer, Honey, Mushroom, Sweet Corn, or Green Peas.</p>
+              <button class="btn-outline" id="resetCatalogBtn" style="height: 42px;">Show all 8 products</button>
+            </div>`;
+          const resetBtn = document.getElementById('resetCatalogBtn');
+          if (resetBtn) resetBtn.addEventListener('click', resetFilters);
+          return;
+        }
+
+        productsGrid.innerHTML = filtered.map(p => {
+          const vIdx = state.selectedVariants[p.id] || 0;
+          const variant = p.variants[vIdx];
+          const key = getCartKey(p.id, vIdx);
+          const qty = state.cart[key] ? state.cart[key].qty : 0;
+
+          const variantButtons = p.variants.map((v, i) => `
+            <button
+              class="variant-pill ${i === vIdx ? 'active' : ''}"
+              data-action="variant"
+              data-id="${p.id}"
+              data-vidx="${i}"
+              aria-pressed="${i === vIdx}"
+            >${v.label}</button>
+          `).join('');
+
+          const actionHTML = qty > 0
+            ? `
+              <div class="qty-stepper" aria-label="Quantity for ${p.name}">
+                <button class="qty-btn" data-action="dec" data-id="${p.id}" data-vidx="${vIdx}" aria-label="Decrease quantity">−</button>
+                <span class="qty-count">${qty}</span>
+                <button class="qty-btn" data-action="inc" data-id="${p.id}" data-vidx="${vIdx}" aria-label="Increase quantity">+</button>
+              </div>`
+            : `<button class="add-btn" data-action="add" data-id="${p.id}" data-vidx="${vIdx}">+ Add</button>`;
+
+          return `
+            <article class="product-card">
+              <div class="product-photo-box" data-action="quick-view" data-id="${p.id}">
+                <img src="${p.image}" alt="${p.name} — ${p.badge}" loading="lazy" onerror="this.onerror=null;this.src='${p.fallback}';" />
+
+                <span class="product-badge ${p.badgeTone}">
+                  <svg width="11" height="13" viewBox="0 0 14 17" fill="none" aria-hidden="true">
+                    <path d="M7 1C7 1 13 7.2 13 11.2C13 14.4 10.3 16.5 7 16.5C3.7 16.5 1 14.4 1 11.2C1 7.2 7 1 7 1Z" fill="currentColor" fill-opacity="0.2" stroke="currentColor" stroke-width="1.6"/>
+                  </svg>
+                  ${p.badge}
+                </span>
+
+                <button class="qv-eye-btn" data-action="quick-view" data-id="${p.id}" aria-label="Quick view ${p.name}">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                </button>
+
+                <span class="kushi-stamp">Kushi® Chaparam</span>
+
+                <svg class="product-photo-wave" viewBox="0 0 360 32" preserveAspectRatio="none" aria-hidden="true">
+                  <path d="M0,18 C95,36 220,-4 360,20 L360,32 L0,32 Z" fill="#FFFFFF"/>
+                </svg>
+              </div>
+
+              <div class="product-body">
+                <span class="product-brand-line">${p.brandLine}</span>
+                <div class="product-title-row">
+                  <h3 class="product-title">${p.name}</h3>
+                  <span class="purity-pill">${p.purity}</span>
+                </div>
+
+                <div class="variant-group" role="group" aria-label="Select size for ${p.name}">
+                  ${variantButtons}
+                </div>
+
+                <button class="details-link-btn" data-action="quick-view" data-id="${p.id}">
+                  Choose size &amp; view details →
+                </button>
+
+                <div class="product-footer">
+                  <div class="price-block">
+                    <span class="price-value">${formatINR(variant.price)}</span>
+                    <span class="price-size">${variant.label}</span>
+                  </div>
+                  ${actionHTML}
+                </div>
+              </div>
+            </article>
+          `;
+        }).join('');
+      }
+
+      function resetFilters() {
+        state.category = 'all';
+        state.search = '';
+        catalogSearch.value = '';
+        navSearchInput.value = '';
+        searchClear.classList.remove('visible');
+        filterPills.forEach(p => p.classList.toggle('active', p.dataset.category === 'all'));
+        renderProducts();
+      }
+
+      function updateCart(id, vIdx, delta) {
+        const product = getProduct(id);
+        if (!product) return;
+        const variant = product.variants[vIdx];
+        const key = getCartKey(id, vIdx);
+        const existing = state.cart[key];
+        const nextQty = (existing ? existing.qty : 0) + delta;
+
+        if (nextQty <= 0) {
+          delete state.cart[key];
+        } else {
+          state.cart[key] = {
+            id,
+            vIdx,
+            name: product.name,
+            variantLabel: variant.label,
+            price: variant.price,
+            image: product.image,
+            fallback: product.fallback,
+            qty: nextQty
+          };
+          if (delta > 0 && !existing) {
+            showToast(`Added ${product.name} (${variant.label})`);
+          }
+        }
+
+        navCartCount.classList.add('pop');
+        setTimeout(() => navCartCount.classList.remove('pop'), 240);
+
+        renderProducts();
+        renderCart();
+        if (state.activeModalProductId === id) {
+          renderQuickView(id);
+        }
+      }
+
+      function renderCart() {
+        const { count, total } = getCartSummary();
+        navCartCount.textContent = count;
+        drawerCartCount.textContent = count;
+        drawerSubtotal.textContent = formatINR(total);
+        drawerTotal.textContent = formatINR(total);
+        confirmWaBtn.disabled = count === 0;
+
+        const pct = Math.min(100, Math.round((total / FREE_DELIVERY_THRESHOLD) * 100));
+        deliveryBarFill.style.width = `${pct}%`;
+        if (total >= FREE_DELIVERY_THRESHOLD) {
+          deliveryProgressText.className = 'delivery-progress-text unlocked';
+          deliveryProgressText.innerHTML = '<span>Free Local Delivery Unlocked!</span><span>100%</span>';
+        } else {
+          const remaining = FREE_DELIVERY_THRESHOLD - total;
+          deliveryProgressText.className = 'delivery-progress-text';
+          deliveryProgressText.innerHTML = `<span>Add ${formatINR(remaining)} for Free Local Delivery</span><span>${pct}%</span>`;
+        }
+
+        floatingBasket.classList.toggle('visible', count > 0);
+        floatingBasketText.textContent = `${count} ${count === 1 ? 'item' : 'items'} · ${formatINR(total)}`;
+
+        const items = Object.values(state.cart);
+        if (items.length === 0) {
+          drawerItems.innerHTML = `
+            <div class="cart-empty">
+              <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="margin: 0 auto;">
+                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <path d="M16 10a4 4 0 0 1-8 0"></path>
+              </svg>
+              <strong>Your basket is empty</strong>
+              <p style="font-size: 0.86rem;">Add fresh milk, curd, ghee, paneer, or farm-fresh essentials to order on WhatsApp.</p>
+            </div>`;
+          return;
+        }
+
+        drawerItems.innerHTML = items.map(item => `
+          <div class="cart-item">
+            <img class="cart-item-img" src="${item.image}" alt="${item.name}" onerror="this.onerror=null;this.src='${item.fallback}';" />
+            <div class="cart-item-info">
+              <strong>${item.name}</strong>
+              <span>${item.variantLabel} · ${formatINR(item.price)} each</span>
+              <div class="cart-item-price">${formatINR(item.price * item.qty)}</div>
+            </div>
+            <div class="qty-stepper" style="height: 34px;">
+              <button class="qty-btn" style="width: 26px; height: 26px;" data-cart-action="dec" data-id="${item.id}" data-vidx="${item.vIdx}" aria-label="Decrease quantity">−</button>
+              <span class="qty-count">${item.qty}</span>
+              <button class="qty-btn" style="width: 26px; height: 26px;" data-cart-action="inc" data-id="${item.id}" data-vidx="${item.vIdx}" aria-label="Increase quantity">+</button>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      confirmWaBtn.addEventListener('click', () => {
+        const items = Object.values(state.cart);
+        if (items.length === 0) return;
+
+        const { total } = getCartSummary();
+        const name = guestName.value.trim();
+        const area = guestArea.value.trim();
+
+        const lines = [
+          'Hello Kushi Dairy (Chaparam, Srikakulam)!',
+          'I would like to confirm my order:',
+          ''
+        ];
+        items.forEach((item, idx) => {
+          lines.push(`${idx + 1}. ${item.name} (${item.variantLabel}) x ${item.qty} = ${formatINR(item.price * item.qty)}`);
+        });
+        lines.push('');
+        lines.push(`Total: ${formatINR(total)}`);
+        if (name) lines.push(`Name: ${name}`);
+        if (area) lines.push(`Delivery Area / Pincode: ${area}`);
+        lines.push('');
+        lines.push('Please confirm availability & delivery time.');
+
+        const url = `https://wa.me/918464952708?text=${encodeURIComponent(lines.join('\n'))}`;
+        window.open(url, '_blank', 'noopener,noreferrer');
+      });
+
+      function renderQuickView(id) {
+        const p = getProduct(id);
+        if (!p) return;
+        state.activeModalProductId = id;
+        const vIdx = state.selectedVariants[id] || 0;
+        const variant = p.variants[vIdx];
+        const key = getCartKey(id, vIdx);
+        const qty = state.cart[key] ? state.cart[key].qty : 0;
+
+        const sizePills = p.variants.map((v, i) => `
+          <button
+            class="variant-pill ${i === vIdx ? 'active' : ''}"
+            data-qv-action="variant"
+            data-id="${p.id}"
+            data-vidx="${i}"
+            aria-pressed="${i === vIdx}"
+          >${v.label} · ${formatINR(v.price)}</button>
+        `).join('');
+
+        const cta = qty > 0
+          ? `
+            <div class="qty-stepper" aria-label="Quantity for ${p.name}">
+              <button class="qty-btn" data-qv-action="dec" data-id="${p.id}" data-vidx="${vIdx}" aria-label="Decrease quantity">−</button>
+              <span class="qty-count">${qty}</span>
+              <button class="qty-btn" data-qv-action="inc" data-id="${p.id}" data-vidx="${vIdx}" aria-label="Increase quantity">+</button>
+            </div>`
+          : `<button class="btn-primary" style="height: 44px; padding: 0 22px;" data-qv-action="add" data-id="${p.id}" data-vidx="${vIdx}">+ Add to Cart</button>`;
+
+        const pillsHTML = (p.pills || []).map((pill, idx) => `
+          <span class="qv-pill ${idx % 2 === 1 ? 'blue' : ''}">${pill}</span>
+        `).join('');
+
+        quickViewBody.innerHTML = `
+          <div class="qv-photo">
+            <img src="${p.image}" alt="${p.name}" onerror="this.onerror=null;this.src='${p.fallback}';" />
+            <span class="product-badge ${p.badgeTone}">${p.badge}</span>
+            <span class="kushi-stamp">Kushi® Chaparam</span>
+            <svg class="qv-header-wave" viewBox="0 0 360 32" preserveAspectRatio="none" aria-hidden="true">
+              <path d="M0,18 C110,36 230,-2 360,20 L360,32 L0,32 Z" fill="#FFFFFF"/>
+            </svg>
+          </div>
+          <div class="qv-content">
+            <span class="product-brand-line" style="margin-bottom: 0;">${p.brandLine}</span>
+            <div class="product-title-row" style="margin-bottom: 0;">
+              <h3 id="qvTitle" style="font-size: 1.55rem;">${p.name}</h3>
+              <span class="purity-pill">${p.purity}</span>
+            </div>
+            <div class="qv-pills">${pillsHTML}</div>
+            <p style="font-size: 0.92rem; color: var(--text-secondary); line-height: 1.65;">${p.description}</p>
+
+            <div class="qv-tip-box">
+              <strong>Indian Kitchen Tip</strong>
+              ${p.kitchenTip}
+            </div>
+            <div class="qv-tip-box" style="background: var(--bg-ice); border-color: var(--border-subtle);">
+              <strong>Freshness &amp; Storage</strong>
+              ${p.freshness}
+            </div>
+
+            <div>
+              <span style="display:block; font-family: var(--font-heading); font-size: 0.76rem; font-weight: 800; color: var(--text-secondary); margin-bottom: 8px; letter-spacing: 0.05em;">CHOOSE PACK SIZE</span>
+              <div class="variant-group" style="margin-bottom: 0;">${sizePills}</div>
+            </div>
+
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; padding-top:14px; border-top:1px solid var(--border-subtle); margin-top:auto;">
+              <div class="price-block">
+                <span class="price-value" style="font-size: 1.38rem;">${formatINR(variant.price)}</span>
+                <span class="price-size">${variant.label}</span>
+              </div>
+              ${cta}
+            </div>
+          </div>
+        `;
+      }
+
+      function closeAllOverlays() {
+        overlayBackdrop.classList.remove('open');
+        [quickViewModal, storyModal, adminModal, cookieModal, cartDrawer].forEach(el => el.classList.remove('open'));
+        state.activeModalProductId = null;
+        document.body.style.overflow = '';
+      }
+
+      function openOverlay(el) {
+        closeAllOverlays();
+        overlayBackdrop.classList.add('open');
+        el.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      }
+
+      const LOCAL_KEYWORDS = ['chaparam', 'patrunivalasa', 'srikakulam', 'amadalavalasa', 'narasannapeta', 'etcharla', 'ranastalam'];
+
+      pincodeForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const val = pincodeInput.value.trim();
+        if (!val) return;
+        const lower = val.toLowerCase();
+        const isSrikakulamPin = /^532\d{3}$/.test(val);
+        const isLocalArea = LOCAL_KEYWORDS.some(k => lower.includes(k));
+
+        if (isSrikakulamPin || isLocalArea) {
+          pincodeResult.className = 'pincode-result success';
+          pincodeResult.innerHTML = `<strong>Great news! We deliver to ${val}.</strong> Daily fresh stock from Chaparam Village is available between 06:30 AM–10:00 PM.`;
+        } else {
+          const waUrl = `https://wa.me/918464952708?text=${encodeURIComponent(`Hello Kushi Dairy! Do you deliver to ${val}?`)}`;
+          pincodeResult.className = 'pincode-result info';
+          pincodeResult.innerHTML = `We’d love to check delivery for <strong>${val}</strong>. <a href="${waUrl}" target="_blank" rel="noopener noreferrer" style="text-decoration:underline;font-weight:700;">Message us on WhatsApp →</a>`;
+        }
+      });
+
+      window.addEventListener('scroll', () => {
+        navbarWrap.classList.toggle('scrolled', window.scrollY > 24);
+      }, { passive: true });
+
+      navSearchInput.addEventListener('input', (e) => {
+        state.search = e.target.value;
+        catalogSearch.value = state.search;
+        searchClear.classList.toggle('visible', Boolean(state.search));
+        renderProducts();
+      });
+
+      navSearchInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+
+      mobileMenuBtn.addEventListener('click', () => {
+        const isOpen = mobileNav.classList.toggle('open');
+        mobileMenuBtn.setAttribute('aria-expanded', String(isOpen));
+      });
+      mobileNav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+        mobileNav.classList.remove('open');
+        mobileMenuBtn.setAttribute('aria-expanded', 'false');
+      }));
+
+      filterPills.forEach(pill => {
+        pill.addEventListener('click', () => {
+          state.category = pill.dataset.category;
+          filterPills.forEach(p => p.classList.toggle('active', p === pill));
+          renderProducts();
+        });
+      });
+
+      rangeChips.forEach(chip => {
+        chip.addEventListener('click', () => {
+          state.category = 'all';
+          state.search = chip.dataset.range;
+          catalogSearch.value = state.search;
+          navSearchInput.value = state.search;
+          searchClear.classList.add('visible');
+          filterPills.forEach(p => p.classList.toggle('active', p.dataset.category === 'all'));
+          renderProducts();
+          document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
+        });
+      });
+
+      viewAllBtn.addEventListener('click', () => {
+        resetFilters();
+        showToast('Showing all 8 Kushi Dairy products');
+      });
+
+      catalogSearch.addEventListener('input', (e) => {
+        state.search = e.target.value;
+        navSearchInput.value = state.search;
+        searchClear.classList.toggle('visible', Boolean(state.search));
+        renderProducts();
+      });
+
+      searchClear.addEventListener('click', () => {
+        state.search = '';
+        catalogSearch.value = '';
+        navSearchInput.value = '';
+        searchClear.classList.remove('visible');
+        renderProducts();
+        catalogSearch.focus();
+      });
+
+      productsGrid.addEventListener('click', (e) => {
+        const btn = e.target.closest('[data-action]');
+        if (!btn) return;
+        const { action, id } = btn.dataset;
+        const vIdx = Number(btn.dataset.vidx);
+
+        if (action === 'variant') {
+          state.selectedVariants[id] = vIdx;
+          renderProducts();
+        } else if (action === 'add' || action === 'inc') {
+          updateCart(id, vIdx, 1);
+        } else if (action === 'dec') {
+          updateCart(id, vIdx, -1);
+        } else if (action === 'quick-view') {
+          renderQuickView(id);
+          openOverlay(quickViewModal);
+        }
+      });
+
+      quickViewBody.addEventListener('click', (e) => {
+        const btn = e.target.closest('[data-qv-action]');
+        if (!btn) return;
+        const { qvAction, id } = btn.dataset;
+        const vIdx = Number(btn.dataset.vidx);
+
+        if (qvAction === 'variant') {
+          state.selectedVariants[id] = vIdx;
+          renderProducts();
+          renderQuickView(id);
+        } else if (qvAction === 'add' || qvAction === 'inc') {
+          updateCart(id, vIdx, 1);
+        } else if (qvAction === 'dec') {
+          updateCart(id, vIdx, -1);
+        }
+      });
+
+      drawerItems.addEventListener('click', (e) => {
+        const btn = e.target.closest('[data-cart-action]');
+        if (!btn) return;
+        const { cartAction, id } = btn.dataset;
+        const vIdx = Number(btn.dataset.vidx);
+        updateCart(id, vIdx, cartAction === 'inc' ? 1 : -1);
+      });
+
+      openCartBtn.addEventListener('click', () => openOverlay(cartDrawer));
+      floatingBasketBtn.addEventListener('click', () => openOverlay(cartDrawer));
+      footerCartLink.addEventListener('click', () => openOverlay(cartDrawer));
+
+      document.getElementById('heroStoryBtn').addEventListener('click', () => openOverlay(storyModal));
+      document.getElementById('openStoryModalBtn').addEventListener('click', () => openOverlay(storyModal));
+      document.getElementById('openAdminModalBtn').addEventListener('click', () => openOverlay(adminModal));
+      document.getElementById('openCookieModalBtn').addEventListener('click', () => openOverlay(cookieModal));
+
+      document.getElementById('adminForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const msg = document.getElementById('adminMsg');
+        msg.style.display = 'block';
+        msg.textContent = 'UI/UX Preview: Store administration backend will be connected in Phase 2.';
+      });
+
+      document.getElementById('saveCookiesBtn').addEventListener('click', () => {
+        closeAllOverlays();
+        showToast('Cookie preferences saved');
+      });
+
+      document.querySelectorAll('[data-close-overlay]').forEach(btn => {
+        btn.addEventListener('click', closeAllOverlays);
+      });
+      overlayBackdrop.addEventListener('click', closeAllOverlays);
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeAllOverlays();
+      });
+
+      renderProducts();
+      renderCart();
+    })();
+  </script>
+</body>
+</html>
