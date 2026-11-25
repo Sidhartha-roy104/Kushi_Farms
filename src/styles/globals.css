@@ -2327,3 +2327,162 @@ h1, h2, h3, h4 {
     width: 82px;
   }
 }
+
+/* ==========================================================================
+   17. REDESIGNED CONTACT KUSHI DAIRY SPLIT HUB
+   ========================================================================== */
+.store-hub.contact-hub-split {
+  display: grid;
+  grid-template-columns: 1.08fr 0.92fr;
+  gap: 0;
+  align-items: stretch;
+  padding: 0;
+  overflow: hidden;
+}
+
+.contact-hub-copy {
+  padding: 36px 38px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.contact-hub-copy h2 {
+  font-size: clamp(1.75rem, 3vw, 2.35rem);
+  margin-bottom: 10px;
+}
+
+.contact-hub-lead {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.65;
+  margin-bottom: 20px;
+  max-width: 480px;
+}
+
+.contact-meta-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.contact-meta-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.contact-meta-item strong {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: 0.92rem;
+  color: var(--navy-deep);
+}
+
+.contact-meta-item span {
+  display: block;
+  font-size: 0.84rem;
+  color: var(--text-secondary);
+}
+
+.contact-hub-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.contact-hub-visual {
+  position: relative;
+  min-height: 320px;
+  background: var(--bg-ice);
+  overflow: hidden;
+}
+
+.contact-hub-visual > img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.contact-visual-badge {
+  position: absolute;
+  top: 14px;
+  left: 16px;
+  right: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 0;
+  background: transparent;
+}
+
+.contact-visual-logo {
+  height: 52px;
+  width: auto;
+  flex-shrink: 0;
+  object-fit: contain;
+  display: block;
+  filter: drop-shadow(0 2px 8px rgba(255, 255, 255, 0.85));
+}
+
+.contact-visual-text strong {
+  display: block;
+  font-family: var(--font-editorial);
+  font-style: italic;
+  font-size: 1.08rem;
+  color: var(--navy-deep);
+  line-height: 1.2;
+  text-shadow: 0 1px 10px rgba(255, 255, 255, 0.95);
+}
+
+.contact-visual-text span {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--brand-green-dark);
+  margin-top: 2px;
+  text-shadow: 0 1px 10px rgba(255, 255, 255, 0.95);
+}
+
+.contact-visual-signature {
+  position: absolute;
+  bottom: 14px;
+  left: 18px;
+  z-index: 4;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  color: #FFFFFF;
+  transform: rotate(-6deg);
+  pointer-events: none;
+  filter: drop-shadow(0 2px 8px rgba(9, 37, 84, 0.55));
+}
+
+.contact-visual-sig-text {
+  font-family: var(--font-script);
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+@media (max-width: 960px) {
+  .store-hub.contact-hub-split {
+    grid-template-columns: 1fr;
+  }
+
+  .contact-hub-copy {
+    padding: 26px 22px;
+  }
+
+  .contact-hub-visual {
+    min-height: 220px;
+    max-height: 280px;
+  }
+}
