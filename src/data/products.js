@@ -12,7 +12,7 @@ export const PRODUCTS = [
     badgeTone: 'green',
     category: 'Dairy',
     pills: ['Unadulterated', 'Morning Sourced', 'Rich Calcium'],
-    image: 'https://images.unsplash.com/photo-1563636619-e9143da7973b?auto=format&fit=crop&w=800&q=80',
+    image: '/products/cows-milk.webp',
     fallback: 'https://placehold.co/600x440/E5F0FF/1256A8?text=Fresh+Cow%27s+Milk',
     description:
       'Clean, naturally sweet cow’s milk sourced daily from Chaparam for morning filter coffee, tea, and children’s nutrition.',
@@ -35,7 +35,7 @@ export const PRODUCTS = [
     badgeTone: 'blue',
     category: 'Dairy',
     pills: ['High Protein', 'Soft Cubes', 'Hygienic Seal'],
-    image: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?auto=format&fit=crop&w=800&q=80',
+    image: '/products/frozen-paneer.webp',
     fallback: 'https://placehold.co/600x440/F2F7FC/1256A8?text=Frozen+Paneer',
     description:
       'Soft, protein-rich paneer cubes hygienically packed to stay tender in curries, pulao, and tawa fry.',
@@ -57,7 +57,7 @@ export const PRODUCTS = [
     badgeTone: 'gold',
     category: 'Pantry',
     pills: ['Zero Added Sugar', 'Natural Enzymes', 'Floral Aroma'],
-    image: 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&w=800&q=80',
+    image: '/products/honey.webp',
     fallback: 'https://placehold.co/600x440/FEF8DF/9A6700?text=100%25+Pure+Honey',
     description:
       'Unadulterated golden natural honey with rich floral notes—no added sugar syrup or artificial flavours.',
@@ -79,7 +79,7 @@ export const PRODUCTS = [
     badgeTone: 'green',
     category: 'Farm Fresh',
     pills: ['Handpicked', 'Rich Vitamin D', 'Cleaned Pack'],
-    image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=80',
+    image: '/products/mushroom.webp',
     fallback: 'https://placehold.co/600x440/ECF7E4/3E7F1C?text=Farm+Fresh+Mushroom',
     description:
       'Plump, earthy button mushrooms handpicked fresh for Andhra-style mushroom masala, biryani, and pepper fry.',
@@ -100,7 +100,7 @@ export const PRODUCTS = [
     badgeTone: 'gold',
     category: 'Farm Fresh',
     pills: ['Naturally Sweet', 'Ready to Steam', 'High Fibre'],
-    image: 'https://images.unsplash.com/photo-1551754655-cd27e38d2076?auto=format&fit=crop&w=800&q=80',
+    image: '/products/sweet-corn.webp',
     fallback: 'https://placehold.co/600x440/FEF8DF/9A6700?text=Farm+Fresh+Sweet+Corn',
     description:
       'Juicy, naturally sweet golden kernels ready for evening masala corn chaat, soups, and crispy corn.',
@@ -122,7 +122,7 @@ export const PRODUCTS = [
     badgeTone: 'green',
     category: 'Farm Fresh',
     pills: ['Tender Pods', 'Plant Protein', 'Quick Cook'],
-    image: 'https://images.unsplash.com/photo-1587735243615-c03f25aaff15?auto=format&fit=crop&w=800&q=80',
+    image: '/products/green-peas.webp',
     fallback: 'https://placehold.co/600x440/ECF7E4/3E7F1C?text=Farm+Fresh+Green+Peas',
     description:
       'Tender, bright green peas carefully selected for matar paneer, vegetable pulao, upma, and aloo matar.',
@@ -144,7 +144,7 @@ export const PRODUCTS = [
     badgeTone: 'blue',
     category: 'Dairy',
     pills: ['Live Probiotics', 'Mild & Creamy', 'Set Daily'],
-    image: 'https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=800&q=80',
+    image: '/products/fresh-curd.webp',
     fallback: 'https://placehold.co/600x440/E5F0FF/1256A8?text=Fresh+Daily+Curd',
     description:
       'Thick, creamy, mildly sweet homestyle perugu (curd) set daily from fresh milk—essential for every Andhra lunch.',
@@ -166,7 +166,7 @@ export const PRODUCTS = [
     badgeTone: 'gold',
     category: 'Dairy',
     pills: ['Slow Clarified', 'Rich Aroma', '100% Pure'],
-    image: 'https://images.unsplash.com/photo-1628088062854-d1870b4553da?auto=format&fit=crop&w=800&q=80',
+    image: '/products/pure-desi-ghee.webp',
     fallback: 'https://placehold.co/600x440/FEF8DF/9A6700?text=Pure+Desi+Ghee',
     description:
       'Rich, grainy, aromatic desi ghee slow-clarified for hot steamed rice, pappu, dosas, and festive sweets.',

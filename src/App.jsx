@@ -3,6 +3,7 @@ import { SettingsProvider } from './context/SettingsContext';
 import { CartProvider } from './context/CartContext';
 import Home from './pages/Home';
 import OrderSuccess from './pages/OrderSuccess';
+import Track from './pages/Track';
 import AdminLogin from './pages/AdminLogin';
 import Admin from './pages/Admin';
 
@@ -14,6 +15,7 @@ export default function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/order-success" element={<OrderSuccess />} />
+            <Route path="/track" element={<Track />} />
             <Route path="/admin-login" element={<AdminLogin />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="*" element={<Navigate to="/" replace />} />

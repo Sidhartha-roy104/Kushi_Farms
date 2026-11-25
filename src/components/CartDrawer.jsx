@@ -135,6 +135,9 @@ export default function CartDrawer() {
                     className="cart-item-img"
                     src={item.image}
                     alt={item.name}
+                    loading="lazy"
+                    width="60"
+                    height="60"
                     onError={(e) => {
                       e.currentTarget.onerror = null;
                       e.currentTarget.src = item.fallback;

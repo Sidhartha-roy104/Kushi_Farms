@@ -44,6 +44,9 @@ export default function QuickViewModal() {
               <img
                 src={product.image}
                 alt={product.name}
+                loading="lazy"
+                width="400"
+                height="400"
                 onError={(e) => {
                   e.currentTarget.onerror = null;
                   e.currentTarget.src = product.fallback;

@@ -33,6 +33,9 @@ export default function Footer() {
                 <a href="#contact">Contact us</a>
               </li>
               <li>
+                <Link to="/track">Track order</Link>
+              </li>
+              <li>
                 <button
                   id="footerCartLink"
                   onClick={() => openOverlay('cart')}

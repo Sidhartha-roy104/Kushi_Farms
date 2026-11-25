@@ -2079,3 +2079,102 @@ h1, h2, h3, h4 {
   gap: 12px;
   flex-wrap: wrap;
 }
+
+/* ==========================================================================
+   15. ORDER TRACKING STEPPER (/track)
+   ========================================================================== */
+.track-result-box {
+  margin-top: 22px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.track-result-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+
+.track-area-pill {
+  font-family: var(--font-heading);
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--brand-blue);
+  background: var(--brand-blue-soft);
+  padding: 5px 12px;
+  border-radius: var(--radius-pill);
+}
+
+.track-stepper {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.track-step {
+  padding: 12px;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--border-subtle);
+  background: var(--bg-milk);
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  opacity: 0.62;
+}
+
+.track-step.done {
+  opacity: 1;
+  border-color: var(--brand-green);
+  background: var(--brand-green-soft);
+}
+
+.track-step-dot {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: #FFFFFF;
+  border: 1.5px solid var(--border-strong);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-heading);
+  font-size: 0.76rem;
+  font-weight: 800;
+  color: var(--text-secondary);
+}
+
+.track-step.done .track-step-dot {
+  background: var(--brand-green);
+  border-color: var(--brand-green);
+  color: #FFFFFF;
+}
+
+.track-step strong {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: 0.86rem;
+}
+
+.track-step span {
+  display: block;
+  font-size: 0.76rem;
+  color: var(--text-secondary);
+}
+
+.track-items-box {
+  padding: 14px 16px;
+  border-radius: var(--radius-md);
+  background: var(--bg-ice);
+  border: 1px solid var(--border-subtle);
+}
+
+@media (max-width: 640px) {
+  .track-stepper {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState, useCallback } from 'react';
 import { supabase } from '../../lib/supabase';
 import { formatINR } from '../../context/CartContext';
+import { downloadInvoicePdf } from '../../lib/invoicePdf';
 
 const STATUS_LABELS = {
   placed: 'Placed',
@@ -133,11 +134,16 @@ export default function OrdersTab({ onNotify }) {
         setOrders((prev) =>
           prev.map((o) =>
             o.id === order.id
-              ? { ...o, invoice_number: data.invoice_number }
+              ? {
+                  ...o,
+                  invoice_number: data.invoice_number,
+                  invoice_generated_at: data.invoice_generated_at
+                }
               : o
           )
         );
-        onNotify?.(`Invoice ${data.invoice_number} ready`);
+        downloadInvoicePdf(data);
+        onNotify?.(`Invoice ${data.invoice_number} downloaded`);
       }
     } catch (err) {
       onNotify?.(
