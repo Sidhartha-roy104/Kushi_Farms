@@ -97,7 +97,7 @@ export default function TrustBar() {
 
       <div className="scroll-explore-wrap">
         <span className="scroll-line" aria-hidden="true"></span>
-        <a href="#essentials" className="scroll-explore-link">
+        <a href="#products" className="scroll-explore-link">
           <span>Scroll to explore</span>
           <span className="scroll-arrow-circle" aria-hidden="true">
             <svg

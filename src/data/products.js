@@ -21,9 +21,8 @@ export const PRODUCTS = [
     freshness:
       'Sourced fresh every morning · Best consumed within 24–48 hours when refrigerated.',
     variants: [
-      { label: '250 ml', price: 12 },
-      { label: '500 ml', price: 24 },
-      { label: '1 L', price: 48 }
+      { label: '200 ml', price: 10 },
+      { label: '500 ml', price: 30 }
     ]
   },
   {
@@ -43,9 +42,9 @@ export const PRODUCTS = [
       'Soak cubes in warm salted water for 8 minutes before cooking for melt-in-mouth softness.',
     freshness: 'Hygienically chilled & sealed · Keep frozen until ready to cook.',
     variants: [
-      { label: '200 g', price: 55 },
-      { label: '500 g', price: 130 },
-      { label: '1 kg', price: 250 }
+      { label: '200 g', price: 95 },
+      { label: '500 g', price: 255 },
+      { label: '1 kg', price: 450 }
     ]
   },
   {
@@ -152,9 +151,8 @@ export const PRODUCTS = [
       'Perfect for cooling curd rice (daddojanam), onion raita, or whisked into spiced buttermilk.',
     freshness: 'Set fresh daily · Keep chilled at 4°C for mild, non-sour taste.',
     variants: [
-      { label: '250 g', price: 25 },
-      { label: '500 g', price: 48 },
-      { label: '1 kg', price: 92 }
+      { label: '180 g', price: 10 },
+      { label: '450 g', price: 32 }
     ]
   },
   {
@@ -175,9 +173,9 @@ export const PRODUCTS = [
     freshness:
       '100% Pure · Naturally shelf-stable in a cool, dry kitchen cupboard.',
     variants: [
-      { label: '200 ml', price: 160 },
-      { label: '500 ml', price: 385 },
-      { label: '1 L', price: 750 }
+      { label: '250 g', price: 350 },
+      { label: '500 g', price: 650 },
+      { label: '1 kg', price: 1200 }
     ]
   }
 ];

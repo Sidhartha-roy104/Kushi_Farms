@@ -25,9 +25,14 @@ export default function AnnouncementBar() {
             </svg>
           </span>
           <span>
-            Free home delivery on orders above ₹{settings.free_delivery_threshold}{' '}
-            • Freshness guaranteed! · Chaparam, Srikakulam (
-            {settings.store_open}–{settings.store_close})
+            Free <span className="hide-mobile">home </span>delivery{' '}
+            <span className="hide-mobile">on orders </span>above ₹
+            {settings.free_delivery_threshold} •{' '}
+            <span className="hide-mobile">
+              Freshness guaranteed! · Chaparam, Srikakulam (
+            </span>
+            {settings.store_open}–{settings.store_close}
+            <span className="hide-mobile">)</span>
           </span>
         </div>
         <a href="#contact" className="top-bar-link">

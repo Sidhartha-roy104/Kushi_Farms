@@ -4,7 +4,7 @@ const RANGES = [
   {
     range: 'Milk',
     label: 'Cow’s Milk',
-    price: 'From ₹12',
+    price: 'From ₹10',
     icon: (
       <svg
         width="22"
@@ -24,7 +24,7 @@ const RANGES = [
   {
     range: 'Curd',
     label: 'Fresh Curd',
-    price: 'From ₹25',
+    price: 'From ₹10',
     icon: (
       <svg
         width="22"
@@ -44,7 +44,7 @@ const RANGES = [
   {
     range: 'Ghee',
     label: 'Desi Ghee',
-    price: 'From ₹160',
+    price: 'From ₹350',
     icon: (
       <svg
         width="22"
@@ -64,7 +64,7 @@ const RANGES = [
   {
     range: 'Paneer',
     label: 'Paneer',
-    price: 'From ₹55',
+    price: 'From ₹95',
     icon: (
       <svg
         width="22"

@@ -263,46 +263,14 @@ export default function Hero() {
               strokeOpacity="0.65"
             />
 
-            <g transform="translate(216, 198)">
-              <path
-                d="M39 0C39 0 54 15.5 54 25.5C54 33.8 47.3 40.5 39 40.5C30.7 40.5 24 33.8 24 25.5C24 15.5 39 0 39 0Z"
-                fill="#DDF0FF"
-                stroke="#1256A8"
-                strokeWidth="2.2"
-                strokeLinejoin="round"
-              />
-              <circle cx="44" cy="16" r="3.2" fill="#F7D138" />
-              <path
-                d="M27 28.5C31 25.5 36.2 25.5 40 28C43.5 30.2 47.6 29.4 51 27C50 33.6 45 38 39 38C33.2 38 28.2 34.2 27 28.5Z"
-                fill="#64B232"
-              />
-              <text
-                x="39"
-                y="65"
-                textAnchor="middle"
-                fill="#0D458A"
-                fontFamily="'Plus Jakarta Sans', sans-serif"
-                fontWeight="800"
-                fontSize="25"
-                letterSpacing="-0.03em"
-              >
-                Kushi
-              </text>
-              <text
-                x="39"
-                y="79"
-                textAnchor="middle"
-                fill="#1256A8"
-                fontFamily="'Plus Jakarta Sans', sans-serif"
-                fontWeight="700"
-                fontSize="10.5"
-                letterSpacing="0.24em"
-              >
-                DAIRY
-              </text>
-              <path
-                d="M68 44C68 40 72 37 76.5 37.5C76 41.8 72.8 45 68 44Z"
-                fill="#64B232"
+            <g transform="translate(216, 194)">
+              <image
+                href="/logo.webp"
+                x="-3"
+                y="0"
+                width="84"
+                height="86"
+                preserveAspectRatio="xMidYMid meet"
               />
             </g>
 

@@ -27,25 +27,6 @@ export default function ProductCard({ product }) {
           }}
         />
 
-        <span className={`product-badge ${product.badgeTone}`}>
-          <svg
-            width="11"
-            height="13"
-            viewBox="0 0 14 17"
-            fill="none"
-            aria-hidden="true"
-          >
-            <path
-              d="M7 1C7 1 13 7.2 13 11.2C13 14.4 10.3 16.5 7 16.5C3.7 16.5 1 14.4 1 11.2C1 7.2 7 1 7 1Z"
-              fill="currentColor"
-              fillOpacity="0.2"
-              stroke="currentColor"
-              strokeWidth="1.6"
-            />
-          </svg>
-          {product.badge}
-        </span>
-
         <button
           className="qv-eye-btn"
           aria-label={`Quick view ${product.name}`}
@@ -68,8 +49,6 @@ export default function ProductCard({ product }) {
             <circle cx="12" cy="12" r="3"></circle>
           </svg>
         </button>
-
-        <span className="kushi-stamp">Kushi® Chaparam</span>
 
         <svg
           className="product-photo-wave"

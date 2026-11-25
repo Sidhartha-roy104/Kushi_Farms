@@ -83,12 +83,18 @@ export default function Footer() {
 
         <div className="footer-bottom">
           <span>© 2026 KUSHI DAIRY PRODUCTS. All rights reserved.</span>
-          <button
-            id="openCookieModalBtn"
-            onClick={() => openOverlay('cookie')}
-          >
-            Cookie settings
-          </button>
+          <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', alignItems: 'center' }}>
+            <Link to="/terms">Terms</Link>
+            <Link to="/privacy">Privacy</Link>
+            <Link to="/refund-policy">Refunds</Link>
+            <Link to="/shipping-policy">Delivery</Link>
+            <button
+              id="openCookieModalBtn"
+              onClick={() => openOverlay('cookie')}
+            >
+              Cookie settings
+            </button>
+          </div>
         </div>
       </div>
     </footer>

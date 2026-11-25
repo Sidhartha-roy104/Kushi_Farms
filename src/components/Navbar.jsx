@@ -27,7 +27,7 @@ export default function Navbar() {
       <div className={`navbar-wrap${scrolled ? ' scrolled' : ''}`} id="navbarWrap">
         <header className="navbar-pill">
           <a href="#home" className="brand-logo" aria-label="Kushi Dairy Home">
-            <Logo variant="dark" width={148} height={40} />
+            <Logo variant="dark" height={58} />
           </a>
 
           <nav aria-label="Main Navigation">
@@ -68,7 +68,7 @@ export default function Navbar() {
                 </a>
               </li>
               <li>
-                <a href="#essentials" className="nav-link">
+                <a href="#products" className="nav-link">
                   Goodness
                 </a>
               </li>
@@ -195,7 +195,7 @@ export default function Navbar() {
         <a href="#products" onClick={() => setMobileOpen(false)}>
           Our Products
         </a>
-        <a href="#essentials" onClick={() => setMobileOpen(false)}>
+        <a href="#products" onClick={() => setMobileOpen(false)}>
           Goodness
         </a>
         <a href="#about" onClick={() => setMobileOpen(false)}>

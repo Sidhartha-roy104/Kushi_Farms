@@ -3,7 +3,6 @@ import AnnouncementBar from '../components/AnnouncementBar';
 import Navbar from '../components/Navbar';
 import Hero from '../components/Hero';
 import TrustBar from '../components/TrustBar';
-import CategoryChips from '../components/CategoryChips';
 import ProductGrid from '../components/ProductGrid';
 import StoreInfo from '../components/StoreInfo';
 import PincodeChecker from '../components/PincodeChecker';
@@ -88,8 +87,6 @@ export default function Home() {
       </div>
 
       <main>
-        <CategoryChips />
-
         <div className="wave-divider wave-from-white" aria-hidden="true">
           <svg
             viewBox="0 0 1440 96"

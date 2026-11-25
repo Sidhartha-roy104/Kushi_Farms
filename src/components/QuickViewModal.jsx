@@ -52,10 +52,6 @@ export default function QuickViewModal() {
                   e.currentTarget.src = product.fallback;
                 }}
               />
-              <span className={`product-badge ${product.badgeTone}`}>
-                {product.badge}
-              </span>
-              <span className="kushi-stamp">Kushi® Chaparam</span>
               <svg
                 className="qv-header-wave"
                 viewBox="0 0 360 32"
