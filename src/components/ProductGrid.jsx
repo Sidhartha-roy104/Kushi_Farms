@@ -1,6 +1,5 @@
 import { useMemo, useRef } from 'react';
 import { useCart } from '../context/CartContext';
-import { useSettings } from '../context/SettingsContext';
 import ProductCard from './ProductCard';
 
 export default function ProductGrid() {
@@ -15,7 +14,6 @@ export default function ProductGrid() {
     resetFilters,
     showToast
   } = useCart();
-  const { settings } = useSettings();
 
   const searchRef = useRef(null);
 
@@ -72,22 +70,6 @@ export default function ProductGrid() {
           >
             View all products
           </button>
-        </div>
-
-        <div className="brand-promise-bar">
-          <span className="promise-pill">
-            <span className="promise-check">✓</span> Chaparam Village Sourced
-          </span>
-          <span className="promise-pill">
-            <span className="promise-check">✓</span> Daily Fresh Stock
-          </span>
-          <span className="promise-pill">
-            <span className="promise-check">✓</span> Hygienically Sealed Packs
-          </span>
-          <span className="promise-pill">
-            <span className="promise-check">✓</span> Free Local Delivery over ₹
-            {settings.free_delivery_threshold}
-          </span>
         </div>
 
         <div className="catalog-controls">
