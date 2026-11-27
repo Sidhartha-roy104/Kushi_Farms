@@ -3212,5 +3212,32 @@ h4 {
     height: 42px;
     padding: 0 16px;
   }
+
+  /* 11. Mobile Cart & Checkout Drawer full-scroll + 100dvh fix */
+  .cart-drawer {
+    height: 100dvh;
+    max-height: 100dvh;
+  }
+
+  .drawer-items {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 14px 18px 32px;
+  }
+
+  .checkout-form .form-field {
+    margin-bottom: 10px;
+  }
+
+  .checkout-form .form-field input {
+    height: 40px;
+  }
+
+  .checkout-totals {
+    margin: 8px 0 12px;
+    padding-top: 10px;
+  }
 }
 
