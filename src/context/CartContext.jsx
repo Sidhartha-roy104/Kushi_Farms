@@ -16,8 +16,8 @@ export function formatINR(amount) {
   return `₹${Number(amount).toFixed(2)}`;
 }
 
-export function getCartKey(id, vIdx) {
-  return `${id}__${vIdx}`;
+export function getCartKey(id, vIdx, schedule = null) {
+  return schedule ? `${id}__${vIdx}__${schedule}` : `${id}__${vIdx}`;
 }
 
 function mapSupabaseProduct(row) {
@@ -175,12 +175,12 @@ export function CartProvider({ children }) {
   }, []);
 
   const updateCart = useCallback(
-    (id, vIdx, delta) => {
+    (id, vIdx, delta, schedule = null) => {
       const product = products.find((p) => p.id === id);
       if (!product) return;
       const variant = product.variants[vIdx];
       if (!variant) return;
-      const key = getCartKey(id, vIdx);
+      const key = getCartKey(id, vIdx, schedule);
 
       setCart((prev) => {
         const existing = prev[key];
@@ -193,7 +193,11 @@ export function CartProvider({ children }) {
         }
 
         if (delta > 0 && !existing) {
-          showToast(`Added ${product.name} (${variant.label})`);
+          showToast(
+            schedule
+              ? `Added ${product.name} (${variant.label} · ${schedule})`
+              : `Added ${product.name} (${variant.label})`
+          );
         }
 
         return {
@@ -207,6 +211,7 @@ export function CartProvider({ children }) {
             price: variant.price,
             image: product.image,
             fallback: product.fallback,
+            schedule: schedule || existing?.schedule || null,
             qty: nextQty
           }
         };
@@ -216,6 +221,42 @@ export function CartProvider({ children }) {
       setTimeout(() => setCartPop(false), 240);
     },
     [products, showToast]
+  );
+
+  const addPackageItemsToCart = useCallback(
+    (packageItems) => {
+      if (!Array.isArray(packageItems) || packageItems.length === 0) return;
+
+      setCart((prev) => {
+        const next = { ...prev };
+        packageItems.forEach((item) => {
+          const key = getCartKey(item.id, item.vIdx, item.schedule);
+          const existing = next[key];
+          next[key] = {
+            id: item.id,
+            vIdx: item.vIdx,
+            variantId: item.variantId || null,
+            name: item.name,
+            variantLabel: item.variantLabel,
+            price: item.price,
+            image: item.image,
+            fallback: item.fallback,
+            schedule: item.schedule,
+            qty: (existing ? existing.qty : 0) + item.qty
+          };
+        });
+        return next;
+      });
+
+      setCartPop(true);
+      setTimeout(() => setCartPop(false), 240);
+      showToast(
+        `Added ${packageItems.length} custom package ${
+          packageItems.length === 1 ? 'item' : 'items'
+        } to cart`
+      );
+    },
+    [showToast]
   );
 
   const openQuickView = useCallback((productId) => {
@@ -270,6 +311,7 @@ export function CartProvider({ children }) {
     selectVariant,
     cart,
     updateCart,
+    addPackageItemsToCart,
     clearCart,
     cartSummary,
     cartPop,

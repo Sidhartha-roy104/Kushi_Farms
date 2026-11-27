@@ -3,6 +3,7 @@ import AnnouncementBar from '../components/AnnouncementBar';
 import Navbar from '../components/Navbar';
 import Hero from '../components/Hero';
 import TrustBar from '../components/TrustBar';
+import CustomPackageBuilder from '../components/CustomPackageBuilder';
 import ProductGrid from '../components/ProductGrid';
 import StoreInfo from '../components/StoreInfo';
 import PincodeChecker from '../components/PincodeChecker';
@@ -88,6 +89,25 @@ export default function Home() {
 
       <main>
         <div className="wave-divider wave-from-white" aria-hidden="true">
+          <svg
+            viewBox="0 0 1440 96"
+            preserveAspectRatio="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0,36 C360,88 760,10 1140,58 C1285,76 1380,58 1440,42 L1440,96 L0,96 Z"
+              fill="rgba(250, 251, 248, 0.55)"
+            />
+            <path
+              d="M0,62 C300,20 720,90 1120,40 C1270,22 1380,44 1440,56 L1440,96 L0,96 Z"
+              fill="#FAFBF8"
+            />
+          </svg>
+        </div>
+
+        <CustomPackageBuilder />
+
+        <div className="wave-divider wave-from-milk" aria-hidden="true">
           <svg
             viewBox="0 0 1440 96"
             preserveAspectRatio="none"

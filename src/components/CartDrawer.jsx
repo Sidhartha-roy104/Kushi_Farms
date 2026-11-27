@@ -30,8 +30,9 @@ export default function CartDrawer() {
       ''
     ];
     items.forEach((item, idx) => {
+      const schedTag = item.schedule ? ` [${item.schedule}]` : '';
       lines.push(
-        `${idx + 1}. ${item.name} (${item.variantLabel}) x ${item.qty} = ${formatINR(item.price * item.qty)}`
+        `${idx + 1}. ${item.name} (${item.variantLabel})${schedTag} × ${item.qty} = ${formatINR(item.price * item.qty)}`
       );
     });
     lines.push('');
@@ -130,7 +131,10 @@ export default function CartDrawer() {
               </div>
             ) : (
               items.map((item) => (
-                <div className="cart-item" key={`${item.id}__${item.vIdx}`}>
+                <div
+                  className="cart-item"
+                  key={`${item.id}__${item.vIdx}__${item.schedule || 'once'}`}
+                >
                   <img
                     className="cart-item-img"
                     src={item.image}
@@ -144,7 +148,12 @@ export default function CartDrawer() {
                     }}
                   />
                   <div className="cart-item-info">
-                    <strong>{item.name}</strong>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
+                      <strong>{item.name}</strong>
+                      {item.schedule && (
+                        <span className="cart-schedule-badge">{item.schedule}</span>
+                      )}
+                    </div>
                     <span>
                       {item.variantLabel} · {formatINR(item.price)} each
                     </span>
@@ -157,7 +166,9 @@ export default function CartDrawer() {
                       className="qty-btn"
                       style={{ width: '26px', height: '26px' }}
                       aria-label="Decrease quantity"
-                      onClick={() => updateCart(item.id, item.vIdx, -1)}
+                      onClick={() =>
+                        updateCart(item.id, item.vIdx, -1, item.schedule)
+                      }
                     >
                       −
                     </button>
@@ -166,7 +177,9 @@ export default function CartDrawer() {
                       className="qty-btn"
                       style={{ width: '26px', height: '26px' }}
                       aria-label="Increase quantity"
-                      onClick={() => updateCart(item.id, item.vIdx, 1)}
+                      onClick={() =>
+                        updateCart(item.id, item.vIdx, 1, item.schedule)
+                      }
                     >
                       +
                     </button>

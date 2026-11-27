@@ -68,6 +68,11 @@ export default function Navbar() {
                 </a>
               </li>
               <li>
+                <a href="#custom-package" className="nav-link">
+                  Custom Pack
+                </a>
+              </li>
+              <li>
                 <a href="#products" className="nav-link">
                   Goodness
                 </a>
@@ -194,6 +199,9 @@ export default function Navbar() {
         </a>
         <a href="#products" onClick={() => setMobileOpen(false)}>
           Our Products
+        </a>
+        <a href="#custom-package" onClick={() => setMobileOpen(false)}>
+          Custom Pack
         </a>
         <a href="#products" onClick={() => setMobileOpen(false)}>
           Goodness
