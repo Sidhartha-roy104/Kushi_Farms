@@ -569,38 +569,29 @@ export default function ProductsTab({ onNotify }) {
                 </div>
               )}
 
-              <div className="admin-form-grid">
-                <div className="form-field">
-                  <label>Badge</label>
-                  <input
-                    type="text"
-                    value={form.badge}
-                    onChange={(e) => setForm({ ...form, badge: e.target.value })}
-                  />
-                </div>
-                <div className="form-field">
-                  <label>Storage Tip</label>
-                  <input
-                    type="text"
-                    placeholder="e.g., Keep refrigerated"
-                    value={form.storage_tip}
-                    onChange={(e) => setForm({ ...form, storage_tip: e.target.value })}
-                  />
-                </div>
-              </div>
-
               <div className="form-field">
-                <label>Product Image (Upload to Storage or Paste URL)</label>
-                <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
-                  <input
-                    type="text"
-                    placeholder="https://..."
-                    value={form.image_url}
-                    onChange={(e) => setForm({ ...form, image_url: e.target.value })}
-                    style={{ flex: 1, minWidth: '200px' }}
-                  />
-                  <label className="admin-btn-sm" style={{ cursor: 'pointer' }}>
-                    {uploading ? 'Uploading...' : 'Upload File'}
+                <label>Product Photo</label>
+                <div style={{ display: 'flex', gap: '12px', alignItems: 'center', flexWrap: 'wrap' }}>
+                  {form.image_url && (
+                    <img
+                      src={form.image_url}
+                      alt="Product preview"
+                      style={{
+                        width: '64px',
+                        height: '64px',
+                        borderRadius: '12px',
+                        objectFit: 'contain',
+                        background: 'var(--bg-milk)',
+                        border: '1px solid var(--border-subtle)'
+                      }}
+                    />
+                  )}
+                  <label className="admin-btn-sm primary" style={{ cursor: 'pointer', height: '40px', padding: '0 16px' }}>
+                    {uploading
+                      ? 'Uploading...'
+                      : form.image_url
+                        ? 'Change Photo'
+                        : 'Upload Photo (Mobile / PC)'}
                     <input
                       type="file"
                       accept="image/*"
