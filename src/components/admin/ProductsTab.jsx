@@ -8,6 +8,7 @@ function VariantRow({ variant, onSaved, onNotify }) {
   const [stock, setStock] = useState(String(variant.stock ?? 0));
   const [isActive, setIsActive] = useState(Boolean(variant.is_active));
   const [saving, setSaving] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   const numericStock = Number(stock);
   const isOut = numericStock <= 0;
@@ -34,6 +35,26 @@ function VariantRow({ variant, onSaved, onNotify }) {
       onSaved?.();
     }
     setSaving(false);
+  };
+
+  const handleDelete = async () => {
+    if (!supabase) return;
+    if (!window.confirm(`Delete pack size "${variant.label}"? Past orders will not be affected.`)) {
+      return;
+    }
+    setDeleting(true);
+    const { error } = await supabase
+      .from('product_variants')
+      .delete()
+      .eq('id', variant.id);
+
+    if (error) {
+      onNotify?.(`Error deleting ${variant.label}: ${error.message}`);
+    } else {
+      onNotify?.(`Deleted ${variant.label}`);
+      onSaved?.();
+    }
+    setDeleting(false);
   };
 
   return (
@@ -119,13 +140,23 @@ function VariantRow({ variant, onSaved, onNotify }) {
         Active
       </label>
 
-      <button
-        className="admin-btn-sm primary"
-        onClick={handleSave}
-        disabled={saving}
-      >
-        {saving ? 'Saving...' : 'Save'}
-      </button>
+      <div style={{ display: 'flex', gap: '6px' }}>
+        <button
+          className="admin-btn-sm primary"
+          onClick={handleSave}
+          disabled={saving || deleting}
+        >
+          {saving ? 'Saving...' : 'Save'}
+        </button>
+        <button
+          className="admin-btn-sm danger"
+          onClick={handleDelete}
+          disabled={saving || deleting}
+          aria-label={`Delete ${variant.label}`}
+        >
+          {deleting ? '...' : 'Delete'}
+        </button>
+      </div>
     </div>
   );
 }
@@ -144,7 +175,10 @@ const EMPTY_PRODUCT = {
   storage_tip: '',
   image_url: '',
   sort_order: 10,
-  is_active: true
+  is_active: true,
+  initialLabel: '',
+  initialPrice: '',
+  initialStock: '50'
 };
 
 export default function ProductsTab({ onNotify }) {
@@ -250,13 +284,20 @@ export default function ProductsTab({ onNotify }) {
     if (!supabase) return;
     setSavingProduct(true);
 
-    const cleanSlug =
+    const baseSlug =
       form.slug.trim() ||
       form.name
         .trim()
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, '-')
-        .replace(/^-|-$/g, '');
+        .replace(/^-|-$/g, '') ||
+      `product-${Date.now()}`;
+
+    const slugTaken =
+      !form.id && products.some((p) => p.slug === baseSlug);
+    const cleanSlug = slugTaken
+      ? `${baseSlug}-${Date.now().toString().slice(-4)}`
+      : baseSlug;
 
     const payload = {
       name: form.name.trim(),
@@ -274,16 +315,48 @@ export default function ProductsTab({ onNotify }) {
       is_active: form.is_active
     };
 
-    const { error } = form.id
-      ? await supabase.from('products').update(payload).eq('id', form.id)
-      : await supabase.from('products').insert(payload);
+    if (form.id) {
+      const { error } = await supabase
+        .from('products')
+        .update(payload)
+        .eq('id', form.id);
 
-    if (error) {
-      onNotify?.(`Error saving product: ${error.message}`);
+      if (error) {
+        onNotify?.(`Error saving product: ${error.message}`);
+      } else {
+        onNotify?.('Product updated');
+        setModalOpen(false);
+        loadProducts();
+      }
     } else {
-      onNotify?.(form.id ? 'Product updated' : 'Product added');
-      setModalOpen(false);
-      loadProducts();
+      const { data: created, error } = await supabase
+        .from('products')
+        .insert(payload)
+        .select('id')
+        .single();
+
+      if (error || !created) {
+        onNotify?.(`Error adding product: ${error?.message || 'Insert failed'}`);
+      } else {
+        const priceNum = Number(form.initialPrice);
+        const { error: varErr } = await supabase.from('product_variants').insert({
+          product_id: created.id,
+          label: form.initialLabel.trim() || '1 unit',
+          price: priceNum,
+          mrp: priceNum,
+          discount_percent: 0,
+          stock: Math.max(0, Math.floor(Number(form.initialStock) || 0)),
+          is_active: true,
+          sort_order: 1
+        });
+        if (varErr) {
+          onNotify?.(`Product added, but variant failed: ${varErr.message}`);
+        } else {
+          onNotify?.('Product added');
+        }
+        setModalOpen(false);
+        loadProducts();
+      }
     }
     setSavingProduct(false);
   };
@@ -309,6 +382,28 @@ export default function ProductsTab({ onNotify }) {
       setNewVarLabel('');
       setNewVarPrice('');
       setNewVarStock('50');
+      loadProducts();
+    }
+  };
+
+  const handleDeleteProduct = async (product) => {
+    if (!supabase) return;
+    if (
+      !window.confirm(
+        `Delete "${product.name}" and all of its pack sizes? Past orders will keep their snapshot and will not be affected.`
+      )
+    ) {
+      return;
+    }
+    const { error } = await supabase
+      .from('products')
+      .delete()
+      .eq('id', product.id);
+
+    if (error) {
+      onNotify?.(`Error deleting ${product.name}: ${error.message}`);
+    } else {
+      onNotify?.(`Deleted ${product.name}`);
       loadProducts();
     }
   };
@@ -365,6 +460,12 @@ export default function ProductsTab({ onNotify }) {
                 >
                   Edit Product
                 </button>
+                <button
+                  className="admin-btn-sm danger"
+                  onClick={() => handleDeleteProduct(product)}
+                >
+                  Delete
+                </button>
               </div>
             </div>
 
@@ -410,18 +511,9 @@ export default function ProductsTab({ onNotify }) {
                   <label>Product Name *</label>
                   <input
                     type="text"
+                    placeholder="e.g., Fresh Butter"
                     value={form.name}
                     onChange={(e) => setForm({ ...form, name: e.target.value })}
-                    required
-                  />
-                </div>
-                <div className="form-field">
-                  <label>Slug *</label>
-                  <input
-                    type="text"
-                    placeholder="e.g., cows-milk"
-                    value={form.slug}
-                    onChange={(e) => setForm({ ...form, slug: e.target.value })}
                     required
                   />
                 </div>
@@ -438,12 +530,61 @@ export default function ProductsTab({ onNotify }) {
                     <option value="Pantry">Pantry</option>
                   </select>
                 </div>
+              </div>
+
+              {!form.id && (
+                <div className="admin-form-grid" style={{ gridTemplateColumns: '1fr 1fr 1fr' }}>
+                  <div className="form-field">
+                    <label>Pack Size *</label>
+                    <input
+                      type="text"
+                      placeholder="e.g., 500 ml"
+                      value={form.initialLabel}
+                      onChange={(e) => setForm({ ...form, initialLabel: e.target.value })}
+                      required
+                    />
+                  </div>
+                  <div className="form-field">
+                    <label>Price (₹) *</label>
+                    <input
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      placeholder="e.g., 45"
+                      value={form.initialPrice}
+                      onChange={(e) => setForm({ ...form, initialPrice: e.target.value })}
+                      required
+                    />
+                  </div>
+                  <div className="form-field">
+                    <label>Initial Stock *</label>
+                    <input
+                      type="number"
+                      min="0"
+                      value={form.initialStock}
+                      onChange={(e) => setForm({ ...form, initialStock: e.target.value })}
+                      required
+                    />
+                  </div>
+                </div>
+              )}
+
+              <div className="admin-form-grid">
                 <div className="form-field">
                   <label>Badge</label>
                   <input
                     type="text"
                     value={form.badge}
                     onChange={(e) => setForm({ ...form, badge: e.target.value })}
+                  />
+                </div>
+                <div className="form-field">
+                  <label>Storage Tip</label>
+                  <input
+                    type="text"
+                    placeholder="e.g., Keep refrigerated"
+                    value={form.storage_tip}
+                    onChange={(e) => setForm({ ...form, storage_tip: e.target.value })}
                   />
                 </div>
               </div>
@@ -480,25 +621,6 @@ export default function ProductsTab({ onNotify }) {
                   value={form.description}
                   onChange={(e) => setForm({ ...form, description: e.target.value })}
                 />
-              </div>
-
-              <div className="admin-form-grid">
-                <div className="form-field">
-                  <label>Kitchen Tip</label>
-                  <input
-                    type="text"
-                    value={form.kitchen_tip}
-                    onChange={(e) => setForm({ ...form, kitchen_tip: e.target.value })}
-                  />
-                </div>
-                <div className="form-field">
-                  <label>Storage Tip</label>
-                  <input
-                    type="text"
-                    value={form.storage_tip}
-                    onChange={(e) => setForm({ ...form, storage_tip: e.target.value })}
-                  />
-                </div>
               </div>
 
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '6px' }}>
