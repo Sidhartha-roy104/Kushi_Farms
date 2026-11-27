@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION public.complete_razorpay_payment(
   p_razorpay_order_id text,
   p_razorpay_payment_id text
 )
-RETURNS texthye 
+RETURNS text
 LANGUAGE plpgsql
 SECURITY DEFINER
 SET search_path = public
