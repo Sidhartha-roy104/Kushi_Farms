@@ -162,29 +162,133 @@ export default function OrdersTab({ onNotify }) {
         <div className="admin-toolbar-left">
           <input
             type="search"
-            className="admin-input"
+            className="admin-input admin-search-input"
             placeholder="Search order ref, name, or phone..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            style={{ minWidth: '250px' }}
           />
-          <select
-            className="admin-select"
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-            aria-label="Filter orders by status"
-          >
-            <option value="all">All Statuses</option>
-            <option value="placed">Placed</option>
-            <option value="accepted">Accepted</option>
-            <option value="on_the_way">On the way</option>
-            <option value="delivered">Delivered</option>
-          </select>
-        </div>
+          <div className="admin-toolbar-row">
+            <select
+              className="admin-select"
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              aria-label="Filter orders by status"
+            >
+              <option value="all">All Statuses</option>
+              <option value="placed">Placed</option>
+              <option value="accepted">Accepted</option>
+              <option value="on_the_way">On the way</option>
+              <option value="delivered">Delivered</option>
+            </select>
 
-        <button className="admin-btn-sm" onClick={loadOrders} disabled={loading}>
-          {loading ? 'Refreshing...' : 'Refresh Orders'}
-        </button>
+            <button
+              className="admin-btn-sm"
+              onClick={loadOrders}
+              disabled={loading}
+            >
+              {loading ? 'Refreshing...' : 'Refresh'}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile Card List (shown on <= 768px) */}
+      <div className="admin-order-cards">
+        {loading ? (
+          <p style={{ textAlign: 'center', padding: '24px' }}>Loading orders...</p>
+        ) : filteredOrders.length === 0 ? (
+          <p
+            style={{
+              textAlign: 'center',
+              padding: '24px',
+              color: 'var(--text-secondary)'
+            }}
+          >
+            No orders found.
+          </p>
+        ) : (
+          filteredOrders.map((order) => (
+            <div className="admin-order-card" key={order.id}>
+              <div className="admin-order-card-top">
+                <div>
+                  <strong className="admin-order-ref">{order.order_ref}</strong>
+                  <span className="admin-order-date">
+                    {new Date(order.created_at).toLocaleString('en-IN', {
+                      dateStyle: 'short',
+                      timeStyle: 'short'
+                    })}
+                  </span>
+                </div>
+                <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                  <span className={`status-pill ${order.payment_status}`}>
+                    {order.payment_status}
+                  </span>
+                  <span className={`status-pill ${order.status}`}>
+                    {STATUS_LABELS[order.status] || order.status}
+                  </span>
+                </div>
+              </div>
+
+              <div className="admin-order-card-mid">
+                <div>
+                  <strong>{order.customer_name}</strong>
+                  <a
+                    href={`tel:+91${order.phone}`}
+                    style={{
+                      display: 'block',
+                      fontSize: '0.82rem',
+                      color: 'var(--brand-blue)',
+                      fontWeight: 600
+                    }}
+                  >
+                    +91 {order.phone}
+                  </a>
+                </div>
+                <div style={{ textAlign: 'right' }}>
+                  <strong style={{ fontSize: '1.05rem', color: 'var(--navy-deep)' }}>
+                    {formatINR(order.total)}
+                  </strong>
+                  <span style={{ display: 'block', fontSize: '0.78rem', color: 'var(--text-secondary)' }}>
+                    {(order.order_items || []).length} items
+                  </span>
+                </div>
+              </div>
+
+              <div className="admin-order-card-actions">
+                <select
+                  className="admin-select"
+                  style={{ height: '36px', fontSize: '0.82rem', flex: '1 1 120px' }}
+                  value={order.status === 'placed' ? '' : order.status}
+                  disabled={updatingId === order.id}
+                  onChange={(e) => handleStatusChange(order.id, e.target.value)}
+                  aria-label={`Change status for ${order.order_ref}`}
+                >
+                  {order.status === 'placed' && (
+                    <option value="" disabled>
+                      Placed
+                    </option>
+                  )}
+                  <option value="accepted">Accepted</option>
+                  <option value="on_the_way">On the way</option>
+                  <option value="delivered">Delivered</option>
+                </select>
+                <button
+                  className="admin-btn-sm"
+                  onClick={() => setSelectedOrder(order)}
+                >
+                  Details
+                </button>
+                <button
+                  className="admin-btn-sm primary"
+                  disabled={generatingId === order.id}
+                  onClick={() => handleGenerateInvoice(order)}
+                >
+                  {generatingId === order.id ? '...' : 'Invoice'}
+                </button>
+              </div>
+            </div>
+          ))
+        )}
       </div>
 
       <div className="admin-table-wrap">

@@ -447,7 +447,7 @@ export default function ProductsTab({ onNotify }) {
                 </div>
               </div>
 
-              <div style={{ display: 'flex', gap: '8px' }}>
+              <div className="admin-product-actions">
                 <button
                   className="admin-btn-sm"
                   onClick={() => setVariantProductId(product.id)}
@@ -458,7 +458,7 @@ export default function ProductsTab({ onNotify }) {
                   className="admin-btn-sm"
                   onClick={() => openEditProduct(product)}
                 >
-                  Edit Product
+                  Edit
                 </button>
                 <button
                   className="admin-btn-sm danger"
@@ -533,7 +533,7 @@ export default function ProductsTab({ onNotify }) {
               </div>
 
               {!form.id && (
-                <div className="admin-form-grid" style={{ gridTemplateColumns: '1fr 1fr 1fr' }}>
+                <div className="admin-form-grid admin-form-grid-3">
                   <div className="form-field">
                     <label>Pack Size *</label>
                     <input
