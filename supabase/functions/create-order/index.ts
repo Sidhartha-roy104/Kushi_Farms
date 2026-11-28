@@ -207,10 +207,16 @@ Deno.serve(async (req) => {
         const lineTotal = Number((unitPrice * qty * totalMult).toFixed(2));
         rawTotal = Number((rawTotal + lineTotal).toFixed(2));
 
+        const slotLabel = String(customPackage.dailySlot || 'Morning (06:30–08:30 AM)').trim();
+        const twiceDays =
+          freq === 'twice_weekly' && customPackage.twiceWeeklyDays
+            ? ` · ${String(customPackage.twiceWeeklyDays).trim()}`
+            : '';
+
         orderItemsPayload.push({
           variant_id: null,
           product_name: prod.name,
-          variant_label: `${v.label} · ${PKG_LABEL[freq] || freq} (${qty * totalMult} packs / ${durationMonths} mo)`,
+          variant_label: `${v.label} · ${PKG_LABEL[freq] || freq}${twiceDays} · ${slotLabel} (${qty * totalMult} packs / ${durationMonths} mo)`,
           qty,
           unit_price: Number((unitPrice * totalMult).toFixed(2)),
           line_total: lineTotal

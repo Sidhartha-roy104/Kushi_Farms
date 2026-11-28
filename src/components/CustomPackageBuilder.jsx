@@ -153,6 +153,11 @@ export default function CustomPackageBuilder() {
       .filter(Boolean);
   }, [products, selections]);
 
+  const hasTwiceWeekly = useMemo(
+    () => selectedItems.some((item) => item.frequency === 'twice_weekly'),
+    [selectedItems]
+  );
+
   return (
     <section className="section section-milk" id="custom-package">
       <div className="container">
@@ -354,23 +359,25 @@ export default function CustomPackageBuilder() {
                   </div>
                 </div>
 
-                <div>
-                  <span className="cpkg-field-label">2X / WEEK DAYS</span>
-                  <div className="cpkg-freq-group">
-                    {TWICE_WEEKLY_DAYS.map((days) => (
-                      <button
-                        key={days}
-                        type="button"
-                        className={`cpkg-freq-pill${
-                          twiceWeeklyDays === days ? ' active' : ''
-                        }`}
-                        onClick={() => setTwiceWeeklyDays(days)}
-                      >
-                        {days}
-                      </button>
-                    ))}
+                {hasTwiceWeekly && (
+                  <div>
+                    <span className="cpkg-field-label">2X / WEEK DAYS</span>
+                    <div className="cpkg-freq-group">
+                      {TWICE_WEEKLY_DAYS.map((days) => (
+                        <button
+                          key={days}
+                          type="button"
+                          className={`cpkg-freq-pill${
+                            twiceWeeklyDays === days ? ' active' : ''
+                          }`}
+                          onClick={() => setTwiceWeeklyDays(days)}
+                        >
+                          {days}
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
 
               <div style={{ marginTop: '14px' }}>

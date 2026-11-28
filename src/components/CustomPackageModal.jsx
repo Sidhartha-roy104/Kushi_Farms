@@ -139,7 +139,7 @@ export default function CustomPackageModal({
               })),
               durationMonths,
               dailySlot,
-              twiceWeeklyDays,
+              twiceWeeklyDays: hasTwiceWeekly ? twiceWeeklyDays : null,
               festivals
             },
             customer: {
@@ -177,7 +177,7 @@ export default function CustomPackageModal({
           customer_phone: cleanPhone,
           delivery_area: `${cleanAddress} (${cleanPincode})`,
           daily_slot: dailySlot,
-          twice_weekly_days: twiceWeeklyDays,
+          twice_weekly_days: hasTwiceWeekly ? twiceWeeklyDays : null,
           festivals,
           raw_monthly_total: rawMonthlyTotal,
           discount_percent: 0,
