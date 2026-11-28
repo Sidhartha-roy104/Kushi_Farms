@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState, useCallback } from 'react';
 import { supabase } from '../../lib/supabase';
 import { formatINR } from '../../context/CartContext';
+import { useSettings } from '../../context/SettingsContext';
 import { downloadInvoicePdf } from '../../lib/invoicePdf';
 
 const STATUS_LABELS = {
@@ -11,6 +12,7 @@ const STATUS_LABELS = {
 };
 
 export default function OrdersTab({ onNotify }) {
+  const { settings } = useSettings();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -124,13 +126,8 @@ export default function OrdersTab({ onNotify }) {
         'generate-invoice',
         { body: { orderId: order.id } }
       );
-      if (error || data?.error) {
-        throw new Error(
-          data?.error ||
-            'Invoice generator Edge Function will be deployed in Phase 5.'
-        );
-      }
-      if (data?.invoice_number) {
+
+      if (!error && !data?.error && data?.invoice_number) {
         setOrders((prev) =>
           prev.map((o) =>
             o.id === order.id
@@ -144,12 +141,53 @@ export default function OrdersTab({ onNotify }) {
         );
         downloadInvoicePdf(data);
         onNotify?.(`Invoice ${data.invoice_number} downloaded`);
+        return;
       }
+
+      // Fallback: assign/save invoice number via authenticated admin session and generate PDF locally
+      const invoiceNumber =
+        order.invoice_number || `INV-${order.order_ref || order.id.slice(0, 8).toUpperCase()}`;
+      const invoiceGeneratedAt =
+        order.invoice_generated_at || new Date().toISOString();
+
+      if (!order.invoice_number) {
+        const { error: updateErr } = await supabase
+          .from('orders')
+          .update({
+            invoice_number: invoiceNumber,
+            invoice_generated_at: invoiceGeneratedAt
+          })
+          .eq('id', order.id);
+
+        if (updateErr) {
+          throw new Error(updateErr.message || 'Could not assign invoice number.');
+        }
+      }
+
+      setOrders((prev) =>
+        prev.map((o) =>
+          o.id === order.id
+            ? {
+                ...o,
+                invoice_number: invoiceNumber,
+                invoice_generated_at: invoiceGeneratedAt
+              }
+            : o
+        )
+      );
+
+      downloadInvoicePdf({
+        invoice_number: invoiceNumber,
+        invoice_generated_at: invoiceGeneratedAt,
+        order,
+        settings
+      });
+      onNotify?.(`Invoice ${invoiceNumber} downloaded`);
     } catch (err) {
       onNotify?.(
         err instanceof Error
           ? err.message
-          : 'Invoice generation is wired in Phase 5.'
+          : 'Could not generate invoice. Please try again.'
       );
     } finally {
       setGeneratingId(null);
