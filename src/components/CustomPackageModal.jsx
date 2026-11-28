@@ -68,6 +68,11 @@ export default function CustomPackageModal({
     };
   });
 
+  const hasTwiceWeekly = breakdown.some((item) => item.frequency === 'twice_weekly');
+  const chosenSchedules = [
+    ...new Set(breakdown.map((item) => FREQ_LABELS[item.frequency] || item.frequency))
+  ].join(', ');
+
   const rawMonthlyTotal = breakdown.reduce((sum, i) => sum + i.lineTotal, 0);
   const finalMonthlyTotal = rawMonthlyTotal;
   const perDayApprox = Math.round(finalMonthlyTotal / (30 * durationMonths));
@@ -262,7 +267,10 @@ export default function CustomPackageModal({
 
     lines.push('');
     lines.push(`Daily Slot: ${dailySlot}`);
-    lines.push(`2x/Week Days: ${twiceWeeklyDays}`);
+    lines.push(`Schedule: ${chosenSchedules}`);
+    if (hasTwiceWeekly) {
+      lines.push(`2x/Week Days: ${twiceWeeklyDays}`);
+    }
     if (festivals.length > 0) {
       lines.push(`Festival Pre-Orders: ${festivals.join(', ')}`);
     }
@@ -317,7 +325,12 @@ export default function CustomPackageModal({
             marginBottom: '12px'
           }}
         >
-          Slot: <strong>{dailySlot}</strong> · 2x/Week: <strong>{twiceWeeklyDays}</strong>
+          Slot: <strong>{dailySlot}</strong> · Schedule: <strong>{chosenSchedules}</strong>
+          {hasTwiceWeekly && (
+            <>
+              {' '}· 2x/Week: <strong>{twiceWeeklyDays}</strong>
+            </>
+          )}
         </p>
 
         <div className="cpkg-modal-summary">
