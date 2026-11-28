@@ -243,7 +243,7 @@ export default function CustomPackageBuilder() {
                           e.currentTarget.src = product.fallback;
                         }}
                       />
-                      <div style={{ flex: 1, minWidth: 0 }}>
+                      <div className="cpkg-card-info">
                         <h3 className="cpkg-card-title">{product.name}</h3>
                         <span className="cpkg-card-sub">
                           {product.badge} · {product.category}

@@ -1,6 +1,24 @@
-import { useState } from 'react';
-import { useCart } from '../context/CartContext';
+import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
+import { useNavigate } from 'react-router-dom';
+import { formatINR } from '../context/CartContext';
 import { useSettings } from '../context/SettingsContext';
+import { supabase } from '../lib/supabase';
+import { openRazorpayCheckout } from '../lib/razorpay';
+import { normalizePhone, isValidPhone } from '../lib/phone';
+
+const DAILY_SLOTS = [
+  'Morning (06:30–08:30 AM)',
+  'Evening (05:30–07:30 PM)'
+];
+
+function formatDateDisplay(date) {
+  return date.toLocaleDateString('en-IN', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric'
+  });
+}
 
 const SUBSCRIPTION_PLANS = {
   '1-month': {
@@ -8,45 +26,41 @@ const SUBSCRIPTION_PLANS = {
     eyebrow: '1-MONTH SUBSCRIPTION · SAVE ₹20',
     title: '1-Month Kushi Plan',
     subtitle: 'Complete monthly dairy & pantry essentials delivered fresh.',
-    originalPrice: '₹2,219',
-    discountedPrice: '₹2,199',
+    originalPrice: 2219,
+    price: 2199,
     savings: 'Save ₹20',
-    durationLabel: '30 Days',
+    durationDays: 30,
+    durationLabel: '1 Month (30 Days)',
     items: [
       {
         productId: 'cows-milk',
         name: "Cow's Milk",
         schedule: 'Daily',
-        detail: '30 packs / month',
-        qty: 1
+        detail: '30 packs / month'
       },
       {
         productId: 'fresh-curd',
         name: 'Fresh Curd',
         schedule: '3x / Week',
-        detail: '12 packs / month',
-        qty: 1
+        detail: '12 packs / month'
       },
       {
         productId: 'frozen-paneer',
         name: 'Frozen Paneer',
         schedule: '2x / Week',
-        detail: '8 packs / month',
-        qty: 1
+        detail: '8 packs / month'
       },
       {
         productId: 'pure-desi-ghee',
         name: 'Pure Desi Ghee',
         schedule: '1x / Month',
-        detail: '1 pack / month',
-        qty: 1
+        detail: '1 pack / month'
       },
       {
         productId: 'honey',
         name: 'Natural Honey',
         schedule: '1x / Month',
-        detail: '1 pack / month',
-        qty: 1
+        detail: '1 pack / month'
       }
     ]
   },
@@ -55,105 +69,231 @@ const SUBSCRIPTION_PLANS = {
     eyebrow: '3-MONTH SUBSCRIPTION · SAVE ₹657',
     title: '3-Month Kushi Plan',
     subtitle: 'All 1-Month Plan essentials extended for 3 full months at max savings.',
-    originalPrice: '₹6,657',
-    discountedPrice: '₹5,999',
+    originalPrice: 6657,
+    price: 5999,
     savings: 'Save ₹657',
-    durationLabel: '90 Days (3 Months)',
+    durationDays: 90,
+    durationLabel: '3 Months (90 Days)',
     items: [
       {
         productId: 'cows-milk',
         name: "Cow's Milk",
         schedule: 'Daily',
-        detail: '90 packs across 3 months',
-        qty: 1
+        detail: '90 packs across 3 months'
       },
       {
         productId: 'fresh-curd',
         name: 'Fresh Curd',
         schedule: '3x / Week',
-        detail: '36 packs across 3 months',
-        qty: 1
+        detail: '36 packs across 3 months'
       },
       {
         productId: 'frozen-paneer',
         name: 'Frozen Paneer',
         schedule: '2x / Week',
-        detail: '24 packs across 3 months',
-        qty: 1
+        detail: '24 packs across 3 months'
       },
       {
         productId: 'pure-desi-ghee',
         name: 'Pure Desi Ghee',
         schedule: '1x / Month',
-        detail: '3 packs across 3 months',
-        qty: 1
+        detail: '3 packs across 3 months'
       },
       {
         productId: 'honey',
         name: 'Natural Honey',
         schedule: '1x / Month',
-        detail: '3 packs across 3 months',
-        qty: 1
+        detail: '3 packs across 3 months'
       }
     ]
   }
 };
 
 export default function TrustBar() {
-  const { products, addPackageItemsToCart, openOverlay, showToast } = useCart();
+  const navigate = useNavigate();
   const { settings } = useSettings();
+
   const [activePlanKey, setActivePlanKey] = useState(null);
+  const [modalStep, setModalStep] = useState('details'); // 'details' | 'checkout'
+  const [dailySlot, setDailySlot] = useState(DAILY_SLOTS[0]);
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [address, setAddress] = useState('');
+  const [landmark, setLandmark] = useState('');
+  const [pincode, setPincode] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState('');
 
   const activePlan = activePlanKey ? SUBSCRIPTION_PLANS[activePlanKey] : null;
+
+  const startDate = new Date();
+  const endDate = activePlan
+    ? new Date(startDate.getTime() + activePlan.durationDays * 24 * 60 * 60 * 1000)
+    : startDate;
+  const startDateStr = formatDateDisplay(startDate);
+  const endDateStr = formatDateDisplay(endDate);
+
+  const openPlanModal = (key) => {
+    setActivePlanKey(key);
+    setModalStep('details');
+    setError('');
+  };
+
+  const closePlanModal = () => {
+    if (submitting) return;
+    setActivePlanKey(null);
+    setModalStep('details');
+    setError('');
+  };
+
+  useEffect(() => {
+    if (!activePlanKey) return undefined;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const onKey = (e) => {
+      if (e.key === 'Escape' && !submitting) {
+        setActivePlanKey(null);
+        setModalStep('details');
+        setError('');
+      }
+    };
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [activePlanKey, submitting]);
 
   const handlePlanWhatsApp = () => {
     if (!activePlan) return;
     const lines = [
       'Hello Kushi Dairy (Chaparam, Srikakulam)!',
       `I would like to subscribe to the *${activePlan.title}* (${activePlan.durationLabel}):`,
+      `Validity: ${startDateStr} to ${endDateStr}`,
       '',
       ...activePlan.items.map(
         (item, idx) => `${idx + 1}. ${item.name} — ${item.schedule} (${item.detail})`
       ),
       '',
-      `Plan Price: ~${activePlan.originalPrice}~ *${activePlan.discountedPrice}* (${activePlan.savings})`,
+      `Plan Price: ~${formatINR(activePlan.originalPrice)}~ *${formatINR(activePlan.price)}* (${activePlan.savings})`,
       'Please confirm my subscription & delivery slot.'
     ];
     const url = `https://wa.me/${settings.whatsapp_number}?text=${encodeURIComponent(
       lines.join('\n')
     )}`;
     window.open(url, '_blank', 'noopener,noreferrer');
-    setActivePlanKey(null);
+    closePlanModal();
   };
 
-  const handlePlanCheckout = () => {
+  const handleRazorpaySubscription = async (e) => {
+    e.preventDefault();
     if (!activePlan) return;
-    const packageItems = activePlan.items
-      .map((planItem) => {
-        const prod = products.find((p) => p.id === planItem.productId);
-        if (!prod || !prod.variants?.length) return null;
-        const variant = prod.variants[0];
-        return {
-          id: prod.id,
-          vIdx: 0,
-          variantId: variant.id || null,
-          name: prod.name,
-          variantLabel: variant.label,
-          price: variant.price,
-          image: prod.image,
-          fallback: prod.fallback,
-          schedule: `${activePlan.id === '1-month' ? '1-Mo' : '3-Mo'} Plan · ${planItem.schedule}`,
-          qty: planItem.qty
-        };
-      })
-      .filter(Boolean);
+    setError('');
 
-    if (packageItems.length > 0) {
-      addPackageItemsToCart(packageItems);
+    const cleanName = name.trim();
+    const cleanPhone = normalizePhone(phone);
+    const cleanAddress = address.trim();
+    const cleanLandmark = landmark.trim();
+    const cleanPincode = pincode.trim();
+
+    if (!cleanName) {
+      setError('Please enter your full name.');
+      return;
+    }
+    if (!isValidPhone(cleanPhone)) {
+      setError('Please enter a valid 10-digit mobile number.');
+      return;
+    }
+    if (!cleanAddress) {
+      setError('Please enter your house / street address.');
+      return;
+    }
+    if (!/^[0-9]{6}$/.test(cleanPincode)) {
+      setError('Please enter a valid 6-digit pincode.');
+      return;
+    }
+    if (!supabase) {
+      setError('Payment service is not configured. Please order via WhatsApp.');
+      return;
+    }
+
+    setSubmitting(true);
+
+    try {
+      const { data: createData, error: createErr } =
+        await supabase.functions.invoke('create-order', {
+          body: {
+            subscriptionPlan: {
+              planId: activePlan.id,
+              dailySlot
+            },
+            customer: {
+              name: cleanName,
+              phone: cleanPhone,
+              address: cleanAddress,
+              landmark: cleanLandmark,
+              pincode: cleanPincode
+            },
+            paymentMethod: 'razorpay'
+          }
+        });
+
+      if (createErr || createData?.error) {
+        let serverMsg = createData?.error;
+        if (!serverMsg && createErr?.context && typeof createErr.context.json === 'function') {
+          try {
+            const errBody = await createErr.context.json();
+            serverMsg = errBody?.error;
+          } catch {
+            // ignore
+          }
+        }
+        throw new Error(serverMsg || createErr?.message || 'Unable to start subscription checkout.');
+      }
+
+      const rzpResponse = await openRazorpayCheckout({
+        keyId: createData.key_id || import.meta.env.VITE_RAZORPAY_KEY_ID,
+        orderId: createData.razorpay_order_id,
+        amount: createData.amount,
+        currency: createData.currency || 'INR',
+        orderRef: createData.order_ref,
+        customerName: cleanName,
+        phone: cleanPhone
+      });
+
+      const { data: verifyData, error: verifyErr } =
+        await supabase.functions.invoke('verify-payment', {
+          body: {
+            razorpay_order_id: rzpResponse.razorpay_order_id,
+            razorpay_payment_id: rzpResponse.razorpay_payment_id,
+            razorpay_signature: rzpResponse.razorpay_signature
+          }
+        });
+
+      if (verifyErr || verifyData?.error || !verifyData?.ok) {
+        let serverMsg = verifyData?.error;
+        if (!serverMsg && verifyErr?.context && typeof verifyErr.context.json === 'function') {
+          try {
+            const errBody = await verifyErr.context.json();
+            serverMsg = errBody?.error;
+          } catch {
+            // ignore
+          }
+        }
+        throw new Error(
+          serverMsg ||
+            verifyErr?.message ||
+            'Payment verification failed. Contact us with your order reference.'
+        );
+      }
+
       setActivePlanKey(null);
-      openOverlay('cart');
-    } else {
-      showToast('Products are still loading. Please try again in a moment.');
+      setModalStep('details');
+      navigate(`/order-success?ref=${encodeURIComponent(verifyData.order_ref)}`);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Checkout failed. Please retry.');
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -165,11 +305,11 @@ export default function TrustBar() {
             className="trust-item plan-card plan-one"
             role="button"
             tabIndex={0}
-            onClick={() => setActivePlanKey('1-month')}
+            onClick={() => openPlanModal('1-month')}
             onKeyDown={(e) => {
               if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
-                setActivePlanKey('1-month');
+                openPlanModal('1-month');
               }
             }}
           >
@@ -205,11 +345,11 @@ export default function TrustBar() {
             className="trust-item plan-card plan-three"
             role="button"
             tabIndex={0}
-            onClick={() => setActivePlanKey('3-month')}
+            onClick={() => openPlanModal('3-month')}
             onKeyDown={(e) => {
               if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
-                setActivePlanKey('3-month');
+                openPlanModal('3-month');
               }
             }}
           >
@@ -309,78 +449,236 @@ export default function TrustBar() {
         <span className="scroll-line" aria-hidden="true"></span>
       </div>
 
-      {activePlan && (
-        <>
-          <div
-            className="overlay-backdrop open"
-            onClick={() => setActivePlanKey(null)}
-          ></div>
-          <div
-            className="modal-dialog compact open plan-details-modal"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="planModalTitle"
-          >
-            <button
-              className="modal-close-btn"
-              aria-label="Close plan details"
-              onClick={() => setActivePlanKey(null)}
+      {activePlan &&
+        createPortal(
+          <>
+            <div
+              className="overlay-backdrop open"
+              onClick={closePlanModal}
+            ></div>
+            <div
+              className="modal-dialog compact open plan-details-modal"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="planModalTitle"
             >
-              &times;
-            </button>
+              <button
+                className="modal-close-btn"
+                aria-label="Close plan details"
+                onClick={closePlanModal}
+                disabled={submitting}
+              >
+                &times;
+              </button>
 
-            <span className="eyebrow">{activePlan.eyebrow}</span>
-            <h3 id="planModalTitle" style={{ fontSize: '1.4rem', marginBottom: '4px' }}>
-              {activePlan.title}
-            </h3>
-            <p style={{ fontSize: '0.86rem', color: 'var(--text-secondary)', marginBottom: '14px' }}>
-              {activePlan.subtitle}
-            </p>
+              {modalStep === 'details' ? (
+                <>
+                  <span className="eyebrow">{activePlan.eyebrow}</span>
+                  <h3 id="planModalTitle" style={{ fontSize: '1.4rem', marginBottom: '4px' }}>
+                    {activePlan.title}
+                  </h3>
+                  <p style={{ fontSize: '0.86rem', color: 'var(--text-secondary)', marginBottom: '12px' }}>
+                    {activePlan.subtitle}
+                  </p>
 
-            <div className="plan-modal-price-box">
-              <div>
-                <span className="plan-modal-duration">{activePlan.durationLabel}</span>
-                <div className="plan-modal-price-row">
-                  <s>{activePlan.originalPrice}</s>
-                  <strong>{activePlan.discountedPrice}</strong>
-                </div>
-              </div>
-              <span className="plan-modal-save-pill">{activePlan.savings}</span>
-            </div>
-
-            <div className="plan-modal-items">
-              <span className="plan-modal-items-head">Included in this plan:</span>
-              {activePlan.items.map((item) => (
-                <div key={item.productId} className="plan-modal-item-row">
-                  <div>
-                    <strong>{item.name}</strong>
-                    <span>{item.detail}</span>
+                  <div className="plan-modal-price-box">
+                    <div>
+                      <span className="plan-modal-duration">{activePlan.durationLabel}</span>
+                      <div className="plan-modal-price-row">
+                        <s>{formatINR(activePlan.originalPrice)}</s>
+                        <strong>{formatINR(activePlan.price)}</strong>
+                      </div>
+                    </div>
+                    <span className="plan-modal-save-pill">{activePlan.savings}</span>
                   </div>
-                  <span className="plan-modal-freq-pill">{item.schedule}</span>
-                </div>
-              ))}
-            </div>
 
-            <div className="plan-modal-actions">
-              <button
-                type="button"
-                className="btn-primary"
-                style={{ width: '100%', height: '46px' }}
-                onClick={handlePlanCheckout}
-              >
-                Proceed to Checkout →
-              </button>
-              <button
-                type="button"
-                className="wa-confirm-btn"
-                onClick={handlePlanWhatsApp}
-              >
-                Order on WhatsApp
-              </button>
+                  <div className="plan-validity-box">
+                    <strong>
+                      Plan Validity: {startDateStr} → {endDateStr}
+                    </strong>
+                    <span>
+                      Starts from your date of purchase and runs for {activePlan.durationDays} days.
+                      Pay once upfront — after {endDateStr}, simply re-subscribe anytime to continue (no auto-debit).
+                    </span>
+                  </div>
+
+                  <div className="plan-modal-items">
+                    <span className="plan-modal-items-head">Included in this plan:</span>
+                    {activePlan.items.map((item) => (
+                      <div key={item.productId} className="plan-modal-item-row">
+                        <div>
+                          <strong>{item.name}</strong>
+                          <span>{item.detail}</span>
+                        </div>
+                        <span className="plan-modal-freq-pill">{item.schedule}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="plan-modal-actions">
+                    <button
+                      type="button"
+                      className="btn-primary"
+                      style={{ width: '100%', height: '46px' }}
+                      onClick={() => setModalStep('checkout')}
+                    >
+                      Subscribe &amp; Pay {formatINR(activePlan.price)} →
+                    </button>
+                    <button
+                      type="button"
+                      className="wa-confirm-btn"
+                      onClick={handlePlanWhatsApp}
+                    >
+                      Order on WhatsApp
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <form className="checkout-form" onSubmit={handleRazorpaySubscription} noValidate>
+                  <div className="checkout-back-row">
+                    <button
+                      type="button"
+                      className="checkout-back-btn"
+                      onClick={() => {
+                        setError('');
+                        setModalStep('details');
+                      }}
+                      disabled={submitting}
+                    >
+                      ← Back to Plan Details
+                    </button>
+                    <span className="checkout-step-tag">{activePlan.durationLabel}</span>
+                  </div>
+
+                  <div className="plan-checkout-summary-bar">
+                    <div>
+                      <strong>{activePlan.title}</strong>
+                      <span>Valid: {startDateStr} – {endDateStr}</span>
+                    </div>
+                    <strong className="plan-checkout-total">{formatINR(activePlan.price)}</strong>
+                  </div>
+
+                  {error && (
+                    <div className="checkout-error" role="alert">
+                      <strong>Checkout Issue</strong>
+                      <p>{error}</p>
+                    </div>
+                  )}
+
+                  <div className="form-field">
+                    <label>Preferred Daily Delivery Slot</label>
+                    <div className="cpkg-freq-group">
+                      {DAILY_SLOTS.map((slot) => (
+                        <button
+                          key={slot}
+                          type="button"
+                          className={`cpkg-freq-pill${dailySlot === slot ? ' active' : ''}`}
+                          onClick={() => setDailySlot(slot)}
+                          disabled={submitting}
+                        >
+                          {slot}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="form-field">
+                    <label htmlFor="subName">Full Name *</label>
+                    <input
+                      type="text"
+                      id="subName"
+                      placeholder="e.g., Srinivas Rao"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      required
+                      disabled={submitting}
+                    />
+                  </div>
+
+                  <div className="form-field">
+                    <label htmlFor="subPhone">10-Digit Mobile Number *</label>
+                    <input
+                      type="tel"
+                      id="subPhone"
+                      placeholder="e.g., 9876543210"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      required
+                      disabled={submitting}
+                    />
+                  </div>
+
+                  <div className="form-field">
+                    <label htmlFor="subAddress">House / Street Address *</label>
+                    <input
+                      type="text"
+                      id="subAddress"
+                      placeholder="Door no, street, village / colony"
+                      value={address}
+                      onChange={(e) => setAddress(e.target.value)}
+                      required
+                      disabled={submitting}
+                    />
+                  </div>
+
+                  <div className="guest-inputs" style={{ marginBottom: '10px' }}>
+                    <div className="form-field" style={{ marginBottom: 0 }}>
+                      <label htmlFor="subLandmark">Landmark</label>
+                      <input
+                        type="text"
+                        id="subLandmark"
+                        placeholder="Near temple / school"
+                        value={landmark}
+                        onChange={(e) => setLandmark(e.target.value)}
+                        disabled={submitting}
+                      />
+                    </div>
+                    <div className="form-field" style={{ marginBottom: 0 }}>
+                      <label htmlFor="subPincode">Pincode *</label>
+                      <input
+                        type="text"
+                        id="subPincode"
+                        placeholder="e.g., 532401"
+                        maxLength={6}
+                        value={pincode}
+                        onChange={(e) => setPincode(e.target.value.replace(/\D/g, ''))}
+                        required
+                        disabled={submitting}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="checkout-totals" style={{ margin: '6px 0 12px', paddingTop: '10px' }}>
+                    <div className="summary-row">
+                      <span>{activePlan.title}</span>
+                      <span>{formatINR(activePlan.price)}</span>
+                    </div>
+                    <div className="summary-row">
+                      <span>Doorstep Delivery ({activePlan.durationDays} Days)</span>
+                      <strong style={{ color: 'var(--brand-green-dark)' }}>FREE</strong>
+                    </div>
+                    <div className="summary-row total">
+                      <span>Total Payable</span>
+                      <span>{formatINR(activePlan.price)}</span>
+                    </div>
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="btn-primary"
+                    style={{ width: '100%', height: '48px' }}
+                    disabled={submitting}
+                  >
+                    {submitting
+                      ? 'Processing...'
+                      : `Pay ${formatINR(activePlan.price)} with Razorpay`}
+                  </button>
+                </form>
+              )}
             </div>
-          </div>
-        </>
-      )}
+          </>,
+          document.body
+        )}
     </>
   );
 }

@@ -1,6 +1,31 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { corsHeaders, jsonResponse } from '../_shared/cors.ts';
 
+const SUBSCRIPTION_PLANS: Record<
+  string,
+  { name: string; durationDays: number; price: number }
+> = {
+  '1-month': {
+    name: '1-Month Kushi Subscription Plan',
+    durationDays: 30,
+    price: 2199
+  },
+  '3-month': {
+    name: '3-Month Kushi Subscription Plan',
+    durationDays: 90,
+    price: 5999
+  }
+};
+
+function formatIstDate(date: Date): string {
+  return date.toLocaleDateString('en-IN', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+    timeZone: 'Asia/Kolkata'
+  });
+}
+
 function normalizePhone(raw: string): string {
   const digits = String(raw || '').replace(/\D/g, '');
   return digits.length >= 10 ? digits.slice(-10) : digits;
@@ -25,10 +50,11 @@ Deno.serve(async (req) => {
 
     const body = await req.json();
     const cart = Array.isArray(body?.cart) ? body.cart : [];
+    const subscriptionPlan = body?.subscriptionPlan || null;
     const customer = body?.customer || {};
     const paymentMethod = body?.paymentMethod === 'cod' ? 'cod' : 'razorpay';
 
-    if (cart.length === 0) {
+    if (!subscriptionPlan && cart.length === 0) {
       return jsonResponse({ error: 'Cart is empty' }, 400);
     }
 
@@ -78,26 +104,11 @@ Deno.serve(async (req) => {
       );
     }
 
-    // 2. Re-read variants & products from DB (never trust browser prices/totals)
-    const variantIds = [...new Set(cart.map((c: { variantId: string }) => c.variantId).filter(Boolean))];
-    if (variantIds.length !== cart.length) {
-      return jsonResponse({ error: 'Invalid cart item' }, 400);
-    }
-
-    const { data: variants, error: variantsError } = await supabase
-      .from('product_variants')
-      .select('id, label, price, stock, is_active, products(id, name, is_active)')
-      .in('id', variantIds);
-
-    if (variantsError || !variants) {
-      return jsonResponse({ error: 'Failed to load products' }, 500);
-    }
-
-    const variantMap = new Map(variants.map((v) => [v.id, v]));
-
+    // 2. Build order items & compute authoritative totals
     let subtotal = 0;
+    let deliveryFee = 0;
     const orderItemsPayload: Array<{
-      variant_id: string;
+      variant_id: string | null;
       product_name: string;
       variant_label: string;
       qty: number;
@@ -105,43 +116,84 @@ Deno.serve(async (req) => {
       line_total: number;
     }> = [];
 
-    for (const item of cart) {
-      const qty = Number(item.qty);
-      if (!Number.isInteger(qty) || qty <= 0) {
-        return jsonResponse({ error: 'Invalid item quantity' }, 400);
+    if (subscriptionPlan) {
+      const plan = SUBSCRIPTION_PLANS[String(subscriptionPlan.planId || '')];
+      if (!plan) {
+        return jsonResponse({ error: 'Invalid subscription plan' }, 400);
       }
 
-      const v = variantMap.get(item.variantId);
-      const prod = Array.isArray(v?.products) ? v.products[0] : v?.products;
+      const start = new Date();
+      const end = new Date(start.getTime() + plan.durationDays * 24 * 60 * 60 * 1000);
+      const slot = String(subscriptionPlan.dailySlot || 'Morning (06:30–08:30 AM)').trim();
+      const validityLabel = `${plan.durationDays} Days (${formatIstDate(start)} – ${formatIstDate(end)}) · ${slot}`;
 
-      if (!v || !v.is_active || !prod || !prod.is_active) {
-        return jsonResponse({ error: 'One or more selected products are unavailable' }, 400);
-      }
-
-      if (v.stock < qty) {
-        return jsonResponse(
-          { error: `Insufficient stock for ${prod.name} (${v.label}). Available: ${v.stock}` },
-          400
-        );
-      }
-
-      const unitPrice = Number(v.price);
-      const lineTotal = Number((unitPrice * qty).toFixed(2));
-      subtotal = Number((subtotal + lineTotal).toFixed(2));
+      subtotal = plan.price;
+      deliveryFee = 0;
 
       orderItemsPayload.push({
-        variant_id: v.id,
-        product_name: prod.name,
-        variant_label: v.label,
-        qty,
-        unit_price: unitPrice,
-        line_total: lineTotal
+        variant_id: null,
+        product_name: plan.name,
+        variant_label: validityLabel,
+        qty: 1,
+        unit_price: plan.price,
+        line_total: plan.price
       });
+    } else {
+      const variantIds = [...new Set(cart.map((c: { variantId: string }) => c.variantId).filter(Boolean))];
+      if (variantIds.length !== cart.length) {
+        return jsonResponse({ error: 'Invalid cart item' }, 400);
+      }
+
+      const { data: variants, error: variantsError } = await supabase
+        .from('product_variants')
+        .select('id, label, price, stock, is_active, products(id, name, is_active)')
+        .in('id', variantIds);
+
+      if (variantsError || !variants) {
+        return jsonResponse({ error: 'Failed to load products' }, 500);
+      }
+
+      const variantMap = new Map(variants.map((v) => [v.id, v]));
+
+      for (const item of cart) {
+        const qty = Number(item.qty);
+        if (!Number.isInteger(qty) || qty <= 0) {
+          return jsonResponse({ error: 'Invalid item quantity' }, 400);
+        }
+
+        const v = variantMap.get(item.variantId);
+        const prod = Array.isArray(v?.products) ? v.products[0] : v?.products;
+
+        if (!v || !v.is_active || !prod || !prod.is_active) {
+          return jsonResponse({ error: 'One or more selected products are unavailable' }, 400);
+        }
+
+        if (v.stock < qty) {
+          return jsonResponse(
+            { error: `Insufficient stock for ${prod.name} (${v.label}). Available: ${v.stock}` },
+            400
+          );
+        }
+
+        const unitPrice = Number(v.price);
+        const lineTotal = Number((unitPrice * qty).toFixed(2));
+        subtotal = Number((subtotal + lineTotal).toFixed(2));
+
+        orderItemsPayload.push({
+          variant_id: v.id,
+          product_name: prod.name,
+          variant_label: v.label,
+          qty,
+          unit_price: unitPrice,
+          line_total: lineTotal
+        });
+      }
+
+      const threshold = Number(settings.free_delivery_threshold ?? 199);
+      const fee = Number(settings.delivery_fee ?? 20);
+      deliveryFee = subtotal >= threshold ? 0 : fee;
     }
 
-    const threshold = Number(settings.free_delivery_threshold ?? 199);
-    const fee = Number(settings.delivery_fee ?? 20);
-    const deliveryFee = subtotal >= threshold ? 0 : fee;
     const total = Number((subtotal + deliveryFee).toFixed(2));
 
     // 3. Create order row
