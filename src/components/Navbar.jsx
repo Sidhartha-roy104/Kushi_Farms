@@ -73,8 +73,8 @@ export default function Navbar() {
                 </a>
               </li>
               <li>
-                <a href="#products" className="nav-link">
-                  Goodness
+                <a href="#wholesale" className="nav-link">
+                  Wholesale
                 </a>
               </li>
               <li>
@@ -203,8 +203,8 @@ export default function Navbar() {
         <a href="#custom-package" onClick={() => setMobileOpen(false)}>
           Custom Pack
         </a>
-        <a href="#products" onClick={() => setMobileOpen(false)}>
-          Goodness
+        <a href="#wholesale" onClick={() => setMobileOpen(false)}>
+          Wholesale &amp; Retail
         </a>
         <a href="#about" onClick={() => setMobileOpen(false)}>
           About Us &amp; Store Hours

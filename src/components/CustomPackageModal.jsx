@@ -77,42 +77,42 @@ export default function CustomPackageModal({
 
     try {
       if (supabase) {
-        const packageId = crypto.randomUUID();
-        const { error: pkgErr } = await supabase.from('custom_packages').insert({
-          id: packageId,
-          customer_name: cleanName,
-          customer_phone: cleanPhone,
-          delivery_area: cleanArea,
-          daily_slot: dailySlot,
-          twice_weekly_days: twiceWeeklyDays,
-          festivals,
-          raw_monthly_total: rawMonthlyTotal,
-          discount_percent: 5.0,
-          discount_amount: discountAmount,
-          final_monthly_total: finalMonthlyTotal,
-          status: 'pending'
-        });
+        try {
+          const packageId = crypto.randomUUID();
+          const { error: pkgErr } = await supabase.from('custom_packages').insert({
+            id: packageId,
+            customer_name: cleanName,
+            customer_phone: cleanPhone,
+            delivery_area: cleanArea,
+            daily_slot: dailySlot,
+            twice_weekly_days: twiceWeeklyDays,
+            festivals,
+            raw_monthly_total: rawMonthlyTotal,
+            discount_percent: 5.0,
+            discount_amount: discountAmount,
+            final_monthly_total: finalMonthlyTotal,
+            status: 'pending'
+          });
 
-        if (pkgErr) throw pkgErr;
-
-        if (breakdown.length > 0) {
-          const { error: itemsErr } = await supabase
-            .from('custom_package_items')
-            .insert(
-              breakdown.map((item) => ({
-                package_id: packageId,
-                product_id: String(item.dbId || item.id),
-                product_name: item.name,
-                variant_label: item.variantLabel,
-                unit_price: item.price,
-                frequency: item.frequency,
-                monthly_multiplier: item.multiplier,
-                quantity: item.qty,
-                line_total: item.lineTotal
-              }))
-            );
-
-          if (itemsErr) throw itemsErr;
+          if (!pkgErr && breakdown.length > 0) {
+            await supabase
+              .from('custom_package_items')
+              .insert(
+                breakdown.map((item) => ({
+                  package_id: packageId,
+                  product_id: String(item.dbId || item.id),
+                  product_name: item.name,
+                  variant_label: item.variantLabel,
+                  unit_price: item.price,
+                  frequency: item.frequency,
+                  monthly_multiplier: item.multiplier,
+                  quantity: item.qty,
+                  line_total: item.lineTotal
+                }))
+              );
+          }
+        } catch (dbErr) {
+          console.warn('Custom package DB save skipped:', dbErr);
         }
       }
 

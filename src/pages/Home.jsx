@@ -6,6 +6,7 @@ import TrustBar from '../components/TrustBar';
 import CustomPackageBuilder from '../components/CustomPackageBuilder';
 import ProductGrid from '../components/ProductGrid';
 import StoreInfo from '../components/StoreInfo';
+import WholesaleBanner from '../components/WholesaleBanner';
 import PincodeChecker from '../components/PincodeChecker';
 import Footer from '../components/Footer';
 import QuickViewModal from '../components/QuickViewModal';
@@ -144,6 +145,8 @@ export default function Home() {
         </div>
 
         <StoreInfo />
+
+        <WholesaleBanner />
 
         <div className="wave-divider wave-from-milk" aria-hidden="true">
           <svg

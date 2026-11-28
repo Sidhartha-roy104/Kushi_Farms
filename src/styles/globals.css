@@ -3240,6 +3240,76 @@ h4 {
   }
 }
 
+/* Wholesale & Retail Band */
+.wholesale-band {
+  padding: 20px 0 12px;
+  background: var(--bg-milk);
+}
+
+.wholesale-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 24px 30px;
+  border-radius: var(--radius-xl);
+  background: linear-gradient(135deg, #F2F7FC 0%, #FFFFFF 60%, #F4FBF0 100%);
+  border: 1px solid rgba(18, 86, 168, 0.14);
+  box-shadow: var(--shadow-sm);
+}
+
+.wholesale-copy {
+  flex: 1;
+  min-width: 0;
+}
+
+.wholesale-copy h3 {
+  font-size: clamp(1.22rem, 2.2vw, 1.55rem);
+  color: var(--navy-deep);
+  margin-bottom: 6px;
+}
+
+.wholesale-copy p {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  max-width: 62ch;
+}
+
+.wholesale-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+.wholesale-call-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 20px;
+}
+
+@media (max-width: 768px) {
+  .wholesale-card {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px 18px;
+    gap: 16px;
+  }
+
+  .wholesale-actions {
+    width: 100%;
+  }
+
+  .wholesale-actions a {
+    flex: 1;
+    justify-content: center;
+    min-width: 150px;
+  }
+}
+
 /* ==========================================================================
    18. MOBILE 2x2 BENTO TRUST BAR (@media (max-width: 640px))
    ========================================================================== */
@@ -3462,10 +3532,14 @@ h4 {
     padding: 0 16px;
   }
 
-  /* 11. Mobile Cart & Checkout Drawer full-scroll + 100dvh fix */
+  /* 11. Mobile Cart & Checkout Drawer full-scroll + 100svh fix */
   .cart-drawer {
-    height: 100dvh;
-    max-height: 100dvh;
+    top: 0;
+    bottom: 0;
+    height: 100%;
+    height: 100svh;
+    max-height: 100svh;
+    overflow: hidden;
   }
 
   .drawer-items {
@@ -3473,7 +3547,18 @@ h4 {
     min-height: 0;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    padding: 14px 18px 32px;
+    overscroll-behavior-y: contain;
+    padding: 14px 18px 48px;
+  }
+
+  .checkout-form {
+    padding-bottom: 44px;
+  }
+
+  .checkout-form button[type="submit"] {
+    margin-top: 8px;
+    margin-bottom: 20px;
+    flex-shrink: 0;
   }
 
   .checkout-form .form-field {
