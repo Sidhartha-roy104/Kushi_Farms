@@ -100,6 +100,7 @@ export default function CustomPackageBuilder() {
     };
 
     products.forEach((p) => {
+      if (p.isActive === false) return;
       const rule = presetRules[p.id];
       if (rule) {
         next[p.id] = {
@@ -219,7 +220,8 @@ export default function CustomPackageBuilder() {
               {products.map((product) => {
                 const cfg = getProductConfig(product);
                 const variant = product.variants[cfg.vIdx] || product.variants[0];
-                const isSelected = cfg.qty > 0;
+                const isUnavailable = product.isActive === false;
+                const isSelected = !isUnavailable && cfg.qty > 0;
                 const freqLabel =
                   FREQUENCIES.find((f) => f.key === cfg.frequency)?.label ||
                   'Daily';
@@ -227,7 +229,7 @@ export default function CustomPackageBuilder() {
                 return (
                   <div
                     key={product.id}
-                    className={`cpkg-card${isSelected ? ' selected' : ''}`}
+                    className={`cpkg-card${isSelected ? ' selected' : ''}${isUnavailable ? ' unavailable' : ''}`}
                   >
                     <div className="cpkg-card-head">
                       <img
@@ -295,12 +297,23 @@ export default function CustomPackageBuilder() {
                       <span
                         className={`cpkg-status${isSelected ? ' active' : ''}`}
                       >
-                        {isSelected
-                          ? `✓ ${variant?.label} · ${freqLabel}`
-                          : 'Optional · Tap + Add'}
+                        {isUnavailable
+                          ? 'Currently Not Available'
+                          : isSelected
+                            ? `✓ ${variant?.label} · ${freqLabel}`
+                            : 'Optional · Tap + Add'}
                       </span>
 
-                      {isSelected ? (
+                      {isUnavailable ? (
+                        <button
+                          type="button"
+                          className="unavailable-btn"
+                          style={{ height: '34px', padding: '0 12px' }}
+                          disabled
+                        >
+                          Not Available
+                        </button>
+                      ) : isSelected ? (
                         <div className="qty-stepper" style={{ height: '34px' }}>
                           <button
                             type="button"

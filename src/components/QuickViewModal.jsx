@@ -165,7 +165,16 @@ export default function QuickViewModal() {
                   <span className="price-size">{variant.label}</span>
                 </div>
 
-                {qty > 0 ? (
+                {product.isActive === false ? (
+                  <button
+                    type="button"
+                    className="unavailable-btn"
+                    style={{ height: '44px', padding: '0 20px' }}
+                    disabled
+                  >
+                    Currently Not Available
+                  </button>
+                ) : qty > 0 ? (
                   <div
                     className="qty-stepper"
                     aria-label={`Quantity for ${product.name}`}

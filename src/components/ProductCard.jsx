@@ -6,11 +6,12 @@ export default function ProductCard({ product }) {
 
   const vIdx = selectedVariants[product.id] || 0;
   const variant = product.variants[vIdx];
+  const isUnavailable = product.isActive === false;
   const key = getCartKey(product.id, vIdx);
   const qty = cart[key] ? cart[key].qty : 0;
 
   return (
-    <article className="product-card">
+    <article className={`product-card${isUnavailable ? ' product-card-unavailable' : ''}`}>
       <div
         className="product-photo-box"
         onClick={() => openQuickView(product.id)}
@@ -26,6 +27,10 @@ export default function ProductCard({ product }) {
             e.currentTarget.src = product.fallback;
           }}
         />
+
+        {isUnavailable && (
+          <span className="unavailable-badge">Currently Not Available</span>
+        )}
 
         <button
           className="qv-eye-btn"
@@ -100,7 +105,11 @@ export default function ProductCard({ product }) {
             <span className="price-size">{variant.label}</span>
           </div>
 
-          {qty > 0 ? (
+          {isUnavailable ? (
+            <button type="button" className="unavailable-btn" disabled>
+              Not Available
+            </button>
+          ) : qty > 0 ? (
             <div
               className="qty-stepper"
               aria-label={`Quantity for ${product.name}`}

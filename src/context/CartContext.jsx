@@ -53,10 +53,12 @@ export function getCartKey(id, vIdx, schedule = null) {
 }
 
 function mapSupabaseProduct(row) {
-  const activeVariants = (row.product_variants || [])
-    .filter((v) => v.is_active !== false)
-    .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0))
-    .map((v) => ({
+  const allVariants = (row.product_variants || [])
+    .slice()
+    .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0));
+  const filtered = allVariants.filter((v) => v.is_active !== false);
+  const chosenVariants = filtered.length > 0 ? filtered : allVariants;
+  const activeVariants = chosenVariants.map((v) => ({
       id: v.id,
       label: v.label,
       price: Number(v.price),
@@ -69,6 +71,7 @@ function mapSupabaseProduct(row) {
     id: row.slug || row.id,
     dbId: row.id,
     slug: row.slug,
+    isActive: row.is_active !== false,
     name: row.name,
     brandLine: row.brand_line || 'KUSHI DAIRY · DAILY ESSENTIALS',
     purity: row.purity || '★ 4.9 · Pure',
@@ -122,7 +125,6 @@ export function CartProvider({ children }) {
         const { data, error } = await supabase
           .from('products')
           .select('*, product_variants(*)')
-          .eq('is_active', true)
           .order('sort_order', { ascending: true });
 
         if (cancelled) return;
@@ -212,6 +214,7 @@ export function CartProvider({ children }) {
     (id, vIdx, delta, schedule = null) => {
       const product = products.find((p) => p.id === id);
       if (!product) return;
+      if (product.isActive === false && delta > 0) return;
       const variant = product.variants[vIdx];
       if (!variant) return;
       const key = getCartKey(id, vIdx, schedule);
