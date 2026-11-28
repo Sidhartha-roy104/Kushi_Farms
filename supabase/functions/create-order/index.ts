@@ -1,6 +1,18 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { corsHeaders, jsonResponse } from '../_shared/cors.ts';
 
+const RATE_PER_KM = 10;
+const FREE_DELIVERY_RADIUS_KM = 5;
+
+const PINCODE_ZONES: Record<string, { area: string; distanceKm: number }> = {
+  '532401': { area: 'Arasavilli / Patrunivalasa / Chaparam', distanceKm: 3 },
+  '532001': { area: 'Srikakulam Town', distanceKm: 4 },
+  '532402': { area: 'S.M. Puram / Ponduru', distanceKm: 8 },
+  '532410': { area: 'Etcherla', distanceKm: 13 },
+  '532403': { area: 'Murapaka / Laveru', distanceKm: 14 },
+  '532405': { area: 'Gara', distanceKm: 15 }
+};
+
 const SUBSCRIPTION_PLANS: Record<
   string,
   { name: string; durationDays: number; price: number }
@@ -88,25 +100,19 @@ Deno.serve(async (req) => {
       return jsonResponse({ error: 'Store settings unavailable' }, 500);
     }
 
-    // Validate pincode against serviceable_pincodes
-    const serviceable: string[] = settings.serviceable_pincodes || [];
-    if (serviceable.length > 0 && !serviceable.includes(pincode)) {
+    // Validate pincode against active delivery zones (6 pincodes)
+    const pincodeZone = PINCODE_ZONES[pincode];
+    if (!pincodeZone) {
       return jsonResponse(
-        { error: `Sorry, we do not deliver to pincode ${pincode} yet.` },
-        400
-      );
-    }
-
-    if (paymentMethod === 'cod' && !settings.cod_enabled) {
-      return jsonResponse(
-        { error: 'Cash on Delivery is currently disabled.' },
+        {
+          error: `Sorry, we do not deliver to pincode ${pincode} yet. Active pincodes: ${Object.keys(PINCODE_ZONES).join(', ')}.`
+        },
         400
       );
     }
 
     // 2. Build order items & compute authoritative totals
     let subtotal = 0;
-    let deliveryFee = 0;
     const orderItemsPayload: Array<{
       variant_id: string | null;
       product_name: string;
@@ -128,7 +134,6 @@ Deno.serve(async (req) => {
       const validityLabel = `${plan.durationDays} Days (${formatIstDate(start)} – ${formatIstDate(end)}) · ${slot}`;
 
       subtotal = plan.price;
-      deliveryFee = 0;
 
       orderItemsPayload.push({
         variant_id: null,
@@ -188,12 +193,22 @@ Deno.serve(async (req) => {
           line_total: lineTotal
         });
       }
-
-      const threshold = Number(settings.free_delivery_threshold ?? 199);
-      const fee = Number(settings.delivery_fee ?? 20);
-      deliveryFee = subtotal >= threshold ? 0 : fee;
     }
 
+    const minOrderAmount = pincodeZone.distanceKm <= 7 ? 199 : 399;
+    if (subtotal < minOrderAmount) {
+      return jsonResponse(
+        {
+          error: `Minimum order for ${pincodeZone.area} (${pincodeZone.distanceKm} km) is ₹${minOrderAmount}. Please add ₹${(minOrderAmount - subtotal).toFixed(2)} more.`
+        },
+        400
+      );
+    }
+
+    const threshold = Number(settings.free_delivery_threshold ?? 199);
+    const isFreeDelivery =
+      pincodeZone.distanceKm <= FREE_DELIVERY_RADIUS_KM && subtotal >= threshold;
+    const deliveryFee = isFreeDelivery ? 0 : pincodeZone.distanceKm * RATE_PER_KM;
     const total = Number((subtotal + deliveryFee).toFixed(2));
 
     // 3. Create order row

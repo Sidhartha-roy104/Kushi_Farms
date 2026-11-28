@@ -6,6 +6,7 @@ import { useSettings } from '../context/SettingsContext';
 import { supabase } from '../lib/supabase';
 import { openRazorpayCheckout } from '../lib/razorpay';
 import { normalizePhone, isValidPhone } from '../lib/phone';
+import { getPincodeDeliveryInfo, ACTIVE_PINCODES, RATE_PER_KM } from '../lib/pincodes';
 
 const DAILY_SLOTS = [
   'Morning (06:30–08:30 AM)',
@@ -121,10 +122,17 @@ export default function TrustBar() {
   const [address, setAddress] = useState('');
   const [landmark, setLandmark] = useState('');
   const [pincode, setPincode] = useState('');
+  const [paymentMethod, setPaymentMethod] = useState('razorpay');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
 
   const activePlan = activePlanKey ? SUBSCRIPTION_PLANS[activePlanKey] : null;
+  const threshold = Number(settings.free_delivery_threshold ?? 199);
+  const deliveryInfo = activePlan
+    ? getPincodeDeliveryInfo(pincode, activePlan.price, threshold)
+    : null;
+  const deliveryFee = deliveryInfo ? deliveryInfo.deliveryFee : 0;
+  const grandTotal = activePlan ? activePlan.price + deliveryFee : 0;
 
   const startDate = new Date();
   const endDate = activePlan
@@ -212,6 +220,12 @@ export default function TrustBar() {
       setError('Please enter a valid 6-digit pincode.');
       return;
     }
+    if (!getPincodeDeliveryInfo(cleanPincode)) {
+      setError(
+        `Sorry, we currently deliver only to: ${ACTIVE_PINCODES.join(', ')}.`
+      );
+      return;
+    }
     if (!supabase) {
       setError('Payment service is not configured. Please order via WhatsApp.');
       return;
@@ -234,7 +248,7 @@ export default function TrustBar() {
               landmark: cleanLandmark,
               pincode: cleanPincode
             },
-            paymentMethod: 'razorpay'
+            paymentMethod
           }
         });
 
@@ -249,6 +263,15 @@ export default function TrustBar() {
           }
         }
         throw new Error(serverMsg || createErr?.message || 'Unable to start subscription checkout.');
+      }
+
+      if (createData.payment_method === 'cod') {
+        setActivePlanKey(null);
+        setModalStep('details');
+        navigate(
+          `/order-success?ref=${encodeURIComponent(createData.order_ref)}&method=cod`
+        );
+        return;
       }
 
       const rzpResponse = await openRazorpayCheckout({
@@ -648,18 +671,64 @@ export default function TrustBar() {
                     </div>
                   </div>
 
+                  <div className="payment-method-box">
+                    <span className="payment-method-label">Payment Method</span>
+                    <div className="payment-method-options">
+                      <label className="payment-radio">
+                        <input
+                          type="radio"
+                          name="subPaymentMethod"
+                          value="razorpay"
+                          checked={paymentMethod === 'razorpay'}
+                          onChange={() => setPaymentMethod('razorpay')}
+                          disabled={submitting}
+                        />
+                        <span>Pay Online (PhonePe / GPay / UPI / Card)</span>
+                      </label>
+                      <label className="payment-radio">
+                        <input
+                          type="radio"
+                          name="subPaymentMethod"
+                          value="cod"
+                          checked={paymentMethod === 'cod'}
+                          onChange={() => setPaymentMethod('cod')}
+                          disabled={submitting}
+                        />
+                        <span>Cash on Delivery (COD)</span>
+                      </label>
+                    </div>
+                  </div>
+
                   <div className="checkout-totals" style={{ margin: '6px 0 12px', paddingTop: '10px' }}>
                     <div className="summary-row">
                       <span>{activePlan.title}</span>
                       <span>{formatINR(activePlan.price)}</span>
                     </div>
                     <div className="summary-row">
-                      <span>Doorstep Delivery ({activePlan.durationDays} Days)</span>
-                      <strong style={{ color: 'var(--brand-green-dark)' }}>FREE</strong>
+                      <span>
+                        {deliveryInfo
+                          ? deliveryInfo.isFree
+                            ? `Delivery (${deliveryInfo.area} · ${deliveryInfo.distanceKm} km, within 5 km)`
+                            : `Delivery (${deliveryInfo.area} · ${deliveryInfo.distanceKm} km × ₹${RATE_PER_KM}/km · >5 km radius)`
+                          : pincode.length === 6
+                            ? 'Delivery (Outside service area)'
+                            : `Delivery (Free within 5 km · ₹${RATE_PER_KM}/km beyond 5 km)`}
+                      </span>
+                      <span>
+                        {deliveryInfo ? (
+                          deliveryInfo.isFree ? (
+                            <strong style={{ color: 'var(--brand-green-dark)' }}>FREE</strong>
+                          ) : (
+                            formatINR(deliveryFee)
+                          )
+                        ) : (
+                          <span style={{ color: 'var(--text-muted)' }}>—</span>
+                        )}
+                      </span>
                     </div>
                     <div className="summary-row total">
                       <span>Total Payable</span>
-                      <span>{formatINR(activePlan.price)}</span>
+                      <span>{formatINR(grandTotal)}</span>
                     </div>
                   </div>
 
@@ -671,7 +740,9 @@ export default function TrustBar() {
                   >
                     {submitting
                       ? 'Processing...'
-                      : `Pay ${formatINR(activePlan.price)} with Razorpay`}
+                      : paymentMethod === 'cod'
+                        ? `Place COD Order · ${formatINR(grandTotal)}`
+                        : `Pay ${formatINR(grandTotal)} Now`}
                   </button>
                 </form>
               )}

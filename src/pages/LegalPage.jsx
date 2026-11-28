@@ -87,7 +87,7 @@ const POLICIES = {
     sections: [
       {
         heading: '1. Serviceable Areas',
-        body: 'Kushi Dairy Products currently delivers across Chaparam Village, Patrunivalasa, and serviceable Srikakulam pincodes (532001, 532401–532410). You can check your pincode on the home page before ordering.'
+        body: 'Kushi Dairy Products currently delivers across Chaparam Village, Patrunivalasa, and serviceable Srikakulam pincodes (532401, 532001, 532402, 532410, 532403, 532405) at ₹10/km from our Chaparam store. You can check your pincode on the home page before ordering.'
       },
       {
         heading: '2. Delivery Hours & Timelines',

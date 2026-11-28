@@ -5,6 +5,7 @@ import { useSettings } from '../context/SettingsContext';
 import { supabase } from '../lib/supabase';
 import { normalizePhone, isValidPhone } from '../lib/phone';
 import { openRazorpayCheckout } from '../lib/razorpay';
+import { getPincodeDeliveryInfo, ACTIVE_PINCODES, RATE_PER_KM } from '../lib/pincodes';
 
 export default function CheckoutForm({ onBack }) {
   const { cart, cartSummary, clearCart, closeAllOverlays } = useCart();
@@ -24,8 +25,8 @@ export default function CheckoutForm({ onBack }) {
   const items = Object.values(cart);
   const subtotal = cartSummary.total;
   const threshold = Number(settings.free_delivery_threshold ?? 199);
-  const deliveryFee =
-    subtotal >= threshold ? 0 : Number(settings.delivery_fee ?? 20);
+  const deliveryInfo = getPincodeDeliveryInfo(pincode, subtotal, threshold);
+  const deliveryFee = deliveryInfo ? deliveryInfo.deliveryFee : 0;
   const grandTotal = subtotal + deliveryFee;
 
   const handleSubmit = async (e) => {
@@ -59,6 +60,19 @@ export default function CheckoutForm({ onBack }) {
       setError('Please enter a valid 6-digit pincode (e.g., 532401).');
       return;
     }
+    const info = getPincodeDeliveryInfo(cleanPincode, subtotal, threshold);
+    if (!info) {
+      setError(
+        `Sorry, we currently deliver only to: ${ACTIVE_PINCODES.join(', ')}.`
+      );
+      return;
+    }
+    if (!info.meetsMinOrder) {
+      setError(
+        `Minimum order for ${info.area} (${info.distanceKm} km) is ₹${info.minOrderAmount}. Please add ${formatINR(info.shortfall)} more to place your order.`
+      );
+      return;
+    }
 
     const missingVariantId = items.some((item) => !item.variantId);
     if (missingVariantId) {
@@ -86,7 +100,7 @@ export default function CheckoutForm({ onBack }) {
               landmark: cleanLandmark,
               pincode: cleanPincode
             },
-            paymentMethod: settings.cod_enabled ? paymentMethod : 'razorpay'
+            paymentMethod
           }
         });
 
@@ -252,35 +266,55 @@ export default function CheckoutForm({ onBack }) {
         </div>
       </div>
 
-      {settings.cod_enabled && (
-        <div className="payment-method-box">
-          <span className="payment-method-label">Payment Method</span>
-          <div className="payment-method-options">
-            <label className="payment-radio">
-              <input
-                type="radio"
-                name="paymentMethod"
-                value="razorpay"
-                checked={paymentMethod === 'razorpay'}
-                onChange={() => setPaymentMethod('razorpay')}
-                disabled={submitting}
-              />
-              <span>Pay Online (UPI / Card / NetBanking)</span>
-            </label>
-            <label className="payment-radio">
-              <input
-                type="radio"
-                name="paymentMethod"
-                value="cod"
-                checked={paymentMethod === 'cod'}
-                onChange={() => setPaymentMethod('cod')}
-                disabled={submitting}
-              />
-              <span>Cash on Delivery</span>
-            </label>
-          </div>
+      {deliveryInfo && !deliveryInfo.meetsMinOrder && (
+        <div className="checkout-error" role="alert">
+          <strong>Minimum Order Required (₹{deliveryInfo.minOrderAmount})</strong>
+          <p>
+            For {deliveryInfo.area} ({deliveryInfo.distanceKm} km), minimum order
+            is ₹{deliveryInfo.minOrderAmount}. Add {formatINR(deliveryInfo.shortfall)} more to continue.
+          </p>
         </div>
       )}
+
+      {!deliveryInfo && subtotal < 199 && (
+        <div
+          className="plan-validity-box"
+          style={{ marginBottom: '12px', background: '#FFFBEB', borderColor: '#F59E0B' }}
+        >
+          <strong style={{ color: '#B45309' }}>Minimum Home Delivery Order</strong>
+          <span>
+            ₹199 minimum for 1–7 km radius · ₹399 minimum for 8–15 km radius.
+          </span>
+        </div>
+      )}
+
+      <div className="payment-method-box">
+        <span className="payment-method-label">Payment Method</span>
+        <div className="payment-method-options">
+          <label className="payment-radio">
+            <input
+              type="radio"
+              name="paymentMethod"
+              value="razorpay"
+              checked={paymentMethod === 'razorpay'}
+              onChange={() => setPaymentMethod('razorpay')}
+              disabled={submitting}
+            />
+            <span>Pay Online (PhonePe / GPay / UPI / Card)</span>
+          </label>
+          <label className="payment-radio">
+            <input
+              type="radio"
+              name="paymentMethod"
+              value="cod"
+              checked={paymentMethod === 'cod'}
+              onChange={() => setPaymentMethod('cod')}
+              disabled={submitting}
+            />
+            <span>Cash on Delivery (COD)</span>
+          </label>
+        </div>
+      </div>
 
       <div className="checkout-totals">
         <div className="summary-row">
@@ -288,12 +322,26 @@ export default function CheckoutForm({ onBack }) {
           <span>{formatINR(subtotal)}</span>
         </div>
         <div className="summary-row">
-          <span>Local Delivery</span>
           <span>
-            {deliveryFee === 0 ? (
-              <strong style={{ color: 'var(--brand-green-dark)' }}>FREE</strong>
+            {deliveryInfo
+              ? deliveryInfo.isFree
+                ? `Delivery (${deliveryInfo.area} · ${deliveryInfo.distanceKm} km, within 5 km & ≥₹${threshold})`
+                : deliveryInfo.isWithin5Km
+                  ? `Delivery (${deliveryInfo.area} · ${deliveryInfo.distanceKm} km × ₹${RATE_PER_KM}/km · Free ≥₹${threshold})`
+                  : `Delivery (${deliveryInfo.area} · ${deliveryInfo.distanceKm} km × ₹${RATE_PER_KM}/km · >5 km radius)`
+              : pincode.length === 6
+                ? 'Delivery (Outside service area)'
+                : `Delivery (Free ≥₹${threshold} within 5 km · else ₹${RATE_PER_KM}/km)`}
+          </span>
+          <span>
+            {deliveryInfo ? (
+              deliveryInfo.isFree ? (
+                <strong style={{ color: 'var(--brand-green-dark)' }}>FREE</strong>
+              ) : (
+                formatINR(deliveryFee)
+              )
             ) : (
-              formatINR(deliveryFee)
+              <span style={{ color: 'var(--text-muted)' }}>—</span>
             )}
           </span>
         </div>
@@ -307,15 +355,19 @@ export default function CheckoutForm({ onBack }) {
         type="submit"
         className="btn-primary"
         style={{ width: '100%', height: '48px' }}
-        disabled={submitting || items.length === 0}
+        disabled={
+          submitting ||
+          items.length === 0 ||
+          (deliveryInfo ? !deliveryInfo.meetsMinOrder : subtotal < 199)
+        }
       >
         {submitting
           ? 'Processing...'
           : error
-            ? `Retry Payment · ${formatINR(grandTotal)}`
-            : paymentMethod === 'cod' && settings.cod_enabled
+            ? `Retry Order · ${formatINR(grandTotal)}`
+            : paymentMethod === 'cod'
               ? `Place COD Order · ${formatINR(grandTotal)}`
-              : `Pay ${formatINR(grandTotal)} with Razorpay`}
+              : `Pay ${formatINR(grandTotal)} Now`}
       </button>
     </form>
   );

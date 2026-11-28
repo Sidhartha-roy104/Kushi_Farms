@@ -1,14 +1,16 @@
 import { useState } from 'react';
 import { useSettings } from '../context/SettingsContext';
+import { getPincodeDeliveryInfo, RATE_PER_KM } from '../lib/pincodes';
 
 const LOCAL_KEYWORDS = [
   'chaparam',
   'patrunivalasa',
+  'arasavilli',
   'srikakulam',
-  'amadalavalasa',
-  'narasannapeta',
+  'ponduru',
   'etcharla',
-  'ranastalam'
+  'murapaka',
+  'gara'
 ];
 
 export default function PincodeChecker() {
@@ -21,13 +23,13 @@ export default function PincodeChecker() {
     const val = pincode.trim();
     if (!val) return;
     const lower = val.toLowerCase();
-    const pincodes = settings.serviceable_pincodes || [];
-    const isServiceablePin =
-      pincodes.includes(val) || /^532\d{3}$/.test(val);
+    const info = getPincodeDeliveryInfo(val);
     const isLocalArea = LOCAL_KEYWORDS.some((k) => lower.includes(k));
 
-    if (isServiceablePin || isLocalArea) {
-      setResult({ type: 'success', val });
+    if (info) {
+      setResult({ type: 'success', val, info });
+    } else if (isLocalArea) {
+      setResult({ type: 'success', val, info: null });
     } else {
       setResult({ type: 'info', val });
     }
@@ -109,9 +111,11 @@ export default function PincodeChecker() {
             >
               {result?.type === 'success' && (
                 <>
-                  <strong>Great news! We deliver to {result.val}.</strong> Daily
-                  fresh stock from Chaparam Village is available between{' '}
-                  {settings.store_open}–{settings.store_close}.
+                  <strong>Great news! We deliver to {result.val}.</strong>{' '}
+                  {result.info
+                    ? `${result.info.area} (${result.info.distanceKm} km from Chaparam · ₹${result.info.deliveryFee} delivery at ₹${RATE_PER_KM}/km). `
+                    : `Daily fresh stock from Chaparam Village is available between ${settings.store_open}–${settings.store_close}. `}
+                  Cash on Delivery &amp; Online Payment available.
                 </>
               )}
               {result?.type === 'info' && (

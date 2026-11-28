@@ -11,18 +11,14 @@ export const DEFAULT_SETTINGS = {
   store_open: '06:30 AM',
   store_close: '10:00 PM',
   serviceable_pincodes: [
-    '532001',
     '532401',
+    '532001',
     '532402',
+    '532410',
     '532403',
-    '532404',
-    '532405',
-    '532407',
-    '532408',
-    '532409',
-    '532410'
+    '532405'
   ],
-  cod_enabled: false
+  cod_enabled: true
 };
 
 const SettingsContext = createContext(null);
