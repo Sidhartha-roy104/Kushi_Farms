@@ -742,6 +742,187 @@ h4 {
   color: var(--text-secondary);
 }
 
+.trust-plan-price {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 2px;
+}
+
+.trust-item .trust-strike {
+  text-decoration: line-through;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.trust-item .trust-price {
+  color: var(--brand-blue);
+  font-family: var(--font-heading);
+  font-size: 0.94rem;
+  font-weight: 800;
+}
+
+.trust-item .trust-save {
+  display: inline-block;
+  margin-top: 3px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--brand-green-dark);
+  background: var(--brand-green-soft);
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+.trust-icon.gold {
+  background: #FEF3C7;
+  color: #B45309;
+}
+
+.trust-item.plan-card {
+  cursor: pointer;
+  padding: 10px 12px;
+  border-radius: 16px;
+  transition: transform 0.2s var(--ease-out), box-shadow 0.2s var(--ease-out), border-color 0.2s var(--ease-out);
+}
+
+.trust-item.plan-card::after {
+  display: none;
+}
+
+.trust-item.plan-one {
+  background: linear-gradient(135deg, #EEF5FC 0%, #F9FCFF 100%);
+  border: 1px solid rgba(18, 86, 168, 0.18);
+}
+
+.trust-item.plan-three {
+  background: linear-gradient(135deg, #EEF9E8 0%, #FFFDF2 100%);
+  border: 1px solid rgba(100, 178, 50, 0.25);
+}
+
+.trust-item.plan-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(9, 37, 84, 0.1);
+}
+
+.trust-item.plan-one:hover {
+  border-color: rgba(18, 86, 168, 0.36);
+}
+
+.trust-item.plan-three:hover {
+  border-color: rgba(100, 178, 50, 0.45);
+}
+
+/* Subscription Plan Details Modal */
+.plan-modal-price-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: var(--radius-md);
+  background: var(--bg-ice);
+  border: 1px solid var(--border-subtle);
+  margin-bottom: 14px;
+}
+
+.plan-modal-duration {
+  display: block;
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.plan-modal-price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.plan-modal-price-row s {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.plan-modal-price-row strong {
+  font-family: var(--font-heading);
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--brand-blue);
+}
+
+.plan-modal-save-pill {
+  font-family: var(--font-heading);
+  font-size: 0.76rem;
+  font-weight: 800;
+  color: var(--brand-green-dark);
+  background: var(--brand-green-soft);
+  padding: 5px 11px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.plan-modal-items {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.plan-modal-items-head {
+  font-family: var(--font-heading);
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.plan-modal-item-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-milk);
+  border: 1px solid var(--border-subtle);
+}
+
+.plan-modal-item-row strong {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: 0.88rem;
+  color: var(--text-primary);
+}
+
+.plan-modal-item-row span {
+  font-size: 0.76rem;
+  color: var(--text-secondary);
+}
+
+.plan-modal-freq-pill {
+  flex-shrink: 0;
+  font-family: var(--font-heading);
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: var(--brand-blue);
+  background: var(--brand-blue-soft);
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+
+.plan-modal-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
 /* Scroll to Explore Divider */
 .scroll-explore-wrap {
   position: relative;
