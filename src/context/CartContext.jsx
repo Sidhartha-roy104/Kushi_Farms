@@ -12,6 +12,38 @@ import { useSettings } from './SettingsContext';
 
 const CartContext = createContext(null);
 
+const PRODUCT_DISPLAY_ORDER = [
+  'cows-milk',
+  'fresh-curd',
+  'frozen-paneer',
+  'pure-desi-ghee',
+  'honey',
+  'mushroom',
+  'sweet-corn',
+  'green-peas'
+];
+
+function getProductOrderIndex(product) {
+  const slug = (product.slug || product.id || '').toLowerCase();
+  const exactIdx = PRODUCT_DISPLAY_ORDER.indexOf(slug);
+  if (exactIdx !== -1) return exactIdx;
+
+  const name = (product.name || '').toLowerCase();
+  if (name.includes('milk')) return 0;
+  if (name.includes('curd')) return 1;
+  if (name.includes('paneer')) return 2;
+  if (name.includes('ghee')) return 3;
+  if (name.includes('honey')) return 4;
+  if (name.includes('mushroom')) return 5;
+  if (name.includes('sweet') && name.includes('corn')) return 6;
+  if (name.includes('peas')) return 7;
+  return PRODUCT_DISPLAY_ORDER.length;
+}
+
+function sortProductsByDisplayOrder(list) {
+  return [...list].sort((a, b) => getProductOrderIndex(a) - getProductOrderIndex(b));
+}
+
 export function formatINR(amount) {
   return `₹${Number(amount).toFixed(2)}`;
 }
@@ -60,7 +92,7 @@ function mapSupabaseProduct(row) {
 export function CartProvider({ children }) {
   const { settings } = useSettings();
   const [products, setProducts] = useState(
-    supabase ? [] : FALLBACK_PRODUCTS
+    supabase ? [] : sortProductsByDisplayOrder(FALLBACK_PRODUCTS)
   );
   const [loadingProducts, setLoadingProducts] = useState(Boolean(supabase));
   const [category, setCategory] = useState('all');
@@ -96,10 +128,12 @@ export function CartProvider({ children }) {
         if (cancelled) return;
 
         if (!error && Array.isArray(data) && data.length > 0) {
-          const mapped = data
-            .map(mapSupabaseProduct)
-            .filter((p) => p.variants.length > 0);
-          setProducts(mapped.length > 0 ? mapped : FALLBACK_PRODUCTS);
+          const mapped = sortProductsByDisplayOrder(
+            data
+              .map(mapSupabaseProduct)
+              .filter((p) => p.variants.length > 0)
+          );
+          setProducts(mapped.length > 0 ? mapped : sortProductsByDisplayOrder(FALLBACK_PRODUCTS));
           setSelectedVariants((prev) => {
             const next = { ...prev };
             mapped.forEach((p) => {
@@ -108,10 +142,10 @@ export function CartProvider({ children }) {
             return next;
           });
         } else {
-          setProducts(FALLBACK_PRODUCTS);
+          setProducts(sortProductsByDisplayOrder(FALLBACK_PRODUCTS));
         }
       } catch (err) {
-        if (!cancelled) setProducts(FALLBACK_PRODUCTS);
+        if (!cancelled) setProducts(sortProductsByDisplayOrder(FALLBACK_PRODUCTS));
       } finally {
         if (!cancelled) setLoadingProducts(false);
       }

@@ -2,34 +2,6 @@ import { useMemo, useRef } from 'react';
 import { useCart } from '../context/CartContext';
 import ProductCard from './ProductCard';
 
-const PRODUCT_DISPLAY_ORDER = [
-  'cows-milk',
-  'fresh-curd',
-  'frozen-paneer',
-  'pure-desi-ghee',
-  'honey',
-  'mushroom',
-  'sweet-corn',
-  'green-peas'
-];
-
-function getProductOrderIndex(product) {
-  const slug = (product.slug || product.id || '').toLowerCase();
-  const exactIdx = PRODUCT_DISPLAY_ORDER.indexOf(slug);
-  if (exactIdx !== -1) return exactIdx;
-
-  const name = (product.name || '').toLowerCase();
-  if (name.includes('milk')) return 0;
-  if (name.includes('curd')) return 1;
-  if (name.includes('paneer')) return 2;
-  if (name.includes('ghee')) return 3;
-  if (name.includes('honey')) return 4;
-  if (name.includes('mushroom')) return 5;
-  if (name.includes('sweet') && name.includes('corn')) return 6;
-  if (name.includes('peas')) return 7;
-  return PRODUCT_DISPLAY_ORDER.length;
-}
-
 export default function ProductGrid() {
   const {
     products,
@@ -54,18 +26,16 @@ export default function ProductGrid() {
 
   const filtered = useMemo(() => {
     const q = debouncedSearch.trim().toLowerCase();
-    return products
-      .filter((p) => {
-        const catMatch = category === 'all' || p.category === category;
-        const searchMatch =
-          !q ||
-          p.name.toLowerCase().includes(q) ||
-          p.category.toLowerCase().includes(q) ||
-          p.badge.toLowerCase().includes(q) ||
-          p.description.toLowerCase().includes(q);
-        return catMatch && searchMatch;
-      })
-      .sort((a, b) => getProductOrderIndex(a) - getProductOrderIndex(b));
+    return products.filter((p) => {
+      const catMatch = category === 'all' || p.category === category;
+      const searchMatch =
+        !q ||
+        p.name.toLowerCase().includes(q) ||
+        p.category.toLowerCase().includes(q) ||
+        p.badge.toLowerCase().includes(q) ||
+        p.description.toLowerCase().includes(q);
+      return catMatch && searchMatch;
+    });
   }, [products, category, debouncedSearch]);
 
   const handleClearSearch = () => {
