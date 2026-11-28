@@ -1,11 +1,14 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import Logo from './Logo';
 import { useCart } from '../context/CartContext';
+import { useCustomer } from '../context/CustomerContext';
 import { WHATSAPP_NUMBER } from '../data/products';
 
 export default function Navbar() {
   const { searchInput, setSearchInput, cartSummary, cartPop, openOverlay } =
     useCart();
+  const { isLoggedIn } = useCustomer();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -117,6 +120,13 @@ export default function Navbar() {
               />
             </div>
 
+            <Link
+              to={isLoggedIn ? '/dashboard' : '/login'}
+              className={`nav-account-pill${isLoggedIn ? ' logged-in' : ''}`}
+            >
+              {isLoggedIn ? '● Dashboard' : 'Login'}
+            </Link>
+
             <a
               href={`https://wa.me/${WHATSAPP_NUMBER}?text=Hello%20Kushi%20Dairy!%20I%20would%20like%20to%20enquire%20about%20your%20products.`}
               target="_blank"
@@ -212,6 +222,16 @@ export default function Navbar() {
         <a href="#contact" onClick={() => setMobileOpen(false)}>
           Contact &amp; Delivery Area
         </a>
+        <Link
+          to={isLoggedIn ? '/dashboard' : '/login'}
+          onClick={() => setMobileOpen(false)}
+          style={{
+            color: isLoggedIn ? 'var(--brand-green-dark)' : 'var(--brand-blue)',
+            fontWeight: 800
+          }}
+        >
+          {isLoggedIn ? '● My Dashboard' : 'Login / Create Account'}
+        </Link>
       </div>
     </>
   );

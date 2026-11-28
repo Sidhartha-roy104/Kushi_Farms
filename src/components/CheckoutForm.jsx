@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart, formatINR } from '../context/CartContext';
 import { useSettings } from '../context/SettingsContext';
+import { useCustomer } from '../context/CustomerContext';
 import { supabase } from '../lib/supabase';
 import { normalizePhone, isValidPhone } from '../lib/phone';
 import { openRazorpayCheckout } from '../lib/razorpay';
@@ -10,6 +11,7 @@ import { getPincodeDeliveryInfo, ACTIVE_PINCODES, RATE_PER_KM } from '../lib/pin
 export default function CheckoutForm({ onBack }) {
   const { cart, cartSummary, clearCart, closeAllOverlays } = useCart();
   const { settings } = useSettings();
+  const { customer } = useCustomer();
   const navigate = useNavigate();
 
   const [name, setName] = useState('');
@@ -21,6 +23,16 @@ export default function CheckoutForm({ onBack }) {
 
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (customer?.delivery_address) {
+      setAddress((prev) => prev || customer.delivery_address);
+      const pinMatch = String(customer.delivery_address).match(/\b(532\d{3})\b/);
+      if (pinMatch) {
+        setPincode((prev) => prev || pinMatch[1]);
+      }
+    }
+  }, [customer?.delivery_address]);
 
   const items = Object.values(cart);
   const subtotal = cartSummary.total;
@@ -94,6 +106,8 @@ export default function CheckoutForm({ onBack }) {
               qty: item.qty
             })),
             customer: {
+              id: customer?.id || null,
+              email: customer?.email || null,
               name: cleanName,
               phone: cleanPhone,
               address: cleanAddress,

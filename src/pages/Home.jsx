@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import AnnouncementBar from '../components/AnnouncementBar';
 import Navbar from '../components/Navbar';
@@ -18,7 +20,15 @@ import FloatingBasket from '../components/FloatingBasket';
 import ToastStack from '../components/ToastStack';
 
 export default function Home() {
-  const { activeOverlay, closeAllOverlays } = useCart();
+  const { activeOverlay, closeAllOverlays, openOverlay } = useCart();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  useEffect(() => {
+    if (searchParams.get('openCart') === '1') {
+      openOverlay('cart');
+      setSearchParams({}, { replace: true });
+    }
+  }, [searchParams, openOverlay, setSearchParams]);
 
   return (
     <>

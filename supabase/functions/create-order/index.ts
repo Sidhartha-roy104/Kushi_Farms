@@ -63,10 +63,11 @@ Deno.serve(async (req) => {
     const body = await req.json();
     const cart = Array.isArray(body?.cart) ? body.cart : [];
     const subscriptionPlan = body?.subscriptionPlan || null;
+    const customPackage = body?.customPackage || null;
     const customer = body?.customer || {};
     const paymentMethod = body?.paymentMethod === 'cod' ? 'cod' : 'razorpay';
 
-    if (!subscriptionPlan && cart.length === 0) {
+    if (!subscriptionPlan && !customPackage && cart.length === 0) {
       return jsonResponse({ error: 'Cart is empty' }, 400);
     }
 
@@ -143,6 +144,80 @@ Deno.serve(async (req) => {
         unit_price: plan.price,
         line_total: plan.price
       });
+    } else if (customPackage) {
+      const pkgItems = Array.isArray(customPackage.items) ? customPackage.items : [];
+      if (pkgItems.length === 0) {
+        return jsonResponse({ error: 'Custom package has no items' }, 400);
+      }
+
+      const durationMonths = Number(customPackage.durationMonths) === 3 ? 3 : 1;
+      const PKG_MULT: Record<string, number> = {
+        daily: 30,
+        twice_weekly: 8,
+        monthly: 1,
+        festival: 0
+      };
+      const PKG_LABEL: Record<string, string> = {
+        daily: 'Daily',
+        twice_weekly: '2x / Week',
+        monthly: 'Monthly',
+        festival: 'Festival'
+      };
+
+      const variantIds = [
+        ...new Set(pkgItems.map((i: { variantId: string }) => i.variantId).filter(Boolean))
+      ];
+      if (variantIds.length === 0) {
+        return jsonResponse({ error: 'Invalid custom package items' }, 400);
+      }
+
+      const { data: variants, error: variantsError } = await supabase
+        .from('product_variants')
+        .select('id, label, price, stock, is_active, products(id, slug, name, is_active)')
+        .in('id', variantIds);
+
+      if (variantsError || !variants) {
+        return jsonResponse({ error: 'Failed to load products' }, 500);
+      }
+
+      const variantMap = new Map(variants.map((v) => [v.id, v]));
+      let rawTotal = 0;
+
+      for (const item of pkgItems) {
+        const qty = Number(item.qty);
+        const freq = String(item.frequency || 'monthly');
+        if (!Number.isInteger(qty) || qty <= 0) {
+          return jsonResponse({ error: 'Invalid item quantity' }, 400);
+        }
+
+        const v = variantMap.get(item.variantId);
+        const prod = Array.isArray(v?.products) ? v.products[0] : v?.products;
+        if (!v || !v.is_active || !prod || !prod.is_active) {
+          return jsonResponse({ error: 'One or more selected products are unavailable' }, 400);
+        }
+
+        const isMilkMonthly =
+          (String(prod.slug || '').toLowerCase() === 'cows-milk' ||
+            String(prod.name || '').toLowerCase().includes('milk')) &&
+          freq === 'monthly';
+        const baseMult = isMilkMonthly ? 30 : (PKG_MULT[freq] ?? 1);
+        const totalMult = baseMult * durationMonths;
+
+        const unitPrice = Number(v.price);
+        const lineTotal = Number((unitPrice * qty * totalMult).toFixed(2));
+        rawTotal = Number((rawTotal + lineTotal).toFixed(2));
+
+        orderItemsPayload.push({
+          variant_id: null,
+          product_name: prod.name,
+          variant_label: `${v.label} · ${PKG_LABEL[freq] || freq} (${qty * totalMult} packs / ${durationMonths} mo)`,
+          qty,
+          unit_price: Number((unitPrice * totalMult).toFixed(2)),
+          line_total: lineTotal
+        });
+      }
+
+      subtotal = Number(rawTotal.toFixed(2));
     } else {
       const variantIds = [...new Set(cart.map((c: { variantId: string }) => c.variantId).filter(Boolean))];
       if (variantIds.length !== cart.length) {
@@ -211,10 +286,15 @@ Deno.serve(async (req) => {
     const deliveryFee = isFreeDelivery ? 0 : pincodeZone.distanceKm * RATE_PER_KM;
     const total = Number((subtotal + deliveryFee).toFixed(2));
 
+    const customerId = customer.id ? String(customer.id).trim() : null;
+    const customerEmail = customer.email ? String(customer.email).trim().toLowerCase() : null;
+
     // 3. Create order row
     const { data: order, error: orderError } = await supabase
       .from('orders')
       .insert({
+        customer_id: customerId,
+        customer_email: customerEmail,
         customer_name: customerName,
         phone,
         address: { street, landmark, pincode },
@@ -250,6 +330,44 @@ Deno.serve(async (req) => {
         await supabase.from('orders').delete().eq('id', order.id);
         return jsonResponse({ error: stockErr.message }, 400);
       }
+
+      if ((subscriptionPlan || customPackage) && customerId) {
+        try {
+          if (subscriptionPlan) {
+            const isThree = String(subscriptionPlan.planId) === '3-month';
+            await supabase.rpc('create_or_renew_customer_subscription', {
+              p_customer_id: customerId,
+              p_plan_name: isThree ? '3-Month Kushi Subscription Plan' : '1-Month Kushi Subscription Plan',
+              p_duration_months: isThree ? 3 : 1,
+              p_items: [
+                { name: "Cow's Milk", schedule: 'Daily' },
+                { name: 'Fresh Curd', schedule: '3x / Week' },
+                { name: 'Frozen Paneer', schedule: '2x / Week' },
+                { name: 'Pure Desi Ghee', schedule: '1x / Month' },
+                { name: 'Natural Honey', schedule: '1x / Month' }
+              ],
+              p_amount_paid: total,
+              p_razorpay_payment_id: null
+            });
+          } else if (customPackage) {
+            const pkgMonths = Number(customPackage.durationMonths) === 3 ? 3 : 1;
+            await supabase.rpc('create_or_renew_customer_subscription', {
+              p_customer_id: customerId,
+              p_plan_name: pkgMonths === 3 ? 'Custom Kushi 3-Month Package' : 'Custom Kushi 1-Month Package',
+              p_duration_months: pkgMonths,
+              p_items: orderItemsPayload.map((it) => ({
+                name: it.product_name,
+                schedule: it.variant_label
+              })),
+              p_amount_paid: total,
+              p_razorpay_payment_id: null
+            });
+          }
+        } catch {
+          // Non-blocking
+        }
+      }
+
       return jsonResponse({
         payment_method: 'cod',
         order_ref: order.order_ref,

@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 import { formatINR } from '../context/CartContext';
 import { useSettings } from '../context/SettingsContext';
+import { useCustomer } from '../context/CustomerContext';
 import { supabase } from '../lib/supabase';
 import { openRazorpayCheckout } from '../lib/razorpay';
 import { normalizePhone, isValidPhone } from '../lib/phone';
@@ -113,6 +114,7 @@ const SUBSCRIPTION_PLANS = {
 export default function TrustBar() {
   const navigate = useNavigate();
   const { settings } = useSettings();
+  const { customer } = useCustomer();
 
   const [activePlanKey, setActivePlanKey] = useState(null);
   const [modalStep, setModalStep] = useState('details'); // 'details' | 'checkout'
@@ -122,6 +124,16 @@ export default function TrustBar() {
   const [address, setAddress] = useState('');
   const [landmark, setLandmark] = useState('');
   const [pincode, setPincode] = useState('');
+
+  useEffect(() => {
+    if (customer?.delivery_address) {
+      setAddress((prev) => prev || customer.delivery_address);
+      const pinMatch = String(customer.delivery_address).match(/\b(532\d{3})\b/);
+      if (pinMatch) {
+        setPincode((prev) => prev || pinMatch[1]);
+      }
+    }
+  }, [customer?.delivery_address]);
   const [paymentMethod, setPaymentMethod] = useState('razorpay');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
@@ -242,6 +254,8 @@ export default function TrustBar() {
               dailySlot
             },
             customer: {
+              id: customer?.id || null,
+              email: customer?.email || null,
               name: cleanName,
               phone: cleanPhone,
               address: cleanAddress,

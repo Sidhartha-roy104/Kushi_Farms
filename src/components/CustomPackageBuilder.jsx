@@ -43,6 +43,7 @@ export default function CustomPackageBuilder() {
   const [selections, setSelections] = useState({});
   const [dailySlot, setDailySlot] = useState(DAILY_SLOTS[0]);
   const [twiceWeeklyDays, setTwiceWeeklyDays] = useState(TWICE_WEEKLY_DAYS[0]);
+  const [durationMonths, setDurationMonths] = useState(1); // 1 | 3
   const [festivals, setFestivals] = useState([]);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
 
@@ -154,7 +155,20 @@ export default function CustomPackageBuilder() {
 
   const handleAddAllToCart = () => {
     if (selectedItems.length === 0) return;
-    addPackageItemsToCart(selectedItems);
+    const cartReadyItems = selectedItems.map((item) => {
+      const isMilkMonthly = item.id === 'cows-milk' && item.frequency === 'monthly';
+      const baseMult =
+        item.frequency === 'daily' || isMilkMonthly
+          ? 30
+          : item.frequency === 'twice_weekly'
+            ? 8
+            : 1;
+      return {
+        ...item,
+        qty: item.qty * baseMult * durationMonths
+      };
+    });
+    addPackageItemsToCart(cartReadyItems);
     setCheckoutOpen(false);
     openOverlay('cart');
   };
@@ -164,12 +178,12 @@ export default function CustomPackageBuilder() {
       <div className="container">
         <div className="section-head" style={{ marginBottom: '18px' }}>
           <div>
-            <span className="eyebrow">01 / BUILD YOUR OWN PACKAGE · SAVE 5%</span>
+            <span className="eyebrow">01 / BUILD YOUR OWN PACKAGE</span>
             <h2>
               Customize Your <span className="editorial-italic">Kushi Package.</span>
             </h2>
             <p>
-              Pick any item, choose pack size &amp; schedule, and save 5% on your
+              Pick any item, choose pack size &amp; schedule, and build your
               monthly pack.
             </p>
           </div>
@@ -201,7 +215,7 @@ export default function CustomPackageBuilder() {
                     selectedItems.length === 1 ? 'item' : 'items'
                   } in pack`}
             </strong>
-            <span>5% Bundle Off · Free Delivery</span>
+            <span>Custom Schedule · Doorstep Delivery</span>
           </div>
           <button
             type="button"
@@ -417,7 +431,6 @@ export default function CustomPackageBuilder() {
                     : ''}
                 </span>
               </div>
-              <span className="cpkg-bundle-badge">5% Bundle Off</span>
             </div>
 
             <div className="cpkg-summary-body">
@@ -457,8 +470,28 @@ export default function CustomPackageBuilder() {
               )}
 
               <div className="cpkg-note-box">
-                Total price &amp; 5% bundle savings will be calculated when you
+                Total price &amp; delivery charges will be calculated when you
                 click <strong>Checkout</strong>.
+              </div>
+
+              <div className="cpkg-field" style={{ marginBottom: '12px' }}>
+                <span className="cpkg-field-label">PLAN DURATION</span>
+                <div className="cpkg-freq-group">
+                  <button
+                    type="button"
+                    className={`cpkg-freq-pill${durationMonths === 1 ? ' active' : ''}`}
+                    onClick={() => setDurationMonths(1)}
+                  >
+                    1 Month (30 Days)
+                  </button>
+                  <button
+                    type="button"
+                    className={`cpkg-freq-pill${durationMonths === 3 ? ' active' : ''}`}
+                    onClick={() => setDurationMonths(3)}
+                  >
+                    3 Months (90 Days)
+                  </button>
+                </div>
               </div>
 
               <button
@@ -493,6 +526,7 @@ export default function CustomPackageBuilder() {
         selectedItems={selectedItems}
         dailySlot={dailySlot}
         twiceWeeklyDays={twiceWeeklyDays}
+        durationMonths={durationMonths}
         festivals={festivals}
         onAddToCartInstead={handleAddAllToCart}
         onSaved={() => showToast('Custom package confirmed on WhatsApp!')}
