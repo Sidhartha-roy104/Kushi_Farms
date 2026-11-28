@@ -37,7 +37,7 @@ const FESTIVAL_OPTIONS = [
 ];
 
 export default function CustomPackageBuilder() {
-  const { products, addPackageItemsToCart, openOverlay, showToast } = useCart();
+  const { products, showToast } = useCart();
 
   // Map: { [productId]: { vIdx: number, frequency: string, qty: number } }
   const [selections, setSelections] = useState({});
@@ -152,26 +152,6 @@ export default function CustomPackageBuilder() {
       })
       .filter(Boolean);
   }, [products, selections]);
-
-  const handleAddAllToCart = () => {
-    if (selectedItems.length === 0) return;
-    const cartReadyItems = selectedItems.map((item) => {
-      const isMilkMonthly = item.id === 'cows-milk' && item.frequency === 'monthly';
-      const baseMult =
-        item.frequency === 'daily' || isMilkMonthly
-          ? 30
-          : item.frequency === 'twice_weekly'
-            ? 8
-            : 1;
-      return {
-        ...item,
-        qty: item.qty * baseMult * durationMonths
-      };
-    });
-    addPackageItemsToCart(cartReadyItems);
-    setCheckoutOpen(false);
-    openOverlay('cart');
-  };
 
   return (
     <section className="section section-milk" id="custom-package">
@@ -497,23 +477,11 @@ export default function CustomPackageBuilder() {
               <button
                 type="button"
                 className="btn-primary"
-                style={{ width: '100%', height: '46px', marginBottom: '10px' }}
+                style={{ width: '100%', height: '46px' }}
                 disabled={selectedItems.length === 0}
                 onClick={() => setCheckoutOpen(true)}
               >
                 Proceed to Checkout →
-              </button>
-
-              <button
-                type="button"
-                className="btn-outline"
-                style={{ width: '100%', height: '44px', fontSize: '0.84rem' }}
-                disabled={selectedItems.length === 0}
-                onClick={handleAddAllToCart}
-              >
-                {selectedItems.length > 0
-                  ? `+ Add ${selectedItems.length} Selected to Regular Cart`
-                  : '+ Add Package Items to Cart'}
               </button>
             </div>
           </aside>
@@ -528,8 +496,7 @@ export default function CustomPackageBuilder() {
         twiceWeeklyDays={twiceWeeklyDays}
         durationMonths={durationMonths}
         festivals={festivals}
-        onAddToCartInstead={handleAddAllToCart}
-        onSaved={() => showToast('Custom package confirmed on WhatsApp!')}
+        onSaved={() => showToast('Custom package confirmed!')}
       />
     </section>
   );

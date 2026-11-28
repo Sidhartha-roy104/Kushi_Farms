@@ -30,7 +30,6 @@ export default function CustomPackageModal({
   twiceWeeklyDays,
   durationMonths = 1,
   festivals,
-  onAddToCartInstead,
   onSaved
 }) {
   const navigate = useNavigate();
@@ -328,10 +327,10 @@ export default function CustomPackageModal({
                 <strong>
                   {item.name} ({item.variantLabel}) × {item.qty}
                 </strong>
-                <span>
+                <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '2px' }}>
                   {FREQ_LABELS[item.frequency]} · {formatINR(item.price)} ×{' '}
                   {item.qty * item.multiplier} packs
-                </span>
+                </div>
               </div>
               <strong>
                 {item.frequency === 'festival'
@@ -499,21 +498,10 @@ export default function CustomPackageModal({
         <button
           type="button"
           className="wa-confirm-btn"
-          style={{ marginBottom: '10px' }}
           onClick={handleConfirmWhatsApp}
           disabled={submitting || breakdown.length === 0}
         >
           Confirm Package on WhatsApp
-        </button>
-
-        <button
-          type="button"
-          className="btn-outline"
-          style={{ width: '100%', height: '42px' }}
-          onClick={onAddToCartInstead}
-          disabled={submitting || breakdown.length === 0}
-        >
-          + Add Monthly Packs to Cart Instead
         </button>
       </div>
     </>
